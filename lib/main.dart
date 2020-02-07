@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc/bloc.dart';
 import 'package:living_city/bloc/route_selection_bloc/bloc.dart';
+import 'package:living_city/screens/user_profile.dart';
 import 'package:living_city/widgets/SearchLocationOverlay.dart';
 import './data/repositories/geolocator_repository.dart';
 import './data/provider/geocoding_provider.dart';
@@ -60,7 +61,9 @@ class _LivingCityAppState extends State<LivingCityApp> {
       ],
       child: MaterialApp(
         theme: ThemeData(
+          accentColor: Color(0xFF5863AF),
           primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: Color(0xFFFFFFFF),
           fontFamily: 'OpenSans',
         ),
         home: MainPage(),
@@ -99,59 +102,65 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false, //make keyboard not scroll the map
       key: _scaffoldKey,
-      body: LayoutBuilder(builder: (context, constraints) {
-        return Stack(
-          overflow: Overflow.visible, //makes sheet shadow not clip
-          children: [
-            //MAP
-            Container(
-              height: constraints.maxHeight,
-              child: MapView(),
-            ),
-            //SEARCH OVERLAY
-            SearchLocationOverlay(),
-            // Align(
-            //   alignment: Alignment.bottomCenter,
-            //   child: ExpandingBottomSheet(
-            //     controller: _expandingBottomSheetController,
-            //     maxCornerRadius: 18,
-            //     maxHeight: 500,
-            //     child: PreferencesSheet(),
-            //   ),
-            // ),
-            // Padding(
-            //   //fab
-            //   padding: EdgeInsets.all(16),
-            //   child: Align(
-            //     alignment: Alignment.topRight,
-            //     child: Column(
-            //       children: <Widget>[
-            //         FloatingActionButton(
-            //           onPressed: () => _expandingBottomSheetController
-            //               .animateToMaxThreshold(), //_animatedMapMove(lisbon, 16),
-            //           child: Icon(Icons.center_focus_strong),
-            //         ),
-            //         FloatingActionButton(
-            //           onPressed: () => _animatedMapMove(lisbon, 15),
-            //           child: Icon(Icons.center_focus_strong),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // )
-          ],
-        );
-      }),
+      body: _bottomNavBarIndex == 0
+          ? LayoutBuilder(builder: (context, constraints) {
+              return Stack(
+                overflow: Overflow.visible, //makes sheet shadow not clip
+                children: [
+                  //MAP
+                  Container(
+                      height: constraints.maxHeight,
+                      child: Container() //MapView(),
+                      ),
+                  //SEARCH OVERLAY
+                  SearchLocationOverlay(),
+                  // Align(
+                  //   alignment: Alignment.bottomCenter,
+                  //   child: ExpandingBottomSheet(
+                  //     controller: _expandingBottomSheetController,
+                  //     maxCornerRadius: 18,
+                  //     maxHeight: 500,
+                  //     child: PreferencesSheet(),
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   //fab
+                  //   padding: EdgeInsets.all(16),
+                  //   child: Align(
+                  //     alignment: Alignment.topRight,
+                  //     child: Column(
+                  //       children: <Widget>[
+                  //         FloatingActionButton(
+                  //           onPressed: () => _expandingBottomSheetController
+                  //               .animateToMaxThreshold(), //_animatedMapMove(lisbon, 16),
+                  //           child: Icon(Icons.center_focus_strong),
+                  //         ),
+                  //         FloatingActionButton(
+                  //           onPressed: () => _animatedMapMove(lisbon, 15),
+                  //           child: Icon(Icons.center_focus_strong),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // )
+                ],
+              );
+            })
+          : UserProfile(),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.gesture),
-            title: Text('Travel'),
+          const BottomNavigationBarItem(
+            icon: const Icon(Icons.gesture),
+            title: const Text('Travel'),
           ),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            title: Text('Journal'),
+            icon: const Icon(Icons.book),
+            title: const Text('Journal'),
           ),
+          const BottomNavigationBarItem(
+            icon: const Icon(Icons.person),
+            title: const Text("'Profile"),
+          )
         ],
         backgroundColor: Colors.white,
         currentIndex: _bottomNavBarIndex,

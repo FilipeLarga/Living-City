@@ -19,7 +19,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_map: ^0.7.3
+  flutter_map: ^0.8.2
   flutter_bloc: ^2.1.1
   geolocator: ^5.1.5
 
@@ -49,20 +49,21 @@ flutter:
   #  - images/a_dot_ham.jpeg
 
   assets:
+    - assets/category_icons/
     # - assets/delivery.png
     # - assets/landscape.jpg
     # - assets/distance_map.png
     # - assets/circle-cropped.png
     # - assets/2017-07-03_portugal_lisbon.mbtiles
-    # - assets/tiles.mbtiles   
+    # - assets/tiles.mbtiles
     # - assets/map/10/484/ #10 484-486
-    # - assets/map/10/485/    
-    # - assets/map/10/486/    
-    # - assets/map/11/969/ #11 969-973 
-    # - assets/map/11/970/    
-    # - assets/map/11/971/    
-    # - assets/map/11/972/    
-    # - assets/map/11/973/       
+    # - assets/map/10/485/
+    # - assets/map/10/486/
+    # - assets/map/11/969/ #11 969-973
+    # - assets/map/11/970/
+    # - assets/map/11/971/
+    # - assets/map/11/972/
+    # - assets/map/11/973/
     # - assets/map/12/1939/ #12 1939-1947
     # - assets/map/12/1940/
     # - assets/map/12/1941/
@@ -122,72 +123,72 @@ flutter:
     # - assets/map/14/7787/
     # - assets/map/14/7788/
     # - assets/map/14/7789/
-    # - assets/map/14/7789/ 
-    - assets/map/15/15515/ #15 15515-15579
-    - assets/map/15/15516/
-    - assets/map/15/15517/
-    - assets/map/15/15518/
-    - assets/map/15/15519/
-    - assets/map/15/15520/
-    - assets/map/15/15521/
-    - assets/map/15/15522/
-    - assets/map/15/15523/
-    - assets/map/15/15524/
-    - assets/map/15/15525/
-    - assets/map/15/15526/
-    - assets/map/15/15527/
-    - assets/map/15/15528/
-    - assets/map/15/15529/
-    - assets/map/15/15530/
-    - assets/map/15/15531/
-    - assets/map/15/15532/
-    - assets/map/15/15533/
-    - assets/map/15/15534/
-    - assets/map/15/15535/
-    - assets/map/15/15536/
-    - assets/map/15/15537/
-    - assets/map/15/15538/
-    - assets/map/15/15539/
-    - assets/map/15/15540/
-    - assets/map/15/15541/
-    - assets/map/15/15542/
-    - assets/map/15/15543/
-    - assets/map/15/15544/
-    - assets/map/15/15545/
-    - assets/map/15/15546/
-    - assets/map/15/15547/
-    - assets/map/15/15548/
-    - assets/map/15/15549/
-    - assets/map/15/15550/
-    - assets/map/15/15551/
-    - assets/map/15/15552/
-    - assets/map/15/15553/
-    - assets/map/15/15554/
-    - assets/map/15/15555/
-    - assets/map/15/15556/
-    - assets/map/15/15557/
-    - assets/map/15/15558/
-    - assets/map/15/15559/
-    - assets/map/15/15560/
-    - assets/map/15/15561/
-    - assets/map/15/15562/
-    - assets/map/15/15563/
-    - assets/map/15/15564/
-    - assets/map/15/15565/
-    - assets/map/15/15566/
-    - assets/map/15/15567/
-    - assets/map/15/15568/
-    - assets/map/15/15569/
-    - assets/map/15/15570/
-    - assets/map/15/15571/
-    - assets/map/15/15572/
-    - assets/map/15/15573/
-    - assets/map/15/15574/
-    - assets/map/15/15575/
-    - assets/map/15/15576/
-    - assets/map/15/15577/
-    - assets/map/15/15578/
-    - assets/map/15/15579/
+    # - assets/map/14/7789/
+    # - assets/map/15/15515/ #15 15515-15579
+    # - assets/map/15/15516/
+    # - assets/map/15/15517/
+    # - assets/map/15/15518/
+    # - assets/map/15/15519/
+    # - assets/map/15/15520/
+    # - assets/map/15/15521/
+    # - assets/map/15/15522/
+    # - assets/map/15/15523/
+    # - assets/map/15/15524/
+    # - assets/map/15/15525/
+    # - assets/map/15/15526/
+    # - assets/map/15/15527/
+    # - assets/map/15/15528/
+    # - assets/map/15/15529/
+    # - assets/map/15/15530/
+    # - assets/map/15/15531/
+    # - assets/map/15/15532/
+    # - assets/map/15/15533/
+    # - assets/map/15/15534/
+    # - assets/map/15/15535/
+    # - assets/map/15/15536/
+    # - assets/map/15/15537/
+    # - assets/map/15/15538/
+    # - assets/map/15/15539/
+    # - assets/map/15/15540/
+    # - assets/map/15/15541/
+    # - assets/map/15/15542/
+    # - assets/map/15/15543/
+    # - assets/map/15/15544/
+    # - assets/map/15/15545/
+    # - assets/map/15/15546/
+    # - assets/map/15/15547/
+    # - assets/map/15/15548/
+    # - assets/map/15/15549/
+    # - assets/map/15/15550/
+    # - assets/map/15/15551/
+    # - assets/map/15/15552/
+    # - assets/map/15/15553/
+    # - assets/map/15/15554/
+    # - assets/map/15/15555/
+    # - assets/map/15/15556/
+    # - assets/map/15/15557/
+    # - assets/map/15/15558/
+    # - assets/map/15/15559/
+    # - assets/map/15/15560/
+    # - assets/map/15/15561/
+    # - assets/map/15/15562/
+    # - assets/map/15/15563/
+    # - assets/map/15/15564/
+    # - assets/map/15/15565/
+    # - assets/map/15/15566/
+    # - assets/map/15/15567/
+    # - assets/map/15/15568/
+    # - assets/map/15/15569/
+    # - assets/map/15/15570/
+    # - assets/map/15/15571/
+    # - assets/map/15/15572/
+    # - assets/map/15/15573/
+    # - assets/map/15/15574/
+    # - assets/map/15/15575/
+    # - assets/map/15/15576/
+    # - assets/map/15/15577/
+    # - assets/map/15/15578/
+    # - assets/map/15/15579/
     # - assets/map/16/31030/
     # - assets/map/16/31031/
     # - assets/map/16/31032/

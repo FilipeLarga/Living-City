@@ -74,3 +74,4 @@
 
 # Map assets
 **/assets/map/
+.flutter-plugins-dependencies
