@@ -173,29 +173,29 @@ class _SearchLocationOverlayState extends State<SearchLocationOverlay>
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: BlocBuilder<SearchLocationBloc, SearchLocationState>(
-                condition: (prevState, currentState) {
-                  return !(currentState is ErrorSearchState ||
-                      currentState is FinishSearchState);
-                },
-                builder: (context, state) {
-                  if (state is InactiveSearchState) {
-                    return Container();
-                  } else if (state is ShowingLocationSearchState) {
-                    return SearchLocationSheet(
-                      animationController: _locationSheetAnimationController,
-                      searchLocation: state.searchLocation,
-                    );
-                  } else {
-                    return SearchLocationSheet(
-                      animationController: _locationSheetAnimationController,
-                    );
-                  }
-                },
-              ),
-            ),
+            // Align(
+            //   alignment: Alignment.bottomCenter,
+            //   child: BlocBuilder<SearchLocationBloc, SearchLocationState>(
+            //     condition: (prevState, currentState) {
+            //       return !(currentState is ErrorSearchState ||
+            //           currentState is FinishSearchState);
+            //     },
+            //     builder: (context, state) {
+            //       if (state is InactiveSearchState) {
+            //         return Container();
+            //       } else if (state is ShowingLocationSearchState) {
+                    // return SearchLocationSheet(
+            //           animationController: _locationSheetAnimationController,
+            //           searchLocation: state.searchLocation,
+            //         );
+            //       } else {
+            //         return SearchLocationSheet(
+            //           animationController: _locationSheetAnimationController,
+            //         );
+            //       }
+            //     },
+            //   ),
+            // ),
           ],
         ));
   }

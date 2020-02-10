@@ -6,8 +6,9 @@ abstract class RouteSelectionEvent {}
 
 class InitializeRouteRequest extends RouteSelectionEvent {
   final SearchLocationModel location;
+  final bool origin;
 
-  InitializeRouteRequest({@required this.location});
+  InitializeRouteRequest({@required this.location, @required this.origin});
 }
 
 class LoopRouteRequest extends RouteSelectionEvent {

@@ -29,8 +29,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
         point: LatLng(38.748753, -9.153692),
         height: 48,
         width: 48,
-        builder: (ctx) => Icon(Icons.person,
-            size: 32, key: Key("person"), color: Colors.red)));
+        builder: (ctx) => Container()));
     mapController = MapController();
   }
 
@@ -98,7 +97,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
           Icons.room,
           size: 48,
           key: Key("lisbon"),
-          color: Colors.red,
+          color: Theme.of(context).accentColor,
         ),
       )
     ]);
@@ -166,7 +165,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
           builder: (ctx) => Icon(
             Icons.room,
             size: 48,
-            color: Colors.red,
+            color: Theme.of(context).accentColor,
           ),
         ));
         _animatedMapMove(state.searchLocation.coordinates, 15);
@@ -189,9 +188,9 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
             height: 48,
             width: 48,
             builder: (ctx) => Icon(
-              Icons.home,
+              Icons.place,
               size: 48,
-              color: Colors.red,
+              color: Theme.of(context).accentColor,
             ),
           ));
           _animatedMapMove(state.startLocation.coordinates, 15);
@@ -201,9 +200,9 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
             height: 48,
             width: 48,
             builder: (ctx) => Icon(
-              Icons.home,
+              Icons.place,
               size: 48,
-              color: Colors.red,
+              color: Theme.of(context).accentColor,
             ),
           ));
           _markers.add(Marker(
@@ -213,7 +212,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
             builder: (ctx) => Icon(
               Icons.flag,
               size: 48,
-              color: Colors.red,
+              color: Theme.of(context).accentColor,
             ),
           ));
         }

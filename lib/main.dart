@@ -109,9 +109,9 @@ class _MainPageState extends State<MainPage> {
                 children: [
                   //MAP
                   Container(
-                      height: constraints.maxHeight,
-                      child: Container() //MapView(),
-                      ),
+                    height: constraints.maxHeight,
+                    child: MapView(),
+                  ),
                   //SEARCH OVERLAY
                   SearchLocationOverlay(),
                   // Align(

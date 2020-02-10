@@ -15,7 +15,11 @@ class SearchRequestEvent extends SearchLocationEvent {
 
 class SearchUserLocationRequestEvent extends SearchLocationEvent {}
 
-class AcceptLocationEvent extends SearchLocationEvent {}
+class AcceptLocationEvent extends SearchLocationEvent {
+  final bool origin;
+
+  AcceptLocationEvent({@required this.origin});
+}
 
 class DismissedEvent extends SearchLocationEvent {}
 // class ClearRequestSearchHistoryEvent extends SearchHistoryEvent {}

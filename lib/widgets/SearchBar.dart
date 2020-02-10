@@ -19,16 +19,17 @@ class SearchBar extends StatefulWidget {
   _SearchBarState createState() => _SearchBarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _SearchBarState extends State<SearchBar>
+    with SingleTickerProviderStateMixin {
   final FocusNode _node = FocusNode();
   final TextEditingController _textEditingController = TextEditingController();
 
   List<SearchLocationModel> _searchHistoryList;
-
   bool _shouldErase;
   bool _shouldExpand;
+  bool _typing;
 
-  Animation<Offset> _animation;
+  // Animation<Offset> _animation;
 
   @override
   void initState() {
@@ -36,9 +37,8 @@ class _SearchBarState extends State<SearchBar> {
 
     _shouldErase = false;
     _shouldExpand = false;
-    print('${widget.animationController.value}');
-    _animation = Tween<Offset>(begin: Offset(0, -1), end: Offset.zero)
-        .animate(widget.animationController);
+    // _animation = Tween<Offset>(begin: Offset(0, -1), end: Offset.zero)
+    //     .animate(widget.animationController);
   }
 
   @override
@@ -51,6 +51,7 @@ class _SearchBarState extends State<SearchBar> {
 
     if (widget.searchLocation != null) {
       _textEditingController.text = widget.searchLocation.title;
+      _shouldExpand = true;
     }
     // if (widget.state is UnitializedSearchState) {
     //   _searchHistoryList = null;
@@ -127,7 +128,7 @@ class _SearchBarState extends State<SearchBar> {
                 width: 22,
               ),
               GestureDetector(
-                child: const Icon(Icons.my_location, color: Colors.black),
+                child: const Icon(Icons.my_location, color: Colors.black87),
                 onTap: () {
                   BlocProvider.of<SearchLocationBloc>(context)
                       .add(SearchUserLocationRequestEvent());
@@ -135,27 +136,73 @@ class _SearchBarState extends State<SearchBar> {
               ),
             ],
           ),
-          AnimatedCrossFade(
-            duration: Duration(milliseconds: 300),
-            crossFadeState: _shouldExpand
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            firstChild: Container(),
-            secondChild: AnimatedCrossFade(
-              crossFadeState: _searchHistoryList == null
-                  ? CrossFadeState.showFirst
-                  : CrossFadeState.showSecond,
-              firstCurve: const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
-              secondCurve:
-                  const Interval(0.6, 1.0, curve: Curves.fastOutSlowIn),
-              duration: Duration(milliseconds: 300),
-              firstChild: SearchBarLoadingHistory(),
-              secondChild: _chooseWidget(),
-            ),
-            firstCurve: const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
-            secondCurve: const Interval(0.6, 1.0, curve: Curves.fastOutSlowIn),
-            sizeCurve: Curves.fastOutSlowIn,
-          )
+          // AnimatedSize(
+          //   duration: Duration(milliseconds: 300),
+          //   vsync: this,
+          //   child: _chooseWidget(),
+
+          // ),
+          AnimatedSwitcher(
+            duration: Duration(milliseconds: 500),
+            child: _chooseWidget(),
+            switchInCurve:
+                Curves.easeInOut,
+            switchOutCurve:
+                const Interval(1, 1, curve: Curves.linear),
+            layoutBuilder: (currentChild, previousChildren) {
+              return Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  Positioned(
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Stack(
+                      children: <Widget>[
+                        ...previousChildren,
+                      ],
+                    ),
+                  ),
+                  if (currentChild != null) currentChild,
+                ],
+                alignment: Alignment.center,
+              );
+            },
+          ),
+          // AnimatedCrossFade(
+          //   duration: Duration(milliseconds: 300),
+          //   crossFadeState: _shouldExpand
+          //       ? CrossFadeState.showSecond
+          //       : CrossFadeState.showFirst,
+          //   firstChild: Container(),
+          //   secondChild: AnimatedSwitcher(
+          //     // layoutBuilder: (child, children) {
+          //     //   return Stack(
+          //     //     overflow: Overflow.visible,
+          //     //     alignment: Alignment.center,
+          //     //     children: <Widget>[
+          //     //       Positioned(key: child.key, top: 0, child: child),
+          //     //                           Positioned(key: child.key, top: 0, child: child)
+
+          //     //     ],
+          //     //   );
+          //     // },
+          //     // crossFadeState: _searchHistoryList == null
+          //     //     ? CrossFadeState.showFirst
+          //     //     : CrossFadeState.showSecond,
+          //     // firstCurve: const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
+          //     // secondCurve:
+          //     //     const Interval(0.6, 1.0, curve: Curves.fastOutSlowIn),
+          //     duration: Duration(milliseconds: 2000),
+          //     // firstChild: SearchBarLoadingHistory(),
+          //     // secondChild: _chooseWidget(),
+          //     child: _chooseWidget(),
+          //   ),
+          //   firstCurve: const Interval(0.0, 0.6, curve: Curves.fastOutSlowIn),
+          //   secondCurve: const Interval(0.6, 1.0, curve: Curves.fastOutSlowIn),
+          //   sizeCurve: Curves.fastOutSlowIn,
+          // )
         ],
       ),
     );
@@ -163,6 +210,7 @@ class _SearchBarState extends State<SearchBar> {
 
   void _search() {
     setState(() {
+      _typing = true;
       _shouldErase = true;
       _shouldExpand = true;
       if (!FocusScope.of(context).hasFocus)
@@ -180,6 +228,7 @@ class _SearchBarState extends State<SearchBar> {
   }
 
   void _onSelect(SearchLocationModel selected) {
+    _typing = false;
     _shouldExpand = false;
     FocusScope.of(context).unfocus();
     BlocProvider.of<SearchLocationBloc>(context)
@@ -187,41 +236,177 @@ class _SearchBarState extends State<SearchBar> {
   }
 
   StatelessWidget _chooseWidget() {
-    if (_searchHistoryList != null)
-      return SearchBarHistoryList(
+    if (!_shouldExpand) {
+      return Container();
+    } else if (widget.searchLocation != null && !_typing) {
+      return RoutePointSelector();
+    } else if (_searchHistoryList != null)
+      return HistoryList(
         callback: _onSelect,
         list: _searchHistoryList,
       );
     else
-      return SearchBarNoHistory();
+      return NoHistory();
   }
 }
 
 class SearchBarLoadingHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: const Padding(
-        padding: const EdgeInsets.only(top: 4.0, bottom: 12.0),
-        child: const Text(
-          'Loading Recent Locations...',
-          style:
-              const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
-          maxLines: 1,
+    return Column(
+      children: <Widget>[
+        Divider(),
+        const Center(
+          child: const Padding(
+            padding: const EdgeInsets.only(top: 4.0, bottom: 12.0),
+            child: const Text(
+              'Loading Recent Locations...',
+              style: const TextStyle(
+                  color: Colors.grey, fontStyle: FontStyle.italic),
+              maxLines: 1,
+            ),
+          ),
         ),
+      ],
+    );
+  }
+}
+
+class RoutePointSelector extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Column(
+        children: <Widget>[
+          Divider(
+            thickness: 1,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 1,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      BlocProvider.of<SearchLocationBloc>(context)
+                          .add(AcceptLocationEvent(origin: true));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Stack(
+                          children: <Widget>[
+                            Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey[100]),
+                            ),
+                            Positioned(
+                                top: 0,
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Icon(Icons.trip_origin,
+                                    size: 20,
+                                    color: Theme.of(context).accentColor))
+                          ],
+                        ),
+                        const SizedBox(width: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'From',
+                            ),
+                            Text(
+                              'This location',
+                              style: const TextStyle(
+                                  color: Colors.grey, fontSize: 12),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 40,
+                  child: VerticalDivider(
+                    thickness: 1,
+                  ),
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 1,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      BlocProvider.of<SearchLocationBloc>(context)
+                          .add(AcceptLocationEvent(origin: false));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Stack(
+                          children: <Widget>[
+                            Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.grey[100]),
+                            ),
+                            Positioned(
+                                top: 0,
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Icon(Icons.location_on,
+                                    color: Theme.of(context).accentColor))
+                          ],
+                        ),
+                        const SizedBox(width: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'To',
+                            ),
+                            Text(
+                              'This location',
+                              style: const TextStyle(
+                                  color: Colors.grey, fontSize: 12),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class SearchBarNoHistory extends StatelessWidget {
+class NoHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
       child: const Padding(
         padding: const EdgeInsets.only(top: 4.0, bottom: 12.0),
         child: const Text(
-          'No Recent Locations.',
+          'No Recent Locations',
           style:
               const TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
           maxLines: 1,
@@ -231,28 +416,32 @@ class SearchBarNoHistory extends StatelessWidget {
   }
 }
 
-class SearchBarHistoryList extends StatelessWidget {
+class HistoryList extends StatelessWidget {
   final Function(SearchLocationModel) callback;
   final List<SearchLocationModel> list;
 
-  const SearchBarHistoryList(
-      {Key key, @required this.callback, @required this.list})
+  const HistoryList({Key key, @required this.callback, @required this.list})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      padding: EdgeInsets.only(bottom: 6),
-      shrinkWrap: true,
-      itemCount: list.length > 3 ? 3 : list.length,
-      separatorBuilder: (ctx, index) => Divider(
-        thickness: 1,
-      ),
-      physics: NeverScrollableScrollPhysics(),
-      itemBuilder: (ctx, index) => SearchHistoryListItem(
-        callback: callback,
-        searchLocation: list.elementAt(index),
-      ),
+    return Column(
+      children: <Widget>[
+        Divider(thickness: 1),
+        ListView.separated(
+          padding: EdgeInsets.only(bottom: 6),
+          shrinkWrap: true,
+          itemCount: list.length > 3 ? 3 : list.length,
+          separatorBuilder: (ctx, index) => Divider(
+            thickness: 1,
+          ),
+          physics: NeverScrollableScrollPhysics(),
+          itemBuilder: (ctx, index) => SearchHistoryListItem(
+            callback: callback,
+            searchLocation: list.elementAt(index),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -22,8 +22,10 @@ class FinishSearchState extends SearchLocationState {}
 
 class InactiveSearchState extends SearchLocationState {
   final SearchLocationModel selectedSearchLocation;
+  final bool origin;
 
-  InactiveSearchState({@required this.selectedSearchLocation});
+  InactiveSearchState(
+      {@required this.selectedSearchLocation, @required this.origin});
 }
 
 class ErrorSearchState extends SearchLocationState {

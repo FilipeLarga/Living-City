@@ -14,6 +14,7 @@ class SearchLocationBloc
   final GeolocatorRepository _geolocatorRepository;
 
   SearchLocationModel selectedSearchLocation;
+  bool origin;
 
   SearchLocationBloc(
       {@required SearchLocationRepository searchHistoryRepository,
@@ -37,7 +38,7 @@ class SearchLocationBloc
     } else if (event is CancelSearchRequestEvent) {
       yield* _mapCancelRequestToState();
     } else if (event is AcceptLocationEvent) {
-      yield* _mapAcceptEventToState();
+      yield* _mapAcceptEventToState(event.origin);
     } else if (event is DismissedEvent) {
       yield* _mapDismissedToState();
     }
@@ -112,12 +113,16 @@ class SearchLocationBloc
     yield InitialSearchState(searchHistory: null);
   }
 
-  Stream<SearchLocationState> _mapAcceptEventToState() async* {
+  Stream<SearchLocationState> _mapAcceptEventToState(bool origin) async* {
+    print('sure');
+    print(origin);
+    this.origin = origin;
     yield FinishSearchState();
   }
 
   Stream<SearchLocationState> _mapDismissedToState() async* {
     if (state is FinishSearchState)
-      yield InactiveSearchState(selectedSearchLocation: selectedSearchLocation);
+      yield InactiveSearchState(
+          selectedSearchLocation: selectedSearchLocation, origin: origin);
   }
 }

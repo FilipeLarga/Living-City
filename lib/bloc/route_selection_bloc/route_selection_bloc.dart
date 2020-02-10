@@ -20,7 +20,9 @@ class RouteSelectionBloc
       @required this.geolocatorRepository}) {
     searchLocationSubscription = searchLocationBloc.listen((state) {
       if (state is InactiveSearchState) {
-        add(InitializeRouteRequest(location: state.selectedSearchLocation));
+        print(state.origin);
+        add(InitializeRouteRequest(
+            location: state.selectedSearchLocation, origin: state.origin));
       }
     });
   }
@@ -39,7 +41,7 @@ class RouteSelectionBloc
     RouteSelectionEvent event,
   ) async* {
     if (event is InitializeRouteRequest) {
-      yield* _mapInitializeRequestToState(event.location);
+      yield* _mapInitializeRequestToState(event.location, event.origin);
     } else if (event is LoopRouteRequest) {
       yield* _mapLoopRequestToState(event.loop);
     } else if (event is SwapRouteRequest) {
@@ -52,8 +54,11 @@ class RouteSelectionBloc
   }
 
   Stream<RouteSelectionState> _mapInitializeRequestToState(
-      SearchLocationModel startLocation) async* {
-    yield SelectingRouteState(loop: false, startLocation: startLocation);
+      SearchLocationModel location, bool origin) async* {
+    if (origin)
+      yield SelectingRouteState(loop: false, startLocation: location);
+    else
+      yield SelectingRouteState(loop: false, destinationLocation: location);
   }
 
   Stream<RouteSelectionState> _mapLoopRequestToState(bool loop) async* {
