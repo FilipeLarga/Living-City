@@ -98,6 +98,8 @@ class SearchLocationBloc
         exception: oob,
       );
     } on NoConnectionException catch (nce) {
+      print('Bloc says: No Connection');
+
       yield ErrorSearchState(exception: nce);
     }
   }
@@ -114,8 +116,6 @@ class SearchLocationBloc
   }
 
   Stream<SearchLocationState> _mapAcceptEventToState(bool origin) async* {
-    print('sure');
-    print(origin);
     this.origin = origin;
     yield FinishSearchState();
   }

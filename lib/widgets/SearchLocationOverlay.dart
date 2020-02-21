@@ -5,6 +5,7 @@ import 'package:living_city/bloc/route_selection_bloc/bloc.dart';
 import 'package:living_city/widgets/RouteSelectorBar.dart';
 import 'package:living_city/widgets/SearchBar.dart';
 import 'package:living_city/widgets/SearchLocationSheet.dart';
+import 'SelectOnMapBar.dart';
 import '../bloc/search_location_bloc/bloc.dart';
 
 class SearchLocationOverlay extends StatefulWidget {
@@ -154,10 +155,13 @@ class _SearchLocationOverlayState extends State<SearchLocationOverlay>
                               return Container();
                             } else if (state is SelectingRouteState) {
                               return RouteSearchSelector(
-                                loop: state.loop,
                                 startLocation: state.startLocation,
                                 endLocation: state.destinationLocation,
+                                searchHistoryList: state.searchHistory,
                               );
+                            } else if (state is SelectingOnMapRouteState) {
+                              return SelectOnMapBar(
+                                  locationTitle: state.selectedLocation?.title);
                             } else {
                               print(
                                   'You Should never see this!! in SearchLocationOverylay');
@@ -184,7 +188,7 @@ class _SearchLocationOverlayState extends State<SearchLocationOverlay>
             //       if (state is InactiveSearchState) {
             //         return Container();
             //       } else if (state is ShowingLocationSearchState) {
-                    // return SearchLocationSheet(
+            // return SearchLocationSheet(
             //           animationController: _locationSheetAnimationController,
             //           searchLocation: state.searchLocation,
             //         );

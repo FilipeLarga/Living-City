@@ -40,6 +40,7 @@ class _LivingCityAppState extends State<LivingCityApp> {
         searchHistoryRepository: _searchLocationRepository);
 
     _routeSelectionBloc = RouteSelectionBloc(
+        searchHistoryRepository: _searchLocationRepository,
         searchLocationBloc: _searchLocationBloc,
         geolocatorRepository: _geolocatorRepository);
   }

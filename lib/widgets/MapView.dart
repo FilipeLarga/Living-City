@@ -3,8 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:living_city/bloc/route_selection_bloc/bloc.dart';
-import 'package:living_city/data/models/search_location_model.dart';
+import 'package:living_city/widgets/NormalMarker.dart';
+import '../bloc/route_selection_bloc/bloc.dart' as routeSelection;
+import '../data/models/search_location_model.dart';
+import '../widgets/AnimatedMarker.dart';
 import '../bloc/search_location_bloc/bloc.dart';
 import '../core/Coordinates.dart';
 
@@ -17,6 +19,11 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   MapController mapController;
   AnimationController _animationController;
 
+  SearchLocationModel _startLocation;
+  SearchLocationModel _endLocation;
+
+  Marker _selectionOnMapMarker;
+
   final List<Marker> _markers = [];
   List<LatLng> points;
 
@@ -25,11 +32,11 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     super.initState();
     //loadMarkers();
     //loadPoints();
-    _markers.add(Marker(
-        point: LatLng(38.748753, -9.153692),
-        height: 48,
-        width: 48,
-        builder: (ctx) => Container()));
+    // _markers.add(Marker(
+    //     point: LatLng(38.748753, -9.153692),
+    //     height: 48,
+    //     width: 48,
+    //     builder: (ctx) => Container()));
     mapController = MapController();
   }
 
@@ -48,7 +55,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
             _searchLocationListener(context, state);
           },
         ),
-        BlocListener<RouteSelectionBloc, RouteSelectionState>(
+        BlocListener<routeSelection.RouteSelectionBloc,
+            routeSelection.RouteSelectionState>(
           listener: (context, state) {
             _routeSelectionListener(context, state);
           },
@@ -87,28 +95,28 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     );
   }
 
-  void loadMarkers() {
-    _markers.addAll([
-      Marker(
-        point: lisbon,
-        height: 48,
-        width: 48,
-        builder: (ctx) => Icon(
-          Icons.room,
-          size: 48,
-          key: Key("lisbon"),
-          color: Theme.of(context).accentColor,
-        ),
-      )
-    ]);
-  }
+  // void loadMarkers() {
+  //   _markers.addAll([
+  //     Marker(
+  //       point: lisbon,
+  //       height: 48,
+  //       width: 48,
+  //       builder: (ctx) => Icon(
+  //         Icons.room,
+  //         size: 48,
+  //         key: Key("lisbon"),
+  //         color: Theme.of(context).accentColor,
+  //       ),
+  //     )
+  //   ]);
+  // }
 
-  void loadPoints() {
-    points = <LatLng>[
-      LatLng(38.748753, -9.153692),
-      LatLng(38.3498, -9.153692),
-    ];
-  }
+  // void loadPoints() {
+  //   points = <LatLng>[
+  //     LatLng(38.748753, -9.153692),
+  //     LatLng(38.3498, -9.153692),
+  //   ];
+  // }
 
   void _animatedMapMove(LatLng destLocation, double destZoom) {
     // Create some tweens. These serve to split up the transition from one location to another.
@@ -127,8 +135,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     Animation<double> animation = CurvedAnimation(
         parent: _animationController, curve: Curves.fastOutSlowIn);
 
-    Animation<double> zoomAnimation =
-        CurvedAnimation(parent: _animationController, curve: Curves.easeIn);
+    Animation<double> zoomAnimation = CurvedAnimation(
+        parent: _animationController, curve: Curves.easeInOutExpo);
 
     _animationController.addListener(() {
       mapController.move(
@@ -150,76 +158,70 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   void _handleTap(LatLng latlng) {
     BlocProvider.of<SearchLocationBloc>(context).add(SearchRequestEvent(
         searchLocation: SearchLocationModel(coordinates: latlng)));
-    //ADD HERE ROUTE PROVIDER
+    BlocProvider.of<routeSelection.RouteSelectionBloc>(context).add(
+        routeSelection.SearchRequestEvent(
+            searchLocation: SearchLocationModel(coordinates: latlng)));
   }
 
   void _searchLocationListener(
       BuildContext context, SearchLocationState state) {
     if (state is ShowingLocationSearchState) {
       setState(() {
-        _markers.removeRange(1, _markers.length);
-        _markers.add(Marker(
-          point: state.searchLocation.coordinates,
-          height: 48,
-          width: 48,
-          builder: (ctx) => Icon(
-            Icons.room,
-            size: 48,
-            color: Theme.of(context).accentColor,
-          ),
-        ));
+        _markers.clear();
         _animatedMapMove(state.searchLocation.coordinates, 15);
-      });
-    } else if (state is InitialSearchState) {
-      setState(() {
-        _markers.removeRange(1, _markers.length);
+        _animationController?.addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            setState(() {
+              _markers.add(Marker(
+                  point: state.searchLocation.coordinates,
+                  height: 40,
+                  width: 40,
+                  builder: (ctx) => AnimatedMarker(iconData: Icons.place)));
+            });
+          }
+        });
       });
     }
   }
 
   void _routeSelectionListener(
-      BuildContext context, RouteSelectionState state) {
-    if (state is SelectingRouteState) {
+      BuildContext context, routeSelection.RouteSelectionState state) {
+    if (state is routeSelection.SelectingRouteState) {
+      _selectionOnMapMarker = null;
       setState(() {
-        _markers.removeRange(1, _markers.length);
-        if (state.loop) {
+        _markers.clear();
+        if (state.startLocation != null) {
           _markers.add(Marker(
-            point: state.startLocation.coordinates,
-            height: 48,
-            width: 48,
-            builder: (ctx) => Icon(
-              Icons.place,
-              size: 48,
-              color: Theme.of(context).accentColor,
-            ),
-          ));
-          _animatedMapMove(state.startLocation.coordinates, 15);
-        } else {
+              point: state.startLocation.coordinates,
+              height: 36,
+              width: 36,
+              builder: (ctx) => NormalMarker(iconData: Icons.place)));
+        }
+        if (state.destinationLocation != null) {
           _markers.add(Marker(
-            point: state.startLocation.coordinates,
-            height: 48,
-            width: 48,
-            builder: (ctx) => Icon(
-              Icons.place,
-              size: 48,
-              color: Theme.of(context).accentColor,
-            ),
-          ));
-          _markers.add(Marker(
-            point: state.destinationLocation.coordinates,
-            height: 48,
-            width: 48,
-            builder: (ctx) => Icon(
-              Icons.flag,
-              size: 48,
-              color: Theme.of(context).accentColor,
-            ),
-          ));
+              point: state.destinationLocation.coordinates,
+              height: 36,
+              width: 36,
+              builder: (ctx) => NormalMarker(iconData: Icons.place)));
         }
       });
-    } else if (state is InitialSearchState) {
+    } else if (state is routeSelection.SelectingOnMapRouteState &&
+        state.selectedLocation != null) {
       setState(() {
-        _markers.removeRange(1, _markers.length);
+        _markers.remove(_selectionOnMapMarker);
+        _animatedMapMove(state.selectedLocation.coordinates, 15);
+        _animationController?.addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            setState(() {
+              _selectionOnMapMarker = Marker(
+                  point: state.selectedLocation.coordinates,
+                  height: 36,
+                  width: 36,
+                  builder: (ctx) => AnimatedMarker(iconData: Icons.place));
+              _markers.add(_selectionOnMapMarker);
+            });
+          }
+        });
       });
     }
   }

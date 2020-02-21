@@ -5,22 +5,24 @@ import 'package:living_city/bloc/search_location_bloc/search_location_bloc.dart'
 import 'package:living_city/bloc/search_location_bloc/search_location_state.dart';
 import 'package:living_city/data/models/search_location_model.dart';
 import 'package:living_city/data/repositories/geolocator_repository.dart';
+import 'package:living_city/data/repositories/search_location_repository.dart';
 import './bloc.dart';
 import '../../core/Exceptions.dart';
-import 'package:latlong/latlong.dart';
 
 class RouteSelectionBloc
     extends Bloc<RouteSelectionEvent, RouteSelectionState> {
   final SearchLocationBloc searchLocationBloc;
+  final SearchLocationRepository searchHistoryRepository;
   StreamSubscription searchLocationSubscription;
   final GeolocatorRepository geolocatorRepository;
+  List<SearchLocationModel> searchHistory;
 
   RouteSelectionBloc(
-      {@required this.searchLocationBloc,
+      {@required this.searchHistoryRepository,
+      @required this.searchLocationBloc,
       @required this.geolocatorRepository}) {
     searchLocationSubscription = searchLocationBloc.listen((state) {
       if (state is InactiveSearchState) {
-        print(state.origin);
         add(InitializeRouteRequest(
             location: state.selectedSearchLocation, origin: state.origin));
       }
@@ -43,43 +45,152 @@ class RouteSelectionBloc
     if (event is InitializeRouteRequest) {
       yield* _mapInitializeRequestToState(event.location, event.origin);
     } else if (event is LoopRouteRequest) {
-      yield* _mapLoopRequestToState(event.loop);
+      yield* _mapLoopRequestToState(event.origin);
     } else if (event is SwapRouteRequest) {
       yield* _mapSwapRequestToState();
     } else if (event is NewStartLocation) {
       yield* _mapNewStartToState(event.startLocation);
     } else if (event is NewEndLocation) {
       yield* _mapNewEndToState(event.endLocation);
+    } else if (event is ClearRouteRequest) {
+      yield* _mapClearToState(event.origin);
+    } else if (event is SelectOnMapRequest) {
+      yield* _mapSelectOnMapToState(event.origin);
+    } else if (event is CancelSelectOnMapRequest) {
+      yield* _mapCancelSelectOnMapToState();
+    } else if (event is SearchRequestEvent) {
+      yield* _mapSearchRequestToState(event.searchLocation);
+    } else if (event is ConfirmSelectOnMapRequest) {
+      yield* _mapConfirmSelectOnMapToState();
     }
   }
 
   Stream<RouteSelectionState> _mapInitializeRequestToState(
       SearchLocationModel location, bool origin) async* {
-    if (origin)
-      yield SelectingRouteState(loop: false, startLocation: location);
-    else
-      yield SelectingRouteState(loop: false, destinationLocation: location);
+    searchHistory = await searchHistoryRepository.getSearchHistory();
+    if (origin) {
+      yield SelectingRouteState(
+          startLocation: location, searchHistory: searchHistory);
+    } else {
+      yield SelectingRouteState(
+          destinationLocation: location, searchHistory: searchHistory);
+    }
   }
 
-  Stream<RouteSelectionState> _mapLoopRequestToState(bool loop) async* {
-    final SearchLocationModel startLocation =
-        (state as SelectingRouteState).startLocation;
-
-    if (loop) {
-      //if loop is true both start and end show the start location
-
-      yield SelectingRouteState(
-          loop: loop,
-          startLocation: startLocation,
-          destinationLocation: startLocation);
-    } else {
-      //if loop is false the start and end are different
+  Stream<RouteSelectionState> _mapLoopRequestToState(bool origin) async* {
+    if (origin) {
       final SearchLocationModel destinationLocation =
           (state as SelectingRouteState).destinationLocation;
+      if (destinationLocation != null || destinationLocation.title != '') {
+        yield SelectingRouteState(
+            startLocation: destinationLocation,
+            destinationLocation: destinationLocation,
+            searchHistory: searchHistory);
+      } else {
+        //Just in case the user meant to loop the destination
+        final SearchLocationModel startLocation =
+            (state as SelectingRouteState).startLocation;
+        if (startLocation != null || startLocation.title != '') {
+          yield SelectingRouteState(
+              startLocation: startLocation,
+              destinationLocation: startLocation,
+              searchHistory: searchHistory);
+        }
+      }
+    } else {
+      final SearchLocationModel startLocation =
+          (state as SelectingRouteState).startLocation;
+      if (startLocation != null || startLocation.title != '') {
+        yield SelectingRouteState(
+            startLocation: startLocation,
+            destinationLocation: startLocation,
+            searchHistory: searchHistory);
+      } else {
+        //Just in case the user meant to loop the origin
+        final SearchLocationModel destinationLocation =
+            (state as SelectingRouteState).destinationLocation;
+        if (destinationLocation != null || destinationLocation.title != '') {
+          yield SelectingRouteState(
+              startLocation: destinationLocation,
+              destinationLocation: destinationLocation,
+              searchHistory: searchHistory);
+        }
+      }
+    }
+    // if (loop) {
+    //   if (originIsDominant) {
+    //     final SearchLocationModel startLocation =
+    //         (state as SelectingRouteState).startLocation;
+
+    //     yield SelectingRouteState(
+    //         startLocation: startLocation,
+    //         destinationLocation: startLocation,
+    //         searchHistory: searchHistory);
+    //   } else {
+    //     final SearchLocationModel destinationLocation =
+    //         (state as SelectingRouteState).destinationLocation;
+
+    //     yield SelectingRouteState(
+    //         startLocation: destinationLocation,
+    //         destinationLocation: destinationLocation,
+    //         searchHistory: searchHistory);
+    //   }
+    // } else {
+    //   if (originIsDominant) {
+    //     final SearchLocationModel startLocation =
+    //         (state as SelectingRouteState).startLocation;
+
+    //     yield SelectingRouteState(
+    //         startLocation: startLocation,
+    //         searchHistory: searchHistory);
+    //   } else {
+    //     final SearchLocationModel destinationLocation =
+    //         (state as SelectingRouteState).destinationLocation;
+
+    //     yield SelectingRouteState(
+    //         destinationLocation: destinationLocation,
+    //         searchHistory: searchHistory);
+    //   }
+    // }
+  }
+
+  Stream<RouteSelectionState> _mapClearToState(bool origin) async* {
+    if (origin) {
       yield SelectingRouteState(
-          loop: loop,
-          startLocation: startLocation,
-          destinationLocation: destinationLocation);
+          startLocation: null,
+          destinationLocation:
+              (state as SelectingRouteState).destinationLocation,
+          searchHistory: searchHistory);
+    } else {
+      yield SelectingRouteState(
+          startLocation: (state as SelectingRouteState).startLocation,
+          destinationLocation: null,
+          searchHistory: searchHistory);
+    }
+  }
+
+  Stream<RouteSelectionState> _mapSelectOnMapToState(bool origin) async* {
+    yield SelectingOnMapRouteState(origin: origin, selectingRouteState: state);
+  }
+
+  Stream<RouteSelectionState> _mapCancelSelectOnMapToState() async* {
+    yield (state as SelectingOnMapRouteState).selectingRouteState;
+  }
+
+  Stream<RouteSelectionState> _mapConfirmSelectOnMapToState() async* {
+    final SelectingOnMapRouteState currState = state;
+    final SelectingRouteState prevState = currState.selectingRouteState;
+    if (currState.origin) {
+      //Origin is the one that needs to change
+      yield SelectingRouteState(
+          searchHistory: prevState.searchHistory,
+          startLocation: currState.selectedLocation, //this changes
+          destinationLocation: prevState.destinationLocation);
+    } else {
+      yield SelectingRouteState(
+          searchHistory: prevState.searchHistory,
+          startLocation: prevState.startLocation,
+          destinationLocation: currState.selectedLocation); //this changes
     }
   }
 
@@ -88,11 +199,10 @@ class RouteSelectionBloc
         (state as SelectingRouteState).startLocation;
     final SearchLocationModel startLocation =
         (state as SelectingRouteState).destinationLocation;
-    final bool loop = (state as SelectingRouteState).loop;
     yield SelectingRouteState(
-        loop: loop,
         startLocation: startLocation,
-        destinationLocation: destinationLocation);
+        destinationLocation: destinationLocation,
+        searchHistory: searchHistory);
   }
 
   Stream<RouteSelectionState> _mapNewStartToState(
@@ -112,11 +222,10 @@ class RouteSelectionBloc
 
       final SearchLocationModel destinationLocation =
           (state as SelectingRouteState).destinationLocation;
-      final bool loop = (state as SelectingRouteState).loop;
       yield SelectingRouteState(
-          loop: loop,
           startLocation: startLocation,
-          destinationLocation: destinationLocation);
+          destinationLocation: destinationLocation,
+          searchHistory: searchHistory);
     } on OutOfBoundsException catch (oob) {
       print('Bloc says: Out Of Bounds');
       yield RouteErrorState(
@@ -144,17 +253,44 @@ class RouteSelectionBloc
 
       final SearchLocationModel startLocation =
           (state as SelectingRouteState).startLocation;
-      final bool loop = (state as SelectingRouteState).loop;
       yield SelectingRouteState(
-          loop: loop,
           startLocation: startLocation,
-          destinationLocation: destinationLocation);
+          destinationLocation: destinationLocation,
+          searchHistory: searchHistory);
     } on OutOfBoundsException catch (oob) {
       print('Bloc says: Out Of Bounds');
       yield RouteErrorState(
         exception: oob,
       );
     } on NoConnectionException catch (nce) {
+      yield RouteErrorState(exception: nce);
+    }
+  }
+
+  Stream<RouteSelectionState> _mapSearchRequestToState(
+      SearchLocationModel searchLocation) async* {
+    //ignore if inactive
+    try {
+      if (state is SelectingOnMapRouteState) {
+        //comes from map tap so we need to get adress name and need to update history
+        final String name = await geolocatorRepository
+            .getAdressFromCoordinates(searchLocation.coordinates);
+        searchLocation.setTitle = name;
+        final SelectingOnMapRouteState previousState = state;
+        yield SelectingOnMapRouteState(
+            origin: previousState.origin,
+            selectedLocation: searchLocation,
+            selectingRouteState: previousState.selectingRouteState);
+        searchHistoryRepository.saveSearchHistory(searchLocation);
+      }
+    } on OutOfBoundsException catch (oob) {
+      print('Bloc says: Out Of Bounds');
+      yield RouteErrorState(
+        exception: oob,
+      );
+    } on NoConnectionException catch (nce) {
+      print('Bloc says: No Connection');
+
       yield RouteErrorState(exception: nce);
     }
   }

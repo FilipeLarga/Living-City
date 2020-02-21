@@ -9,10 +9,25 @@ class UnitializedRouteState extends RouteSelectionState {}
 class SelectingRouteState extends RouteSelectionState {
   final SearchLocationModel startLocation;
   final SearchLocationModel destinationLocation;
-  final bool loop;
+  final List<SearchLocationModel> searchHistory;
 
-  SelectingRouteState(
-      {this.startLocation, this.destinationLocation, @required this.loop});
+  SelectingRouteState({
+    @required this.searchHistory,
+    this.startLocation,
+    this.destinationLocation,
+  });
+}
+
+class SelectingOnMapRouteState extends RouteSelectionState {
+  final SearchLocationModel selectedLocation;
+  final SelectingRouteState selectingRouteState;
+  final bool origin;
+
+  SelectingOnMapRouteState({
+    @required this.origin,
+    @required this.selectingRouteState,
+    this.selectedLocation,
+  });
 }
 
 class RouteErrorState extends RouteSelectionState {

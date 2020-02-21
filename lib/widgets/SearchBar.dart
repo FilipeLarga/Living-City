@@ -29,6 +29,8 @@ class _SearchBarState extends State<SearchBar>
   bool _shouldExpand;
   bool _typing;
 
+  String _prevText;
+
   // Animation<Offset> _animation;
 
   @override
@@ -51,7 +53,11 @@ class _SearchBarState extends State<SearchBar>
 
     if (widget.searchLocation != null) {
       _textEditingController.text = widget.searchLocation.title;
+      _prevText = widget.searchLocation.title;
       _shouldExpand = true;
+      _typing = false;
+      _shouldErase = true;
+      FocusScope.of(context).unfocus();
     }
     // if (widget.state is UnitializedSearchState) {
     //   _searchHistoryList = null;
@@ -82,6 +88,9 @@ class _SearchBarState extends State<SearchBar>
           Row(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
+              const SizedBox(
+                width: 4,
+              ),
               GestureDetector(
                 child: _shouldErase
                     ? const Icon(
@@ -124,16 +133,16 @@ class _SearchBarState extends State<SearchBar>
                   ),
                 ),
               ),
-              const SizedBox(
-                width: 22,
-              ),
-              GestureDetector(
-                child: const Icon(Icons.my_location, color: Colors.black87),
-                onTap: () {
-                  BlocProvider.of<SearchLocationBloc>(context)
-                      .add(SearchUserLocationRequestEvent());
-                },
-              ),
+              // const SizedBox(
+              //   width: 22,
+              // ),
+              // GestureDetector(
+              //   child: const Icon(Icons.my_location, color: Colors.black87),
+              //   onTap: () {
+              //     BlocProvider.of<SearchLocationBloc>(context)
+              //         .add(SearchUserLocationRequestEvent());
+              //   },
+              // ),
             ],
           ),
           // AnimatedSize(
@@ -145,10 +154,8 @@ class _SearchBarState extends State<SearchBar>
           AnimatedSwitcher(
             duration: Duration(milliseconds: 500),
             child: _chooseWidget(),
-            switchInCurve:
-                Curves.easeInOut,
-            switchOutCurve:
-                const Interval(1, 1, curve: Curves.linear),
+            switchInCurve: Curves.easeInOut,
+            switchOutCurve: const Interval(1, 1, curve: Curves.linear),
             layoutBuilder: (currentChild, previousChildren) {
               return Stack(
                 overflow: Overflow.visible,
@@ -220,6 +227,7 @@ class _SearchBarState extends State<SearchBar>
 
   void _stopSearch() {
     setState(() {
+      _prevText = '';
       _shouldExpand = false;
       _shouldErase = false;
       _textEditingController.clear();
@@ -231,8 +239,16 @@ class _SearchBarState extends State<SearchBar>
     _typing = false;
     _shouldExpand = false;
     FocusScope.of(context).unfocus();
-    BlocProvider.of<SearchLocationBloc>(context)
-        .add(SearchRequestEvent(searchLocation: selected));
+    if (selected.title != _prevText)
+      BlocProvider.of<SearchLocationBloc>(context)
+          .add(SearchRequestEvent(searchLocation: selected));
+    else {
+      setState(() {
+        _shouldExpand = true;
+        _typing = false;
+        _shouldErase = true;
+      });
+    }
   }
 
   StatelessWidget _chooseWidget() {
@@ -255,7 +271,7 @@ class SearchBarLoadingHistory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Divider(),
+        Divider(height: 4),
         const Center(
           child: const Padding(
             padding: const EdgeInsets.only(top: 4.0, bottom: 12.0),
@@ -278,12 +294,21 @@ class RoutePointSelector extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Divider(
             thickness: 1,
+            height: 0,
           ),
+          const SizedBox(height: 8),
+          Text('PLAN TRIP',
+              style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).accentColor,
+                  fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6.0),
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -416,6 +441,48 @@ class NoHistory extends StatelessWidget {
   }
 }
 
+class CurrentLocationItem extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      // onTap: () => BlocProvider.of<SearchLocationBloc>(context)
+      //     .add(SearchUserLocationRequestEvent()),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
+        child: Row(
+          children: <Widget>[
+            Stack(
+              children: <Widget>[
+                Container(
+                  height: 32,
+                  width: 32,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.grey[100]),
+                ),
+                Positioned(
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Icon(Icons.location_on,
+                        color: Theme.of(context).accentColor))
+              ],
+            ),
+            SizedBox(
+              width: 22,
+            ),
+            Text(
+              'Current Location',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class HistoryList extends StatelessWidget {
   final Function(SearchLocationModel) callback;
   final List<SearchLocationModel> list;
@@ -426,12 +493,22 @@ class HistoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Divider(thickness: 1),
+        Divider(thickness: 1, height: 0),
+        const SizedBox(height: 8),
+        CurrentLocationItem(),
+        const SizedBox(height: 8),
+        Text('RECENT SEARCHES',
+            style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).accentColor,
+                fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
         ListView.separated(
           padding: EdgeInsets.only(bottom: 6),
           shrinkWrap: true,
-          itemCount: list.length > 3 ? 3 : list.length,
+          itemCount: list.length > 2 ? 2 : list.length,
           separatorBuilder: (ctx, index) => Divider(
             thickness: 1,
           ),
@@ -462,9 +539,22 @@ class SearchHistoryListItem extends StatelessWidget {
         padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
         child: Row(
           children: <Widget>[
-            Icon(
-              Icons.history,
-              color: Colors.grey,
+            Stack(
+              children: <Widget>[
+                Container(
+                  height: 32,
+                  width: 32,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.grey[100]),
+                ),
+                Positioned(
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Icon(Icons.history,
+                        color: Theme.of(context).accentColor))
+              ],
             ),
             SizedBox(
               width: 22,
@@ -473,7 +563,7 @@ class SearchHistoryListItem extends StatelessWidget {
               '${searchLocation.title}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(),
             ),
           ],
         ),
