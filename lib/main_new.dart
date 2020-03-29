@@ -14,8 +14,25 @@ import 'bloc/bloc_delegate.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  BlocSupervisor.delegate = SimpleBlocDelegate();
   runApp(LivingCityApp());
+}
+
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        accentColor: Color(0xFF5863AF),
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Color(0xFFFFFFFF),
+        fontFamily: 'OpenSans',
+      ),
+      routes: {
+        '/': (context) => MainPage(),
+        //'/other': (context) => OtherScreen(),
+      },
+    );
+  }
 }
 
 class LivingCityApp extends StatefulWidget {

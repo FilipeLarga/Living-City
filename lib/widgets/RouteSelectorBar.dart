@@ -302,7 +302,7 @@ class LoopItem extends StatelessWidget {
               width: 22,
             ),
             Text(
-              'Loop',
+              'Round Trip',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

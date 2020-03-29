@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:living_city/widgets/CustomCalendar.dart';
 
 class UserProfile extends StatelessWidget {
   @override
@@ -16,6 +17,19 @@ class UserProfile extends StatelessWidget {
               textAlign: TextAlign.start,
             ),
             SizedBox(height: 32),
+            FlatButton(
+                onPressed: () => showDialog<dynamic>(
+                      context: context,
+                      builder: (BuildContext context) => CalendarPopupView(
+                        barrierDismissible: true,
+                        minimumDate: DateTime.now(),
+                        maximumDate:
+                            DateTime.now().add(const Duration(days: 5)),
+                        onApplyClick: (DateTime startData, DateTime endData) {},
+                        onCancelClick: () {},
+                      ),
+                    ),
+                child: Text('Here')),
             DurationPicker(),
             SizedBox(height: 24),
             EffortPicker(),
