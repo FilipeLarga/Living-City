@@ -5,8 +5,8 @@ import '../bloc/search_location_bloc/bloc.dart';
 import '../data/models/search_location_model.dart';
 
 class SearchBar extends StatefulWidget {
-  final List<SearchLocationModel> searchHistoryList;
-  final SearchLocationModel searchLocation;
+  final List<LocationModel> searchHistoryList;
+  final LocationModel searchLocation;
   final AnimationController animationController;
   const SearchBar(
       {Key key,
@@ -24,7 +24,7 @@ class _SearchBarState extends State<SearchBar>
   final FocusNode _node = FocusNode();
   final TextEditingController _textEditingController = TextEditingController();
 
-  List<SearchLocationModel> _searchHistoryList;
+  List<LocationModel> _searchHistoryList;
   bool _shouldErase;
   bool _shouldExpand;
   bool _typing;
@@ -52,8 +52,8 @@ class _SearchBarState extends State<SearchBar>
     }
 
     if (widget.searchLocation != null) {
-      _textEditingController.text = widget.searchLocation.title;
-      _prevText = widget.searchLocation.title;
+      _textEditingController.text = widget.searchLocation.address;
+      _prevText = widget.searchLocation.address;
       _shouldExpand = true;
       _typing = false;
       _shouldErase = true;
@@ -114,8 +114,8 @@ class _SearchBarState extends State<SearchBar>
               Expanded(
                 child: TextField(
                   onSubmitted: (String name) {
-                    _onSelect(SearchLocationModel(
-                        title: _textEditingController?.text));
+                    _onSelect(
+                        LocationModel(address: _textEditingController?.text));
                   },
                   controller: _textEditingController,
                   onTap: () {
@@ -235,11 +235,11 @@ class _SearchBarState extends State<SearchBar>
     });
   }
 
-  void _onSelect(SearchLocationModel selected) {
+  void _onSelect(LocationModel selected) {
     _typing = false;
     _shouldExpand = false;
     FocusScope.of(context).unfocus();
-    if (selected.title != _prevText)
+    if (selected.address != _prevText)
       BlocProvider.of<SearchLocationBloc>(context)
           .add(SearchRequestEvent(searchLocation: selected));
     else {
@@ -484,8 +484,8 @@ class CurrentLocationItem extends StatelessWidget {
 }
 
 class HistoryList extends StatelessWidget {
-  final Function(SearchLocationModel) callback;
-  final List<SearchLocationModel> list;
+  final Function(LocationModel) callback;
+  final List<LocationModel> list;
 
   const HistoryList({Key key, @required this.callback, @required this.list})
       : super(key: key);
@@ -524,8 +524,8 @@ class HistoryList extends StatelessWidget {
 }
 
 class SearchHistoryListItem extends StatelessWidget {
-  final Function(SearchLocationModel) callback;
-  final SearchLocationModel searchLocation;
+  final Function(LocationModel) callback;
+  final LocationModel searchLocation;
 
   const SearchHistoryListItem(
       {Key key, @required this.callback, @required this.searchLocation})
@@ -560,7 +560,7 @@ class SearchHistoryListItem extends StatelessWidget {
               width: 22,
             ),
             Text(
-              '${searchLocation.title}',
+              '${searchLocation.address}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(),

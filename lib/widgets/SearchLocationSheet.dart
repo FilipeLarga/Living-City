@@ -5,7 +5,7 @@ import '../bloc/search_location_bloc/bloc.dart';
 import '../data/models/search_location_model.dart';
 
 class SearchLocationSheet extends StatefulWidget {
-  final SearchLocationModel searchLocation;
+  final LocationModel searchLocation;
   final AnimationController animationController;
 
   const SearchLocationSheet({
@@ -65,72 +65,11 @@ class _SearchLocationSheetState extends State<SearchLocationSheet> {
         ),
       ),
     );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
   }
 
   _acceptTrip() {
-    BlocProvider.of<SearchLocationBloc>(context).add(AcceptLocationEvent(origin: true));
+    BlocProvider.of<SearchLocationBloc>(context)
+        .add(AcceptLocationEvent(origin: true));
   }
 }
 

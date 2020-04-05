@@ -7,9 +7,9 @@ abstract class RouteSelectionState {}
 class UnitializedRouteState extends RouteSelectionState {}
 
 class SelectingRouteState extends RouteSelectionState {
-  final SearchLocationModel startLocation;
-  final SearchLocationModel destinationLocation;
-  final List<SearchLocationModel> searchHistory;
+  final LocationModel startLocation;
+  final LocationModel destinationLocation;
+  final List<LocationModel> searchHistory;
 
   SelectingRouteState({
     @required this.searchHistory,
@@ -19,7 +19,7 @@ class SelectingRouteState extends RouteSelectionState {
 }
 
 class SelectingOnMapRouteState extends RouteSelectionState {
-  final SearchLocationModel selectedLocation;
+  final LocationModel selectedLocation;
   final SelectingRouteState selectingRouteState;
   final bool origin;
 

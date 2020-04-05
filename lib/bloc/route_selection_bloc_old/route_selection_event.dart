@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 abstract class RouteSelectionEvent {}
 
 class InitializeRouteRequest extends RouteSelectionEvent {
-  final SearchLocationModel location;
+  final LocationModel location;
   final bool origin;
 
   InitializeRouteRequest({@required this.location, @required this.origin});
@@ -26,13 +26,13 @@ class ClearRouteRequest extends RouteSelectionEvent {
 }
 
 class NewStartLocation extends RouteSelectionEvent {
-  final SearchLocationModel startLocation;
+  final LocationModel startLocation;
 
   NewStartLocation({@required this.startLocation});
 }
 
 class NewEndLocation extends RouteSelectionEvent {
-  final SearchLocationModel endLocation;
+  final LocationModel endLocation;
 
   NewEndLocation({@required this.endLocation});
 }
@@ -46,7 +46,7 @@ class SelectOnMapRequest extends RouteSelectionEvent {
 class ConfirmSelectOnMapRequest extends RouteSelectionEvent {}
 
 class SearchRequestEvent extends RouteSelectionEvent {
-  final SearchLocationModel searchLocation;
+  final LocationModel searchLocation;
   SearchRequestEvent({@required this.searchLocation});
 }
 

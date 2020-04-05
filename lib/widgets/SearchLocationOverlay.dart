@@ -161,7 +161,8 @@ class _SearchLocationOverlayState extends State<SearchLocationOverlay>
                               );
                             } else if (state is SelectingOnMapRouteState) {
                               return SelectOnMapBar(
-                                  locationTitle: state.selectedLocation?.title);
+                                  locationTitle:
+                                      state.selectedLocation?.address);
                             } else {
                               print(
                                   'You Should never see this!! in SearchLocationOverylay');

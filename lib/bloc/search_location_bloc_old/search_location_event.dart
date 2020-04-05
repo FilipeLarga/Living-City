@@ -9,7 +9,7 @@ class LoadHistoryRequestEvent extends SearchLocationEvent {}
 class CancelSearchRequestEvent extends SearchLocationEvent {}
 
 class SearchRequestEvent extends SearchLocationEvent {
-  final SearchLocationModel searchLocation;
+  final LocationModel searchLocation;
   SearchRequestEvent({@required this.searchLocation});
 }
 

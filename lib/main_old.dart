@@ -1,31 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:living_city/dependency_injection/injection_container.dart'
-    as di;
-import './screens/main_screen/main_screen.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:bloc/bloc.dart';
+// import 'package:living_city/bloc/route_selection_bloc/bloc.dart';
+// import 'package:living_city/screens/user_profile.dart';
+// import 'package:living_city/widgets/SearchLocationOverlay.dart';
+// import './data/repositories/geolocator_repository.dart';
+// import './data/provider/geocoding_provider.dart';
+// import './bloc/search_location_bloc/bloc.dart';
+// import './data/provider/search_location_provider.dart';
+// import './data/repositories/search_location_repository.dart';
+// import './widgets/MapView.dart';
+// import 'bloc/bloc_delegate.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  di.init(); //dependencies injection
-  runApp(App());
-}
-
-class App extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        accentColor: Color(0xFF5863AF),
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Color(0xFFFFFFFF),
-        fontFamily: 'OpenSans',
-      ),
-      routes: {
-        '/': (context) => MainScreen(),
-        //'/other': (context) => OtherScreen(),
-      },
-    );
-  }
-}
+// void main() {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   BlocSupervisor.delegate = SimpleBlocDelegate();
+//   runApp(LivingCityApp());
+// }
 
 // class LivingCityApp extends StatefulWidget {
 //   @override
@@ -188,73 +179,73 @@ class App extends StatelessWidget {
 //   }
 // }
 
-/*DraggableScrollableSheet(
-              maxChildSize: 1,
-              minChildSize: (constraints.maxHeight / 5) / constraints.maxHeight,
-              initialChildSize:
-                  (constraints.maxHeight / 5) / constraints.maxHeight,
-              builder:
-                  (BuildContext context, ScrollController scrollController) {
-                return Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(20.0),
-                          topRight: const Radius.circular(20.0))),
-                  height: constraints.maxHeight,
-                  child: SingleChildScrollView(
-                    //physics: ClampingScrollPhysics(),
-                    controller: scrollController,
-                    child: Column(
-                      children: <Widget>[
-                        Text("1"),
-                        Text("2"),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),*/
+// /*DraggableScrollableSheet(
+//               maxChildSize: 1,
+//               minChildSize: (constraints.maxHeight / 5) / constraints.maxHeight,
+//               initialChildSize:
+//                   (constraints.maxHeight / 5) / constraints.maxHeight,
+//               builder:
+//                   (BuildContext context, ScrollController scrollController) {
+//                 return Container(
+//                   decoration: BoxDecoration(
+//                       color: Colors.white,
+//                       borderRadius: BorderRadius.only(
+//                           topLeft: const Radius.circular(20.0),
+//                           topRight: const Radius.circular(20.0))),
+//                   height: constraints.maxHeight,
+//                   child: SingleChildScrollView(
+//                     //physics: ClampingScrollPhysics(),
+//                     controller: scrollController,
+//                     child: Column(
+//                       children: <Widget>[
+//                         Text("1"),
+//                         Text("2"),
+//                       ],
+//                     ),
+//                   ),
+//                 );
+//               },
+//             ),*/
 
-/*DraggableScrollableSheet(
-              maxChildSize: 1,
-              minChildSize: (constraints.maxHeight / 5) / constraints.maxHeight,
-              initialChildSize:
-                  (constraints.maxHeight / 5) / constraints.maxHeight,
-              builder:
-                  (BuildContext context, ScrollController scrollController) {
-                return Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                            offset: const Offset(0.0, 7.0),
-                            blurRadius: 8.0,
-                            spreadRadius: -4.0,
-                            color: const Color(0x33000000)),
-                        BoxShadow(
-                            offset: const Offset(0.0, 12.0),
-                            blurRadius: 17.0,
-                            spreadRadius: 2.0,
-                            color: const Color(0x24000000)),
-                        BoxShadow(
-                            offset: const Offset(0.0, 5.0),
-                            blurRadius: 22.0,
-                            spreadRadius: 4.0,
-                            color: const Color(0x1F000000)),
-                      ],
-                      borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(20.0),
-                          topRight: const Radius.circular(20.0))),
-                  height: constraints.maxHeight,
-                  child: CustomScrollView(
-                    //physics: ClampingScrollPhysics(),
-                    controller: scrollController,
+// /*DraggableScrollableSheet(
+//               maxChildSize: 1,
+//               minChildSize: (constraints.maxHeight / 5) / constraints.maxHeight,
+//               initialChildSize:
+//                   (constraints.maxHeight / 5) / constraints.maxHeight,
+//               builder:
+//                   (BuildContext context, ScrollController scrollController) {
+//                 return Container(
+//                   decoration: BoxDecoration(
+//                       color: Colors.white,
+//                       boxShadow: <BoxShadow>[
+//                         BoxShadow(
+//                             offset: const Offset(0.0, 7.0),
+//                             blurRadius: 8.0,
+//                             spreadRadius: -4.0,
+//                             color: const Color(0x33000000)),
+//                         BoxShadow(
+//                             offset: const Offset(0.0, 12.0),
+//                             blurRadius: 17.0,
+//                             spreadRadius: 2.0,
+//                             color: const Color(0x24000000)),
+//                         BoxShadow(
+//                             offset: const Offset(0.0, 5.0),
+//                             blurRadius: 22.0,
+//                             spreadRadius: 4.0,
+//                             color: const Color(0x1F000000)),
+//                       ],
+//                       borderRadius: BorderRadius.only(
+//                           topLeft: const Radius.circular(20.0),
+//                           topRight: const Radius.circular(20.0))),
+//                   height: constraints.maxHeight,
+//                   child: CustomScrollView(
+//                     //physics: ClampingScrollPhysics(),
+//                     controller: scrollController,
 
-                    slivers: <Widget>[
-                      
-                    ],
-                  ),
-                );
-              },
-            ),*/
+//                     slivers: <Widget>[
+
+//                     ],
+//                   ),
+//                 );
+//               },
+//             ),*/

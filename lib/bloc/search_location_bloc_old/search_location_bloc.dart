@@ -10,15 +10,15 @@ import './bloc.dart';
 
 class SearchLocationBloc
     extends Bloc<SearchLocationEvent, SearchLocationState> {
-  final SearchLocationRepository _searchHistoryRepository;
-  final GeolocatorRepository _geolocatorRepository;
+  final SearchHistoryRepository _searchHistoryRepository;
+  final LocationRepository _geolocatorRepository;
 
-  SearchLocationModel selectedSearchLocation;
+  LocationModel selectedSearchLocation;
   bool origin;
 
   SearchLocationBloc(
-      {@required SearchLocationRepository searchHistoryRepository,
-      @required GeolocatorRepository geocodingRepository})
+      {@required SearchHistoryRepository searchHistoryRepository,
+      @required LocationRepository geocodingRepository})
       : _searchHistoryRepository = searchHistoryRepository,
         _geolocatorRepository = geocodingRepository;
 
@@ -58,13 +58,13 @@ class SearchLocationBloc
   }
 
   Stream<SearchLocationState> _mapSearchRequestToState(
-      SearchLocationModel searchLocation) async* {
+      LocationModel searchLocation) async* {
     //ignore if inactive
     try {
       if (!(state is InactiveSearchState)) {
         if (searchLocation.hasCoordinates) {
           //either comes from map tap or search history
-          if (searchLocation.title != null) {
+          if (searchLocation.address != null) {
             //comes from search history so it has both name and coordinates, don't need to update history
             yield ShowingLocationSearchState(searchLocation: searchLocation);
             selectedSearchLocation = searchLocation;
@@ -81,10 +81,10 @@ class SearchLocationBloc
           //comes from manual search adress so we need to get coordinates and update history
 
           final LatLng coordinates = await _geolocatorRepository
-              .getCoordinatesFromAdress(searchLocation.title);
+              .getCoordinatesFromAdress(searchLocation.address);
           searchLocation.setCoordinates = coordinates;
 
-          print('Name: ${searchLocation.title}');
+          print('Name: ${searchLocation.address}');
           print('Coords: ${searchLocation.coordinates}');
 
           yield ShowingLocationSearchState(searchLocation: searchLocation);
@@ -105,7 +105,7 @@ class SearchLocationBloc
   }
 
   Stream<SearchLocationState> _mapSearchUserLocationRequestEvent() async* {
-    SearchLocationModel searchLocation =
+    LocationModel searchLocation =
         await _geolocatorRepository.getCurrentLocation();
     yield ShowingLocationSearchState(searchLocation: searchLocation);
     selectedSearchLocation = searchLocation;

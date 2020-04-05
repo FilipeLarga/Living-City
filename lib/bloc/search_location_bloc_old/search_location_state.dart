@@ -7,13 +7,13 @@ abstract class SearchLocationState {}
 class UnitializedSearchState extends SearchLocationState {}
 
 class InitialSearchState extends SearchLocationState {
-  final List<SearchLocationModel> searchHistory;
+  final List<LocationModel> searchHistory;
 
   InitialSearchState({@required this.searchHistory});
 }
 
 class ShowingLocationSearchState extends SearchLocationState {
-  final SearchLocationModel searchLocation;
+  final LocationModel searchLocation;
 
   ShowingLocationSearchState({@required this.searchLocation});
 }
@@ -21,7 +21,7 @@ class ShowingLocationSearchState extends SearchLocationState {
 class FinishSearchState extends SearchLocationState {}
 
 class InactiveSearchState extends SearchLocationState {
-  final SearchLocationModel selectedSearchLocation;
+  final LocationModel selectedSearchLocation;
   final bool origin;
 
   InactiveSearchState(

@@ -12,10 +12,10 @@ import '../../core/Exceptions.dart';
 class RouteSelectionBloc
     extends Bloc<RouteSelectionEvent, RouteSelectionState> {
   final SearchLocationBloc searchLocationBloc;
-  final SearchLocationRepository searchHistoryRepository;
+  final SearchHistoryRepository searchHistoryRepository;
   StreamSubscription searchLocationSubscription;
-  final GeolocatorRepository geolocatorRepository;
-  List<SearchLocationModel> searchHistory;
+  final LocationRepository geolocatorRepository;
+  List<LocationModel> searchHistory;
 
   RouteSelectionBloc(
       {@required this.searchHistoryRepository,
@@ -66,7 +66,7 @@ class RouteSelectionBloc
   }
 
   Stream<RouteSelectionState> _mapInitializeRequestToState(
-      SearchLocationModel location, bool origin) async* {
+      LocationModel location, bool origin) async* {
     searchHistory = await searchHistoryRepository.getSearchHistory();
     if (origin) {
       yield SelectingRouteState(
@@ -79,18 +79,18 @@ class RouteSelectionBloc
 
   Stream<RouteSelectionState> _mapLoopRequestToState(bool origin) async* {
     if (origin) {
-      final SearchLocationModel destinationLocation =
+      final LocationModel destinationLocation =
           (state as SelectingRouteState).destinationLocation;
-      if (destinationLocation != null || destinationLocation.title != '') {
+      if (destinationLocation != null || destinationLocation.address != '') {
         yield SelectingRouteState(
             startLocation: destinationLocation,
             destinationLocation: destinationLocation,
             searchHistory: searchHistory);
       } else {
         //Just in case the user meant to loop the destination
-        final SearchLocationModel startLocation =
+        final LocationModel startLocation =
             (state as SelectingRouteState).startLocation;
-        if (startLocation != null || startLocation.title != '') {
+        if (startLocation != null || startLocation.address != '') {
           yield SelectingRouteState(
               startLocation: startLocation,
               destinationLocation: startLocation,
@@ -98,18 +98,18 @@ class RouteSelectionBloc
         }
       }
     } else {
-      final SearchLocationModel startLocation =
+      final LocationModel startLocation =
           (state as SelectingRouteState).startLocation;
-      if (startLocation != null || startLocation.title != '') {
+      if (startLocation != null || startLocation.address != '') {
         yield SelectingRouteState(
             startLocation: startLocation,
             destinationLocation: startLocation,
             searchHistory: searchHistory);
       } else {
         //Just in case the user meant to loop the origin
-        final SearchLocationModel destinationLocation =
+        final LocationModel destinationLocation =
             (state as SelectingRouteState).destinationLocation;
-        if (destinationLocation != null || destinationLocation.title != '') {
+        if (destinationLocation != null || destinationLocation.address != '') {
           yield SelectingRouteState(
               startLocation: destinationLocation,
               destinationLocation: destinationLocation,
@@ -195,9 +195,9 @@ class RouteSelectionBloc
   }
 
   Stream<RouteSelectionState> _mapSwapRequestToState() async* {
-    final SearchLocationModel destinationLocation =
+    final LocationModel destinationLocation =
         (state as SelectingRouteState).startLocation;
-    final SearchLocationModel startLocation =
+    final LocationModel startLocation =
         (state as SelectingRouteState).destinationLocation;
     yield SelectingRouteState(
         startLocation: startLocation,
@@ -206,21 +206,21 @@ class RouteSelectionBloc
   }
 
   Stream<RouteSelectionState> _mapNewStartToState(
-      SearchLocationModel startLocation) async* {
+      LocationModel startLocation) async* {
     try {
       if (!startLocation.hasCoordinates) {
         //No coordinates means it comes from manual text
         final coordinates = await geolocatorRepository
-            .getCoordinatesFromAdress(startLocation.title);
+            .getCoordinatesFromAdress(startLocation.address);
         startLocation.setCoordinates = coordinates;
-      } else if (startLocation.title != null) {
+      } else if (startLocation.address != null) {
         //No title means it comes from map tap
         final name = await geolocatorRepository
             .getAdressFromCoordinates(startLocation.coordinates);
         startLocation.setTitle = name;
       }
 
-      final SearchLocationModel destinationLocation =
+      final LocationModel destinationLocation =
           (state as SelectingRouteState).destinationLocation;
       yield SelectingRouteState(
           startLocation: startLocation,
@@ -237,21 +237,21 @@ class RouteSelectionBloc
   }
 
   Stream<RouteSelectionState> _mapNewEndToState(
-      SearchLocationModel destinationLocation) async* {
+      LocationModel destinationLocation) async* {
     try {
       if (!destinationLocation.hasCoordinates) {
         //No coordinates means it comes from manual text
         final coordinates = await geolocatorRepository
-            .getCoordinatesFromAdress(destinationLocation.title);
+            .getCoordinatesFromAdress(destinationLocation.address);
         destinationLocation.setCoordinates = coordinates;
-      } else if (destinationLocation.title != null) {
+      } else if (destinationLocation.address != null) {
         //No title means it comes from map tap
         final name = await geolocatorRepository
             .getAdressFromCoordinates(destinationLocation.coordinates);
         destinationLocation.setTitle = name;
       }
 
-      final SearchLocationModel startLocation =
+      final LocationModel startLocation =
           (state as SelectingRouteState).startLocation;
       yield SelectingRouteState(
           startLocation: startLocation,
@@ -268,7 +268,7 @@ class RouteSelectionBloc
   }
 
   Stream<RouteSelectionState> _mapSearchRequestToState(
-      SearchLocationModel searchLocation) async* {
+      LocationModel searchLocation) async* {
     //ignore if inactive
     try {
       if (state is SelectingOnMapRouteState) {
