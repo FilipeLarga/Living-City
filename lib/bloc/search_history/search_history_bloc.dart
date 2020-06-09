@@ -13,7 +13,7 @@ class SearchHistoryBloc extends Bloc<SearchHistoryEvent, SearchHistoryState> {
 
   SearchHistoryBloc(this._locationRepository);
   @override
-  SearchHistoryState get initialState => SearchHistoryLoading();
+  SearchHistoryState get initialState => SearchHistoryInitial();
 
   @override
   Stream<SearchHistoryState> mapEventToState(
@@ -23,10 +23,11 @@ class SearchHistoryBloc extends Bloc<SearchHistoryEvent, SearchHistoryState> {
   }
 
   Stream<SearchHistoryState> _getSearchHistory() async* {
+    yield const SearchHistoryLoading();
     final List<LocationModel> searchHistory =
         await _locationRepository.getSearchHistory();
     if (searchHistory == null || searchHistory.isEmpty) {
-      yield SearchHistoryEmpty();
+      yield const SearchHistoryEmpty();
     } else {
       yield SearchHistoryLoaded(searchHistory);
     }

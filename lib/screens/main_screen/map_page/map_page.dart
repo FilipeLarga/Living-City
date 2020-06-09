@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:living_city/bloc/location/location_bloc.dart';
 import 'package:living_city/dependency_injection/injection_container.dart';
 import '../../../bloc/route/route_bloc.dart';
 import '../../../bloc/bottom_sheet/bottom_sheet_bloc.dart';
@@ -24,6 +25,9 @@ class MapPage extends StatelessWidget {
         ),
         BlocProvider<SearchHistoryBloc>(
           create: (BuildContext context) => SearchHistoryBloc(sl()),
+        ),
+        BlocProvider<LocationBloc>(
+          create: (BuildContext context) => LocationBloc(sl()),
         ),
       ],
       child: Stack(

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
 import 'package:living_city/core/Exceptions.dart';
+import '../models/location_model.dart';
 
 class GeolocatorProvider {
   final Geolocator _geolocator = Geolocator();
@@ -13,15 +14,19 @@ class GeolocatorProvider {
     return distance;
   }
 
-  Future<List<Placemark>> getPlacemarkFromAdress(String address) async {
+  Future<LocationModel> getPlacemarkFromAdress(String address) async {
     try {
       List<Placemark> placemarks =
           await _geolocator.placemarkFromAddress(address);
       for (Placemark place in placemarks) {
-        print(
-            'Place: (${place.position.latitude}, ${place.position.longitude} )');
+        // print(
+        //     'Place: (${place.subThoroughfare}, ${place.subLocality}, ${place.name}, ${place.locality}, ${place.administrativeArea}, ${place.subAdministrativeArea}, ${place.thoroughfare}, ${place.position.latitude}, ${place.position.longitude} )');
       }
-      return placemarks;
+      return LocationModel(
+          placemarks[0].name,
+          placemarks[0].locality,
+          LatLng(placemarks[0].position.latitude,
+              placemarks[0].position.longitude));
     } catch (_) {
       throw NoConnectionException();
     }

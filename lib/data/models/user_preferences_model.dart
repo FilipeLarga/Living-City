@@ -1,4 +1,4 @@
-import '../../data/models/point_of_interest.dart';
+import '../../data/models/point_of_interest_model.dart';
 import 'package:meta/meta.dart';
 
 enum UserPreferencesUnit {
@@ -22,7 +22,7 @@ UserPreferencesUnit _convertStringToUnit(String s) {
 class UserPreferencesModel {
   final int travelDurationHours;
   final UserPreferencesUnit distanceUnit;
-  final PointOfInterest pointsOfInterest;
+  final PointOfInterestModel pointsOfInterest;
 
   const UserPreferencesModel({
     @required this.travelDurationHours,

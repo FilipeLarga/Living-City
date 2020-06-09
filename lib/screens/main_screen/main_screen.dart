@@ -26,14 +26,16 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _showPage(int index) {
-    setState(() {
-      _pageIndex = index;
-    });
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOutCubic,
-    );
+    if (index != _pageIndex) {
+      setState(() {
+        _pageIndex = index;
+      });
+      _pageController.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutCubic,
+      );
+    }
   }
 
   @override
@@ -56,8 +58,14 @@ class _MainScreenState extends State<MainScreen> {
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
         controller: _pageController,
-        children: const [const MapPage(), const JournalPage()],
+        children: [const MapPage(), JournalPage()],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 }

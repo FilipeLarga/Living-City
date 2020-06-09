@@ -5,6 +5,10 @@ abstract class SearchHistoryState {
   const SearchHistoryState();
 }
 
+class SearchHistoryInitial extends SearchHistoryState {
+  const SearchHistoryInitial();
+}
+
 class SearchHistoryLoading extends SearchHistoryState {
   const SearchHistoryLoading();
 }

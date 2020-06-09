@@ -1,27 +1,27 @@
 import 'package:latlong/latlong.dart';
 
 class LocationModel {
-  String address;
+  String name;
+  String locality;
   LatLng coordinates;
   bool get hasCoordinates {
     return coordinates != null;
   }
 
-  LocationModel(this.address, this.coordinates);
+  LocationModel(this.name, this.locality, this.coordinates);
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      'address': address,
+      'name': name,
+      'locality': locality,
       'latitude': coordinates.latitude,
       'longitude': coordinates.longitude,
     };
     return map;
   }
 
-  LocationModel.fromMap(Map<String, dynamic> map) {
-    address = map['address'];
-    final latitude = map['latitude'];
-    final longitude = map['longitude'];
-    coordinates = LatLng(latitude, longitude);
+  factory LocationModel.fromMap(Map<String, dynamic> map) {
+    return LocationModel(map['name'], map['locality'],
+        LatLng(map['latitude'], map['longitude']));
   }
 }

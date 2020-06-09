@@ -24,10 +24,7 @@ class LocationRepository {
   }
 
   Future<LocationModel> getLocationFromAddress(String address) async {
-    await Future.delayed(Duration(seconds: 1));
-    LocationModel location = LocationModel(address, LatLng(38.4, 39.2));
-    _searchHistoryProvider.insertSearch(location);
-    return location;
+    return await _geolocatorProvider.getPlacemarkFromAdress(address);
   }
   // Future<LocationModel> getCurrentLocation() async {
   //   Position position = await _provider.getCurrentPosition();

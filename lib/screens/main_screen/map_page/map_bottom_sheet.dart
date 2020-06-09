@@ -67,22 +67,23 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
           _panelMaxHeight = constraints.maxHeight - 40;
           return SlidingUpPanel(
             maxHeight: _panelMaxHeight,
-            minHeight: 150,
+            minHeight: 88,
             backdropEnabled: _backdrop,
             backdropTapClosesPanel: _backdrop,
             isDraggable: _draggable,
             controller: _panelController,
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: EdgeInsets.only(left: 16, right: 16, top: 12),
             borderRadius: const BorderRadius.only(
-                topLeft: const Radius.circular(8),
-                topRight: const Radius.circular(8)),
+                topLeft: const Radius.circular(10),
+                topRight: const Radius.circular(10)),
             panelBuilder: (ScrollController sc) {
               _scrollController = sc;
               return Container(
                 decoration: const BoxDecoration(
+                  color: Colors.white,
                   borderRadius: const BorderRadius.only(
-                    topLeft: const Radius.circular(8),
-                    topRight: const Radius.circular(8),
+                    topLeft: const Radius.circular(10),
+                    topRight: const Radius.circular(10),
                   ),
                 ),
                 child: PageTransitionSwitcher(
@@ -99,6 +100,7 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                   },
                   child: _panelWidget ??
                       SearchPanel(
+                        key: ValueKey<int>(1),
                         openSheet: _openSheet,
                         closeSheet: _closeSheet,
                         scrollController: _scrollController,
@@ -118,12 +120,15 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
   Widget _getPanelWidget(RouteState state) {
     if (state is RouteSearch) {
       return SearchPanel(
+        key: ValueKey<int>(1),
         openSheet: _openSheet,
         closeSheet: _closeSheet,
         scrollController: _scrollController,
       );
     } else if (state is RouteLocation) {
-      return LocationPanel();
+      return LocationPanel(
+        key: ValueKey<int>(2),
+      );
     } else
       return Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
         Align(

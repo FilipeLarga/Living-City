@@ -14,7 +14,7 @@ class SearchHistoryProvider {
       onCreate: (db, version) {
         // Run the CREATE TABLE statement on the database.
         return db.execute(
-          "CREATE TABLE searches(id INTEGER PRIMARY KEY AUTOINCREMENT, address TEXT, latitude REAL, longitude REAL)",
+          "CREATE TABLE searches(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, locality TEXT, latitude REAL, longitude REAL)",
         );
       },
       // Set the version. This executes the onCreate function and provides a
@@ -52,6 +52,7 @@ class SearchHistoryProvider {
   }
 
   Future<List<LocationModel>> getSearches() async {
+    await Future.delayed(Duration(seconds: 3));
     // Init the database if it's not already.
     if (_db == null) {
       await _init();
@@ -61,8 +62,9 @@ class SearchHistoryProvider {
     final List<Map<String, dynamic>> maps = await _db.query('searches');
 
     // Convert the List<Map<String, dynamic> into a List<Dog>.
-    return List.generate(maps.length, (i) {
+    var list = List.generate(maps.length, (i) {
       return LocationModel.fromMap(maps[i]);
     }).reversed.toList();
+    return list;
   }
 }

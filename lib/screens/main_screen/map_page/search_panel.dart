@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:living_city/bloc/bottom_sheet/bottom_sheet_bloc.dart';
+import 'package:living_city/bloc/route/route_bloc.dart';
 import 'package:living_city/bloc/search_history/search_history_bloc.dart';
 import 'package:living_city/data/models/location_model.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SearchPanel extends StatefulWidget {
   final Function() openSheet;
@@ -27,7 +29,11 @@ class _SearchPanelState extends State<SearchPanel> {
   bool _focusWhenOpen;
   @override
   void initState() {
-    BlocProvider.of<SearchHistoryBloc>(context).add(const FetchHistory());
+    if ((BlocProvider.of<RouteBloc>(context).state is RouteSearch) &&
+        !(BlocProvider.of<SearchHistoryBloc>(context).state
+            is SearchHistoryLoading)) {
+      BlocProvider.of<SearchHistoryBloc>(context).add(const FetchHistory());
+    }
     _myFocusNode = FocusNode();
     _ignoretextfield = true;
     _focusWhenOpen = false;
@@ -36,110 +42,227 @@ class _SearchPanelState extends State<SearchPanel> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<BottomSheetBloc, BottomSheetState>(
-      listener: (context, state) {
-        if (state is SheetOpen) {
-          setState(() {
-            if (_focusWhenOpen) _myFocusNode.requestFocus();
-            _ignoretextfield = false;
-            _focusWhenOpen = false;
-          });
-        } else if (state is SheetMoving && state.factor < 0.99) {
-          FocusScope.of(context).unfocus();
-          setState(() {
-            _ignoretextfield = true;
-          });
-        } else if (state is SheetClosed) {
-          FocusScope.of(context).unfocus();
-          setState(() {
-            _ignoretextfield = true;
-          });
-        }
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Stack(
-            children: <Widget>[
-              Positioned(
-                bottom: 0,
-                top: 0,
-                left: 0,
-                right: 0,
-                child: IgnorePointer(
-                  ignoring: !_ignoretextfield,
-                  child: GestureDetector(
-                    onTap: _openAndFocusKeyboard,
-                    child: Container(
-                      color: Colors.red,
-                    ),
-                  ),
-                ),
-              ),
-              IgnorePointer(
-                ignoring: _ignoretextfield,
-                child: TextField(
-                  focusNode: _myFocusNode,
-                  decoration: InputDecoration(fillColor: Colors.grey),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              controller: widget.scrollController,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Container(
-                    color: Colors.purple,
-                    child: Center(
-                      child: MaterialButton(
-                        onPressed: widget.closeSheet,
-                        color: Colors.pinkAccent,
-                        child: Text('Select on map'),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    color: Colors.purpleAccent,
-                    height: 350,
-                    child: Center(
-                      child: MaterialButton(
-                        onPressed: widget.closeSheet,
-                        color: Colors.pinkAccent,
-                        child: Text('Other Options'),
-                      ),
-                    ),
-                  ),
-                  BlocBuilder<SearchHistoryBloc, SearchHistoryState>(
-                    builder: (BuildContext context, SearchHistoryState state) {
-                      if (state is SearchHistoryLoading) {
-                        return Text('loading');
-                      } else if (state is SearchHistoryEmpty) {
-                        return Text('empty');
-                      } else {
-                        final List<LocationModel> locations =
-                            (state as SearchHistoryLoaded).searchHistory;
-                        return ListView.builder(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: locations.length ?? 0,
-                            itemExtent: 100,
-                            itemBuilder: (BuildContext ctxt, int index) {
-                              return Center(
-                                child: Text('${locations[index].address}'),
-                              );
-                            });
-                      }
-                    },
-                  ),
-                ],
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<RouteBloc, RouteState>(listener: (context, state) {}),
+        BlocListener<BottomSheetBloc, BottomSheetState>(
+          listener: (context, state) {
+            if (state is SheetOpen) {
+              setState(() {
+                if (_focusWhenOpen) _myFocusNode.requestFocus();
+                _ignoretextfield = false;
+                _focusWhenOpen = false;
+              });
+            } else if (state is SheetMoving && state.factor < 0.99) {
+              FocusScope.of(context).unfocus();
+              setState(() {
+                _ignoretextfield = true;
+              });
+            } else if (state is SheetClosed) {
+              FocusScope.of(context).unfocus();
+              setState(() {
+                _ignoretextfield = true;
+              });
+            }
+          },
+        ),
+      ],
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Container(
+              height: 4,
+              width: 36,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE0E0E0),
+                borderRadius: BorderRadius.circular(16),
               ),
             ),
-          ),
-        ],
+            const SizedBox(
+              height: 12,
+            ),
+            Stack(
+              children: <Widget>[
+                Positioned(
+                  bottom: 0,
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: IgnorePointer(
+                    ignoring: !_ignoretextfield,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: _openAndFocusKeyboard,
+                      child: Container(),
+                    ),
+                  ),
+                ),
+                IgnorePointer(
+                  ignoring: _ignoretextfield,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: 48, minHeight: 48),
+                    child: TextField(
+                      textCapitalization: TextCapitalization.words,
+                      autocorrect: false,
+                      maxLines: 1,
+                      focusNode: _myFocusNode,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: const Color(0xFF808080),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 6.0, horizontal: 16),
+                        hintText: 'Search here',
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                              color: Color(0xFFF0F0F0), width: 1.5),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).cursorColor, width: 1),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                              color: Color(0xFFF0F0F0), width: 1.5),
+                        ),
+                        fillColor: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                controller: widget.scrollController,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      height: 56,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color(0xFFF0F0F0)),
+                      child: Center(
+                        child: Row(
+                          children: <Widget>[
+                            const SizedBox(width: 12),
+                            Icon(
+                              Icons.pin_drop,
+                              color: const Color(0xFF808080),
+                            ),
+                            const SizedBox(width: 12),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 12.0),
+                              child: const Text(
+                                'Choose on map',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    color: const Color(0xFF4D4D4D)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      height: 56,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color(0xFFF0F0F0)),
+                      child: Center(
+                        child: Row(
+                          children: <Widget>[
+                            const SizedBox(width: 12),
+                            Icon(
+                              Icons.history,
+                              color: const Color(0xFF808080),
+                            ),
+                            const SizedBox(width: 12),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 12.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  const Text(
+                                    'Current Location',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        color: const Color(0xFF4D4D4D)),
+                                  ),
+                                  const Text(
+                                    'Avenida das Forças Armadas',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 10,
+                                        color: const Color(0xFF666666)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'RECENT SEARCHES',
+                          style: const TextStyle(
+                              fontSize: 10,
+                              color: const Color(0xFF7F7E7E),
+                              fontWeight: FontWeight.w600),
+                        )),
+                    const SizedBox(height: 16),
+                    BlocBuilder<SearchHistoryBloc, SearchHistoryState>(
+                      builder:
+                          (BuildContext context, SearchHistoryState state) {
+                        if (state is SearchHistoryLoading ||
+                            state is SearchHistoryInitial) {
+                          return const ShimmerList();
+                        } else if (state is SearchHistoryEmpty) {
+                          return Text('empty');
+                        } else {
+                          final List<LocationModel> locations =
+                              (state as SearchHistoryLoaded).searchHistory;
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              ...locations.map((location) {
+                                return SearchHistoryListItem(
+                                  location: location,
+                                );
+                              }),
+                              const SizedBox(height: 24)
+                            ],
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -155,5 +278,125 @@ class _SearchPanelState extends State<SearchPanel> {
       _focusWhenOpen = true;
     });
     widget.openSheet();
+  }
+}
+
+class SearchHistoryListItem extends StatelessWidget {
+  final LocationModel location;
+
+  const SearchHistoryListItem({Key key, this.location}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Container(
+        height: 56,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          //color: const Color(0xFFF0F0F0)
+        ),
+        child: Center(
+          child: Row(
+            children: <Widget>[
+              const SizedBox(width: 12),
+              Icon(
+                Icons.history,
+                color: const Color(0xFF808080),
+              ),
+              const SizedBox(width: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      location.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 12, color: const Color(0xFF4D4D4D)),
+                    ),
+                    Text(
+                      location.locality,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 10, color: const Color(0xFF666666)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ShimmerList extends StatelessWidget {
+  const ShimmerList();
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[200],
+      highlightColor: Colors.grey[100],
+      child: ListView.builder(
+        padding: EdgeInsets.all(0),
+        shrinkWrap: true,
+        itemCount: 8,
+        itemBuilder: (_, __) => Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Container(
+            height: 56,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              child: Row(
+                children: <Widget>[
+                  const SizedBox(width: 12),
+                  Container(
+                    height: 24,
+                    width: 24,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.white),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 32.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            height: 10,
+                            color: Colors.white,
+                            width: double.infinity,
+                          ),
+                          const SizedBox(height: 8),
+                          LayoutBuilder(
+                            builder: (_, constraints) {
+                              return Container(
+                                height: 10,
+                                color: Colors.white,
+                                width: constraints.maxWidth / 2,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

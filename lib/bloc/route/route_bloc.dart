@@ -13,7 +13,7 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
   RouteBloc(this._locationRepository);
 
   @override
-  RouteState get initialState => RouteSearch();
+  RouteState get initialState => const RouteSearch();
 
   @override
   Stream<RouteState> mapEventToState(
@@ -22,30 +22,18 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
     if (event is ShowLocation) {
       yield* _mapShowLocationToState(event);
     } else if (event is CancelLocation) {
-      yield RouteSearch();
+      yield const RouteSearch();
     } else if (event is AcceptLocation) {
       yield* _mapAcceptLocationToState(event);
     }
   }
 
   Stream<RouteState> _mapShowLocationToState(ShowLocation event) async* {
-    yield RouteLocation();
+    yield const RouteLocation();
   }
 
   Stream<RouteState> _mapAcceptLocationToState(AcceptLocation event) async* {
     final LocationModel location = event.location;
-    bool valid = await _validateLocation(location);
-    if (valid) {
-      await _saveLocation(location);
-      yield RouteLocation();
-    }
-  }
-
-  Future<bool> _validateLocation(LocationModel location) async {
-    return true;
-  }
-
-  Future<void> _saveLocation(LocationModel location) async {
-    await _locationRepository.saveLocation(location);
+    yield const RouteLocation();
   }
 }

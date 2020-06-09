@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:living_city/bloc/location/location_bloc.dart';
 import '../../../bloc/route/route_bloc.dart';
 
 class MapView extends StatefulWidget {
@@ -18,7 +19,9 @@ class _MapViewState extends State<MapView> {
         child: MaterialButton(
           color: Colors.pinkAccent,
           onPressed: () {
-            BlocProvider.of<RouteBloc>(context).add(ShowLocation());
+            BlocProvider.of<RouteBloc>(context).add(const ShowLocation());
+            BlocProvider.of<LocationBloc>(context)
+                .add(LoadLocation.address('Avenida das forças armadas'));
           },
           child: Text('Rua Alexandre Ferreira'),
         ),

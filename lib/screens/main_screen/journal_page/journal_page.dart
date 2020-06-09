@@ -1,50 +1,48 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:living_city/bloc/trip_details/trip_details_bloc.dart';
+import 'package:living_city/bloc/trip_list/trip_list_bloc.dart';
+import 'package:living_city/dependency_injection/injection_container.dart';
+import 'package:living_city/screens/main_screen/journal_page/trip_details_page.dart';
+import 'package:living_city/screens/main_screen/journal_page/trip_list_page.dart';
 
-class JournalPage extends StatefulWidget {
-  const JournalPage();
-
-  @override
-  _JournalPageState createState() => _JournalPageState();
-}
-
-class _JournalPageState extends State<JournalPage> {
-  int _selectedIndex = 0;
-
-  final List<Color> _colors = [Colors.blue, Colors.red, Colors.yellow];
+class JournalPage extends StatelessWidget {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Journal'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            height: 200,
-            color: Colors.lightBlue,
-            child: MaterialButton(onPressed: () {
-              setState(() {
-                _selectedIndex == 2 ? _selectedIndex = 0 : _selectedIndex++;
-              });
-            }),
-          ),
-          Expanded(
-              child: PageTransitionSwitcher(
-            transitionBuilder: (child, animation, animation2) {
-              return FadeThroughTransition(
-                child: child,
-                animation: animation,
-                secondaryAnimation: animation2,
-              );
-            },
-            child: Container(
-              key: ValueKey(_selectedIndex),
-              color: _colors[_selectedIndex],
-            ),
-          ))
-        ],
+    return WillPopScope(
+      onWillPop: () async {
+        final NavigatorState navigator = navigatorKey.currentState;
+        if (!navigator.canPop()) return true;
+        navigator.pop();
+        return false;
+      },
+      child: Navigator(
+        key: navigatorKey,
+        initialRoute: TripListPage.routeName,
+        onGenerateRoute: (RouteSettings settings) {
+          WidgetBuilder builder;
+          switch (settings.name) {
+            case TripListPage.routeName:
+              builder = (BuildContext _) => BlocProvider<TripListBloc>(
+                    create: (BuildContext context) =>
+                        TripListBloc(sl())..add(LoadTripList()),
+                    child: TripListPage(),
+                  );
+              break;
+            case TripDetailsPage.routeName:
+              builder = (BuildContext _) => BlocProvider<TripDetailsBloc>(
+                    create: (BuildContext context) =>
+                        TripDetailsBloc(settings.arguments),
+                    child: TripDetailsPage(),
+                  );
+              break;
+            default:
+              throw Exception('Invalid route: ${settings.name}');
+          }
+          return MaterialPageRoute(builder: builder, settings: settings);
+        },
       ),
     );
   }
