@@ -10,13 +10,20 @@ class TripListLoaded extends TripListState {
   final int sumPOIsVisited;
   final int sumTrips;
   final int sumDistance;
-  final List<TripModel> trips;
+  final double avgSustainability;
+  final List<TripModel> plannedTrips;
+  final List<TripModel> completedTrips;
+  final TripModel currentTrip;
 
   TripListLoaded(
-      this.sumCalories, this.sumPOIsVisited, this.sumDistance, this.trips)
-      : sumTrips = trips.length;
+      this.sumCalories,
+      this.sumPOIsVisited,
+      this.sumDistance,
+      this.avgSustainability,
+      this.plannedTrips,
+      this.completedTrips,
+      this.currentTrip)
+      : sumTrips = completedTrips.length;
 }
 
 class TripListLoading extends TripListState {}
-
-class TripListEmpty extends TripListState {}

@@ -7,7 +7,7 @@ class PointOfInterestModel {
   final int sustainability;
   final LatLng coordinates;
 
-  PointOfInterestModel(this.pointID, this.categoryID, this.price,
+  const PointOfInterestModel(this.pointID, this.categoryID, this.price,
       this.sustainability, this.coordinates);
 
   factory PointOfInterestModel.fromJson(Map<String, dynamic> json) {
@@ -17,7 +17,17 @@ class PointOfInterestModel {
         json['normalPrice'],
         json['sustainability'],
         LatLng(
-            json['coordinate']['latitude'], json['coordinate']['longitude']));
+            json['coordinates']['latitude'], json['coordinates']['longitude']));
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'pointID': pointID,
+      'categoryID': categoryID,
+      'normalPrice': price,
+      'sustainability': sustainability,
+      'coordinates': coordinates.toMap(),
+    };
   }
 }
 
@@ -25,10 +35,17 @@ class TimedPointOfInterestModel {
   final PointOfInterestModel poi;
   final int timestamp;
 
-  TimedPointOfInterestModel(this.poi, this.timestamp);
+  const TimedPointOfInterestModel(this.poi, this.timestamp);
 
   factory TimedPointOfInterestModel.fromJson(Map<String, dynamic> json) {
     return TimedPointOfInterestModel(
-        PointOfInterestModel.fromJson(json['POI']), json['timestamp']);
+        PointOfInterestModel.fromJson(json['poi']), json['timestamp']);
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'timestamp': timestamp,
+      'poi': poi.toMap(),
+    };
   }
 }

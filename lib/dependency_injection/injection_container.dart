@@ -4,6 +4,7 @@ import 'package:living_city/data/provider/search_history_provider.dart';
 import 'package:living_city/data/provider/trip_provider.dart';
 import 'package:living_city/data/repositories/location_repository.dart';
 import 'package:living_city/data/repositories/trip_repository.dart';
+import 'package:living_city/data/database/trip_database.dart';
 
 final sl = GetIt.instance;
 
@@ -15,5 +16,8 @@ void init() {
   // Providers
   sl.registerLazySingleton(() => SearchHistoryProvider());
   sl.registerLazySingleton(() => GeolocatorProvider());
-  sl.registerLazySingleton(() => TripProvider());
+  sl.registerLazySingleton(() => TripProvider(sl()));
+
+  // Database
+  sl.registerLazySingleton(() => TripDatabase());
 }
