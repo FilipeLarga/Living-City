@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../bloc/route/route_bloc.dart';
 import '../../../bloc/bottom_sheet/bottom_sheet_bloc.dart';
-import '../../../bloc/search_history/search_history_bloc.dart';
 import './location_panel.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 

@@ -31,13 +31,14 @@ class JournalPage extends StatelessWidget {
                     child: TripListPage(),
                   );
               break;
-            case TripDetailsPage.routeName:
-              builder = (BuildContext _) => BlocProvider<TripDetailsBloc>(
-                    create: (BuildContext context) =>
-                        TripDetailsBloc(settings.arguments),
-                    child: TripDetailsPage(),
-                  );
-              break;
+            //  This route is now unnecessary since the navigation is done through the OpenContainer animation that pushes the route automatically
+            // case TripDetailsPage.routeName:
+            //   builder = (BuildContext _) => BlocProvider<TripDetailsBloc>(
+            //         create: (BuildContext context) =>
+            //             TripDetailsBloc(settings.arguments),
+            //         child: TripDetailsPage(),
+            //       );
+            //   break;
             default:
               throw Exception('Invalid route: ${settings.name}');
           }

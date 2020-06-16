@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:living_city/data/models/point_of_interest_model.dart';
 import 'package:living_city/data/models/trip_model.dart';
 import 'package:living_city/data/repositories/trip_repository.dart';
 import 'package:meta/meta.dart';
-import 'package:latlong/latlong.dart';
 import '../../core/example_data.dart' as coords;
 part 'trip_list_event.dart';
 part 'trip_list_state.dart';

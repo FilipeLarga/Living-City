@@ -6,11 +6,10 @@ abstract class LocationEvent {
 }
 
 class LoadLocation extends LocationEvent {
-  String address;
-  LatLng coordinates;
+  final String address;
+  final LatLng coordinates;
 
-  LoadLocation.address(this.address);
-  LoadLocation.coordinates(this.coordinates);
+  LoadLocation({this.address, this.coordinates});
 }
 
 class ResetLocation extends LocationEvent {

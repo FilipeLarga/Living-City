@@ -21,7 +21,7 @@ class _MapViewState extends State<MapView> {
           onPressed: () {
             BlocProvider.of<RouteBloc>(context).add(const ShowLocation());
             BlocProvider.of<LocationBloc>(context)
-                .add(LoadLocation.address('Avenida das forças armadas'));
+                .add(LoadLocation(address: 'Avenida das forças armadas'));
           },
           child: Text('Rua Alexandre Ferreira'),
         ),

@@ -1,6 +1,12 @@
 part of 'trip_details_bloc.dart';
 
 @immutable
-abstract class TripDetailsState {}
+abstract class TripDetailsState {
+  final TripModel trip;
 
-class TripDetailsInitial extends TripDetailsState {}
+  TripDetailsState(this.trip);
+}
+
+class TripDetailsInitial extends TripDetailsState {
+  TripDetailsInitial(TripModel trip) : super(trip);
+}

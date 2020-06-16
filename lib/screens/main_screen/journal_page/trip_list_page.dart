@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:living_city/bloc/trip_list/trip_list_bloc.dart';
 import 'package:living_city/data/models/trip_model.dart';
 import 'package:living_city/screens/main_screen/journal_page/trip_details_page.dart';
 import 'package:vector_math/vector_math_64.dart' as vectors;
 import '../../../core/animated_list_helper.dart';
 import '../../../widgets/trip_preview.dart';
+import '../../../bloc/trip_details/trip_details_bloc.dart';
+import 'package:animations/animations.dart';
 
 class TripListPage extends StatelessWidget {
   static const routeName = 'journal/trip_list';
@@ -53,18 +54,6 @@ class TripListPage extends StatelessWidget {
                     ),
                   ] else
                     Text('LOADING'),
-                  /*ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: state.trips.length,
-                          itemBuilder: (context, i) {
-                            return StatsDisplay(
-                              sumCalories: state.trips[i].calories,
-                              sumDistance: state.trips[i].distance,
-                              sumPOIsVisited: state.trips[i].pois.length,
-                              avgSustainability:
-                                  state.trips[i].sustainability.toDouble(),
-                            );
-                          })*/
                 ],
               ),
             ),
@@ -253,7 +242,7 @@ class _TripListState extends State<TripList> {
             selected: _selection,
             onTap: (value) => _onTabChanged(value),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           AspectRatio(
             aspectRatio: 16.0 / 12,
             child: AnimatedList(
@@ -263,13 +252,24 @@ class _TripListState extends State<TripList> {
               scrollDirection: Axis.horizontal,
               initialItemCount: _initialCount,
               itemBuilder: (context, index, animation) {
-                return TripListItem(
-                  animation: animation,
-                  item: _list[index],
-                  rightPadding: 16,
-                  onTap: () => Navigator.of(context).pushNamed(
-                      TripDetailsPage.routeName,
-                      arguments: _list[index]),
+                return Padding(
+                  padding: EdgeInsets.only(right: 16),
+                  child: OpenContainer(
+                    tappable: true,
+                    closedShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    transitionType: ContainerTransitionType.fade,
+                    openBuilder: (context, VoidCallback _) =>
+                        BlocProvider<TripDetailsBloc>(
+                      create: (BuildContext context) =>
+                          TripDetailsBloc(_list[index]),
+                      child: TripDetailsPage(),
+                    ),
+                    closedBuilder: (context, VoidCallback _) => TripListItem(
+                      animation: animation,
+                      item: _list[index],
+                    ),
+                  ),
                 );
               },
             ),
@@ -302,10 +302,12 @@ class _TripListState extends State<TripList> {
 
   Widget _buildRemovedItem(
       TripModel trip, BuildContext context, Animation<double> animation) {
-    return TripListItem(
-      animation: animation,
-      item: trip,
-      rightPadding: 16,
+    return Padding(
+      padding: EdgeInsets.only(right: 16),
+      child: TripListItem(
+        animation: animation,
+        item: trip,
+      ),
     );
   }
 }
@@ -405,7 +407,6 @@ class TripListItem extends StatelessWidget {
     @required this.animation,
     this.onTap,
     @required this.item,
-    @required this.rightPadding,
   })  : assert(animation != null),
         assert(item != null),
         super(key: key);
@@ -413,27 +414,21 @@ class TripListItem extends StatelessWidget {
   final Animation<double> animation;
   final VoidCallback onTap;
   final TripModel item;
-  final double rightPadding;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.only(right: rightPadding),
-        child: FadeTransition(
-          opacity: animation,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: AspectRatio(
-              aspectRatio: 9.0 / 14.0,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: onTap,
-                child: TripPreview(
-                  trip: item,
-                ),
-              ),
-            ),
+    return FadeTransition(
+      opacity: animation,
+      child: AspectRatio(
+        aspectRatio: 9.0 / 14.0,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: onTap,
+          child: TripPreview(
+            trip: item,
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

@@ -13,7 +13,7 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   TripDetailsBloc(this.tripModel);
 
   @override
-  TripDetailsState get initialState => TripDetailsInitial();
+  TripDetailsState get initialState => TripDetailsInitial(tripModel);
 
   @override
   Stream<TripDetailsState> mapEventToState(

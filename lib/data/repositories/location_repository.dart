@@ -21,6 +21,7 @@ class LocationRepository {
   Future<LocationModel> getLocationFromCoordinates(LatLng coordinates) async {
     //fake location for now
     await Future.delayed(Duration(seconds: 1));
+    return null;
   }
 
   Future<LocationModel> getLocationFromAddress(String address) async {
