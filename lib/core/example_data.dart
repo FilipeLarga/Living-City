@@ -8,20 +8,20 @@ final LatLng lisbon = LatLng(38.748753, -9.153692);
 
 var markers = [
   TimedPointOfInterestModel(
-      PointOfInterestModel(
-          1, 1, 1, 1, LatLng(38.713434885851484, -9.133620912637578)),
+      PointOfInterestModel(1, 1, 'Castelo de S. Jorge', 15, 15, 61,
+          LatLng(38.713434885851484, -9.133620912637578)),
       1),
   TimedPointOfInterestModel(
-      PointOfInterestModel(
-          1, 1, 1, 1, LatLng(38.70816559446653, -9.136622677359982)),
+      PointOfInterestModel(1, 1, 'Praça do Comércio', 20, 15, 61,
+          LatLng(38.70816559446653, -9.136622677359982)),
       1),
   TimedPointOfInterestModel(
-      PointOfInterestModel(
-          1, 1, 1, 1, LatLng(38.71493746027443, -9.139745024718508)),
+      PointOfInterestModel(1, 1, 'Largo do Regedor', 60, 15, 61,
+          LatLng(38.71493746027443, -9.139745024718508)),
       1),
   TimedPointOfInterestModel(
-      PointOfInterestModel(
-          1, 1, 1, 1, LatLng(38.70861933474137, -9.140110592695562)),
+      PointOfInterestModel(1, 1, 'Largo da Academia Nacional de Belas Artes',
+          30, 15, 61, LatLng(38.70861933474137, -9.140110592695562)),
       1),
 ];
 
@@ -97,4 +97,4 @@ var line = [
   LatLng(38.70861933474137, -9.140110592695562),
 ];
 
-var trip = TripModel([...markers], [...line], 1, 1, 50, 50, 100, 350);
+var trip = TripModel([...markers], [...line], 60, 320, 81, 50, 100, 350);

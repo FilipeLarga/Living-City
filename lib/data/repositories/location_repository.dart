@@ -27,14 +27,11 @@ class LocationRepository {
   Future<LocationModel> getLocationFromAddress(String address) async {
     return await _geolocatorProvider.getPlacemarkFromAdress(address);
   }
-  // Future<LocationModel> getCurrentLocation() async {
-  //   Position position = await _provider.getCurrentPosition();
-  //   LatLng coordinates = _positionToLatLng(position);
-  //   List<Placemark> placemarks =
-  //       await _provider.getPlacemarkFromCoordinates(coordinates);
-  //   return LocationModel(
-  //       coordinates: _positionToLatLng(position), address: placemarks[0].name);
-  // }
+
+  Future<LocationModel> getCurrentLocation() async {
+    LatLng coordinates = await _geolocatorProvider.getCurrentPosition();
+    return LocationModel(coordinates);
+  }
 
   // Future<LatLng> getCoordinatesFromAdress(String name) async {
   //   try {

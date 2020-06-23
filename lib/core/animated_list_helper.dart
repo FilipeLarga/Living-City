@@ -20,7 +20,7 @@ class ListModel<E> {
   void insert(int index, E item) {
     _items.insert(index, item);
     _animatedList.insertItem(index,
-        duration: const Duration(milliseconds: 500));
+        duration: const Duration(milliseconds: 300));
   }
 
   E removeAt(int index) {

@@ -23,10 +23,11 @@ class GeolocatorProvider {
         //     'Place: (${place.subThoroughfare}, ${place.subLocality}, ${place.name}, ${place.locality}, ${place.administrativeArea}, ${place.subAdministrativeArea}, ${place.thoroughfare}, ${place.position.latitude}, ${place.position.longitude} )');
       }
       return LocationModel(
-          placemarks[0].name,
-          placemarks[0].locality,
-          LatLng(placemarks[0].position.latitude,
-              placemarks[0].position.longitude));
+        LatLng(
+            placemarks[0].position.latitude, placemarks[0].position.longitude),
+        name: placemarks[0].name,
+        locality: placemarks[0].locality,
+      );
     } catch (_) {
       throw NoConnectionException();
     }
@@ -43,9 +44,9 @@ class GeolocatorProvider {
     yield* Geolocator().getPositionStream(locationOptions);
   }
 
-  Future<Position> getCurrentPosition() async {
+  Future<LatLng> getCurrentPosition() async {
     Position p = await _geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best);
-    return p;
+    return LatLng(p.latitude, p.longitude);
   }
 }

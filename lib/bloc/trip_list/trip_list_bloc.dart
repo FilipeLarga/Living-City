@@ -41,15 +41,15 @@ class TripListBloc extends Bloc<TripListEvent, TripListState> {
     await _tripRepository.addPlannedTrip(trip);
     await _tripRepository.addPlannedTrip(trip);
     await _tripRepository.addPlannedTrip(trip);
-    // await _tripRepository.addPlannedTrip(trip);
-    // await _tripRepository.addPlannedTrip(trip);
+    // // await _tripRepository.addPlannedTrip(trip);
+    // // await _tripRepository.addPlannedTrip(trip);
 
     var tripsTest = await _tripRepository.getPlannedTrips();
     await _tripRepository.startTrip(tripsTest[0]);
 
-    await _tripRepository.testAddCompleted(trip);
-    await _tripRepository.testAddCompleted(trip);
-    await _tripRepository.testAddCompleted(trip);
+    // await _tripRepository.testAddCompleted(ProgressionTripModel.initial(trip));
+    // await _tripRepository.testAddCompleted(ProgressionTripModel.initial(trip));
+    // await _tripRepository.testAddCompleted(ProgressionTripModel.initial(trip));
 
     // //Get Planned trips
     // List<TripModel> trips = await _tripRepository.getPlannedTrips();
@@ -62,20 +62,21 @@ class TripListBloc extends Bloc<TripListEvent, TripListState> {
     // List<TripModel> trips2 = await _tripRepository.getPlannedTrips();
     // print('Isto devia ser 4 e é ${trips2.length}');
 
-    TripModel currentTrip = await _tripRepository.getCurrentTrip();
+    ProgressionTripModel currentTrip = await _tripRepository.getCurrentTrip();
     List<TripModel> plannedList = await _tripRepository.getPlannedTrips();
-    List<TripModel> completedList = await _tripRepository.getCompletedTrips();
+    List<ProgressionTripModel> completedList =
+        await _tripRepository.getCompletedTrips();
 
     int sumCalories = 0,
         sumDistance = 0,
         sumPOIsVisited = 0,
         sumSustainability = 0;
 
-    for (TripModel trip in completedList) {
-      sumCalories += trip.calories;
-      sumDistance += trip.distance;
-      sumPOIsVisited += trip.pois?.length ?? 0;
-      sumSustainability += trip.sustainability;
+    for (ProgressionTripModel trip in completedList) {
+      sumCalories += trip.originalTrip.calories;
+      sumDistance += trip.originalTrip.distance;
+      sumPOIsVisited += trip.originalTrip.pois?.length ?? 0;
+      sumSustainability += trip.originalTrip.sustainability;
     }
 
     yield TripListLoaded(

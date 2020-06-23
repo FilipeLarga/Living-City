@@ -6,8 +6,8 @@ class TripModel {
 
   final List<TimedPointOfInterestModel> pois;
   final List<LatLng> line;
-  final double startTime;
-  final double endTime;
+  final int startTime;
+  final int endTime;
   final int sustainability;
   final int price;
   final int distance;
@@ -46,8 +46,43 @@ class TripModel {
     return {'startTime': startTime, 'endTime': endTime};
   }
 
-  @override
-  String toString() {
-    return 'Calories: $calories; Distance: $distance; POIs: ${pois?.length}; Sustainabiliy: $sustainability';
+  // @override
+  // String toString() {
+  //   return 'Calories: $calories; Distance: $distance; POIs: ${pois?.length}; Sustainabiliy: $sustainability';
+  // }
+}
+
+class ProgressionTripModel {
+  int id; // For database purposes
+
+  final TripModel originalTrip;
+  final List<LatLng> progressLine;
+  final List<TimedPointOfInterestModel> progressPOIs;
+
+  ProgressionTripModel(this.originalTrip, this.progressLine, this.progressPOIs);
+  ProgressionTripModel.initial(this.originalTrip)
+      : this.progressLine = [],
+        this.progressPOIs = [];
+
+  factory ProgressionTripModel.fromJson(Map<String, dynamic> json) {
+    var progressPoisList = json['progressPOIs'] as List;
+    var line = json['progressLine'] as List;
+    return ProgressionTripModel(
+      TripModel.fromJson(json['originalTrip']),
+      line.map((e) => LatLng(e['latitude'], e['longitude'])).toList(),
+      progressPoisList
+          .map((e) => TimedPointOfInterestModel.fromJson(e))
+          .toList(growable: false),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'originalTrip': originalTrip.toMap(),
+      'progressLine':
+          progressLine.map((e) => e.toMap()).toList(growable: false),
+      'progressPOIs':
+          progressPOIs.map((e) => e.toMap()).toList(growable: false),
+    };
   }
 }

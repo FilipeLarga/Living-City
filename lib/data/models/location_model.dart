@@ -8,7 +8,7 @@ class LocationModel {
     return coordinates != null;
   }
 
-  LocationModel(this.name, this.locality, this.coordinates);
+  LocationModel(this.coordinates, {this.name, this.locality});
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
@@ -21,7 +21,10 @@ class LocationModel {
   }
 
   factory LocationModel.fromMap(Map<String, dynamic> map) {
-    return LocationModel(map['name'], map['locality'],
-        LatLng(map['latitude'], map['longitude']));
+    return LocationModel(
+      LatLng(map['latitude'], map['longitude']),
+      name: map['name'],
+      locality: map['locality'],
+    );
   }
 }

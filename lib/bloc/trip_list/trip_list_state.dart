@@ -12,8 +12,8 @@ class TripListLoaded extends TripListState {
   final int sumDistance;
   final double avgSustainability;
   final List<TripModel> plannedTrips;
-  final List<TripModel> completedTrips;
-  final TripModel currentTrip;
+  final List<ProgressionTripModel> completedTrips;
+  final ProgressionTripModel currentTrip;
 
   TripListLoaded(
       this.sumCalories,

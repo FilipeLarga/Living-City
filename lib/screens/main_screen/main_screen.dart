@@ -14,6 +14,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
+    super.initState();
     _pageIndex = 0;
     _pageController.addListener(() {
       if (_pageController.page.round() != _pageIndex) {
@@ -22,7 +23,6 @@ class _MainScreenState extends State<MainScreen> {
         });
       }
     });
-    super.initState();
   }
 
   void _showPage(int index) {

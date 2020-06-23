@@ -3,17 +3,21 @@ import 'package:latlong/latlong.dart';
 class PointOfInterestModel {
   final int pointID;
   final int categoryID;
+  final String name;
+  final int visitTime;
   final int price;
   final int sustainability;
   final LatLng coordinates;
 
-  const PointOfInterestModel(this.pointID, this.categoryID, this.price,
-      this.sustainability, this.coordinates);
+  const PointOfInterestModel(this.pointID, this.categoryID, this.name,
+      this.visitTime, this.price, this.sustainability, this.coordinates);
 
   factory PointOfInterestModel.fromJson(Map<String, dynamic> json) {
     return PointOfInterestModel(
         json['pointID'],
         json['categoryID'],
+        json['name'],
+        json['visitTime'],
         json['normalPrice'],
         json['sustainability'],
         LatLng(
@@ -24,6 +28,8 @@ class PointOfInterestModel {
     return {
       'pointID': pointID,
       'categoryID': categoryID,
+      'name': name,
+      'visitTime': visitTime,
       'normalPrice': price,
       'sustainability': sustainability,
       'coordinates': coordinates.toMap(),

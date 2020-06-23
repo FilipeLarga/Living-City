@@ -40,7 +40,10 @@ class _LocationPanelState extends State<LocationPanel> {
                           onPressed: () =>
                               BlocProvider.of<RouteBloc>(context).add(
                             AcceptLocation(LocationModel(
-                                'Ruasdijasd', 'Lisbon', LatLng(1, 1))),
+                              LatLng(1, 1),
+                              name: 'Ruasdijasd',
+                              locality: 'Lisbon',
+                            )),
                           ),
                           child: Text('Origin'),
                         ),
