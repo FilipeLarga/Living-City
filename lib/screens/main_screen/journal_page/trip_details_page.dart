@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../widgets/map_widgets.dart';
 import '../../../bloc/trip_details/trip_details_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../data/models/trip_model.dart';
 
 class TripDetailsPage extends StatelessWidget {
   static const routeName = 'journal/trip_details';

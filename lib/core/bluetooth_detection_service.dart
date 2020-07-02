@@ -13,7 +13,7 @@ class BluetoothDetectionService {
   final BluetoothDevicesRepository _bluetoothDevicesRepository;
   final LocationRepository _locationRepository;
 
-  static const scanInterval = Duration(minutes: 2);
+  static const scanInterval = Duration(seconds: 40);
   static const scanTimeout = Duration(seconds: 10);
 
   Timer _timer;
@@ -55,14 +55,19 @@ class BluetoothDetectionService {
     } on PlatformException catch (e) {
       print('Platform Exception: $e');
     } catch (e) {
-      print(e);
+      print('Erro: $e');
     } finally {
+      print('Agendar outro');
       _timer = Timer(scanInterval, () => _workAndSetupTimer());
     }
   }
 
   Future<int> _scanDevicesAndroid() async {
     if (!await _bluetooth.isEnabled) throw BluetoothOffException();
+
+    final locationStatus = await _locationRepository.getLocationStatus();
+    if (!locationStatus.enabled) throw LocationEnabledException();
+    if (!locationStatus.permission) throw LocationPermissionException();
     try {
       int count = 0;
       try {
@@ -81,6 +86,10 @@ class BluetoothDetectionService {
 
   Future<int> _scanDevicesIOS() async {
     if (!await _bluetooth.isOn) throw BluetoothOffException();
+    final locationStatus = await _locationRepository.getLocationStatus();
+    if (!locationStatus.enabled) throw LocationEnabledException();
+    if (!locationStatus.permission) throw LocationPermissionException();
+
     try {
       try {
         List<ScanResult> results =

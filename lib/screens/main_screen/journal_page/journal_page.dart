@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:living_city/bloc/trip_details/trip_details_bloc.dart';
+import 'package:living_city/bloc/search_history/search_history_bloc.dart';
 import 'package:living_city/bloc/trip_list/trip_list_bloc.dart';
 import 'package:living_city/dependency_injection/injection_container.dart';
-import 'package:living_city/screens/main_screen/journal_page/trip_details_page.dart';
 import 'package:living_city/screens/main_screen/journal_page/trip_list_page.dart';
 
 class JournalPage extends StatelessWidget {
@@ -25,10 +24,10 @@ class JournalPage extends StatelessWidget {
           WidgetBuilder builder;
           switch (settings.name) {
             case TripListPage.routeName:
-              builder = (BuildContext _) => BlocProvider<TripListBloc>(
-                    create: (BuildContext context) =>
-                        TripListBloc(sl())..add(LoadTripList()),
-                    child: TripListPage(),
+              builder = (_) => BlocProvider(
+                    create: (context) =>
+                        TripListBloc(sl())..add(TripListLoad()),
+                    child: const TripListPage(),
                   );
               break;
             //  This route is now unnecessary since the navigation is done through the OpenContainer animation that pushes the route automatically

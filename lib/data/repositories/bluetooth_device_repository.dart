@@ -1,6 +1,5 @@
 import 'package:living_city/data/models/bluetooth_device_model.dart';
 import 'package:living_city/data/provider/bluetooth_device_provider.dart';
-import 'package:living_city/data/repositories/location_repository.dart';
 
 class BluetoothDevicesRepository {
   final BluetoothDeviceProvider _bleDeviceProvider;

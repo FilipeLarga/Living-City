@@ -18,7 +18,5 @@ class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   @override
   Stream<TripDetailsState> mapEventToState(
     TripDetailsEvent event,
-  ) async* {
-    // TODO: implement mapEventToState
-  }
+  ) async* {}
 }

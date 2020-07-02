@@ -1,55 +1,64 @@
 import 'package:flutter/material.dart';
 
 class MapControls extends StatelessWidget {
-  final Function() onCenterLocationPress;
-  final Function() onShowPOIsPress;
+  final Function(bool) centerCallback;
+  final Function(bool) poiCallback;
+  final bool centeringUser;
+  final bool showingPOIs;
 
   const MapControls(
-      {@required this.onCenterLocationPress, @required this.onShowPOIsPress});
+      {@required this.centerCallback,
+      @required this.poiCallback,
+      @required this.centeringUser,
+      @required this.showingPOIs});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: const Color.fromRGBO(255, 255, 255, 0.75),
-        boxShadow: [
-          const CustomBoxShadow(
-              color: Colors.grey, blurRadius: 10, blurStyle: BlurStyle.outer),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          GestureDetector(
-            onTap: onCenterLocationPress,
-            child: const Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-              child: const Icon(Icons.my_location),
-            ),
-          ),
-          SizedBox(
-            height: 16,
-            child: Center(
-              child: Container(
-                height: 1,
-                width: 40,
-                color: const Color(0xFFD6D6D6),
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: const Color.fromRGBO(255, 255, 255, 0.75),
+          boxShadow: [
+            const CustomBoxShadow(
+                color: Colors.grey, blurRadius: 10, blurStyle: BlurStyle.outer),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            GestureDetector(
+              onTap: () => centerCallback(!centeringUser),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+                child: Icon(Icons.my_location,
+                    color:
+                        centeringUser ? Theme.of(context).accentColor : null),
               ),
             ),
-          ),
-          GestureDetector(
-            onTap: onShowPOIsPress,
-            child: const Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-              child: const Icon(Icons.place),
+            SizedBox(
+              height: 16,
+              child: Center(
+                child: Container(
+                  height: 1,
+                  width: 40,
+                  color: const Color(0xFFD6D6D6),
+                ),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+            GestureDetector(
+              onTap: () => poiCallback(!showingPOIs),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+                child: Icon(Icons.place,
+                    color: showingPOIs ? Theme.of(context).accentColor : null),
+              ),
+            ),
+          ],
+        ));
   }
 }
 

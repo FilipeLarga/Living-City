@@ -28,7 +28,10 @@ class LineMap extends StatelessWidget {
           PolylineLayerOptions(
             polylineCulling: true,
             polylines: [
-              Polyline(points: line, color: Colors.orange, strokeWidth: 3)
+              Polyline(
+                  points: line,
+                  color: Theme.of(context).accentColor,
+                  strokeWidth: 3)
             ],
           ),
         ]);
@@ -64,7 +67,10 @@ class LineAndMarkersMap extends StatelessWidget {
           PolylineLayerOptions(
             polylineCulling: true,
             polylines: [
-              Polyline(points: line, color: Colors.orange, strokeWidth: 3)
+              Polyline(
+                  points: line,
+                  color: Theme.of(context).accentColor,
+                  strokeWidth: 3)
             ],
           ),
           MarkerLayerOptions(

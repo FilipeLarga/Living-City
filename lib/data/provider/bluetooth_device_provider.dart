@@ -1,6 +1,5 @@
 import 'package:living_city/data/database/ble_devices_database.dart';
 import 'package:living_city/data/models/bluetooth_device_model.dart';
-import 'package:living_city/data/models/trip_model.dart';
 import 'package:sembast/sembast.dart';
 
 class BluetoothDeviceProvider {

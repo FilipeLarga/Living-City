@@ -1,10 +1,10 @@
 import 'package:latlong/latlong.dart';
 import 'package:living_city/data/models/location_model.dart';
 import 'package:living_city/data/provider/search_history_provider.dart';
-import '../provider/geocoding_provider.dart';
+import '../provider/location_provider.dart';
 
 class LocationRepository {
-  final GeolocatorProvider _geolocatorProvider;
+  final LocationProvider _geolocatorProvider;
   final SearchHistoryProvider _searchHistoryProvider;
 
   const LocationRepository(
@@ -20,8 +20,7 @@ class LocationRepository {
 
   Future<LocationModel> getLocationFromCoordinates(LatLng coordinates) async {
     //fake location for now
-    await Future.delayed(Duration(seconds: 1));
-    return null;
+    return await _geolocatorProvider.getPlacemarkFromCoordinates(coordinates);
   }
 
   Future<LocationModel> getLocationFromAddress(String address) async {
@@ -32,6 +31,14 @@ class LocationRepository {
     LatLng coordinates = await _geolocatorProvider.getCurrentPosition();
     return LocationModel(coordinates);
   }
+
+  Future<LocationStatus> getLocationStatus() async {
+    return await _geolocatorProvider.getLocationStatus();
+  }
+
+  // Future<> requestLocationPermission() async {
+  //   await _geolocatorProvider.requestLocationPermission();
+  // }
 
   // Future<LatLng> getCoordinatesFromAdress(String name) async {
   //   try {
@@ -87,4 +94,11 @@ class LocationRepository {
   // LatLng _positionToLatLng(Position p) {
   //   return LatLng(p.latitude, p.longitude);
   // }
+}
+
+class LocationStatus {
+  final bool enabled;
+  final bool permission;
+
+  LocationStatus(this.enabled, this.permission);
 }

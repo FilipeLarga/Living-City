@@ -2,10 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:living_city/bloc/trip_list/trip_list_bloc.dart';
 import 'package:living_city/core/example_data.dart';
 import 'package:living_city/data/models/trip_model.dart';
 import 'package:living_city/screens/main_screen/journal_page/trip_details_page.dart';
+import 'package:living_city/widgets/dashed_line.dart';
 import 'package:living_city/widgets/map_widgets.dart';
 import 'package:vector_math/vector_math_64.dart' as vectors;
 import '../../../core/animated_list_helper.dart';
@@ -151,7 +153,7 @@ class StatsItem extends StatelessWidget {
             style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 19,
-                color: const Color(0xFFEBA947)),
+                color: Theme.of(context).accentColor),
           ),
           Text('$name', style: TextStyle(fontWeight: FontWeight.w400)),
         ],
@@ -171,10 +173,10 @@ class ActiveTrip extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const Text(
+          Text(
             'Active Trip',
-            style: const TextStyle(
-                color: Colors.orange,
+            style: TextStyle(
+                color: Theme.of(context).accentColor,
                 fontWeight: FontWeight.w600,
                 fontSize: 16),
           ),
@@ -249,14 +251,6 @@ class ActiveTrip extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 18.0),
-                  //   child: Container(
-                  //     height: double.infinity,
-                  //     width: 1,
-                  //     color: Colors.grey[300],
-                  //   ),
-                  // ),
                   Expanded(
                     flex: 4,
                     child: LineAndMarkersMap(
@@ -476,8 +470,9 @@ class _TripListTabState extends State<TripListTab> {
                     widget.strings[i],
                     key: keys[i],
                     style: TextStyle(
-                        color:
-                            widget.selected == i ? Colors.orange : Colors.grey,
+                        color: widget.selected == i
+                            ? Theme.of(context).accentColor
+                            : Colors.grey,
                         fontWeight: FontWeight.w600,
                         fontSize: 16),
                   ),
@@ -497,7 +492,7 @@ class _TripListTabState extends State<TripListTab> {
             height: 5,
             width: _calculateWidth(),
             decoration: new BoxDecoration(
-              color: Colors.orange,
+              color: Theme.of(context).accentColor,
               borderRadius: BorderRadius.circular(64),
             ),
           )
@@ -541,139 +536,127 @@ class TripListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int leafCount = trip.sustainability >= 80
+        ? 3
+        : trip.sustainability >= 70 ? 2 : trip.sustainability >= 60 ? 1 : 0;
     return FadeTransition(
       opacity: animation,
       child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF000000).withOpacity(0.05),
-              blurRadius: 5,
-              offset: Offset(2, 2),
-            )
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-              child: Row(
+          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF000000).withOpacity(0.05),
+                blurRadius: 5,
+                offset: Offset(2, 2),
+              )
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        width: 54,
-                        height: 54,
-                        child: CustomPaint(
-                          foregroundPainter:
-                              CircleProgress(trip.sustainability.toDouble()),
-                          child: Center(
-                              child:
-                                  Text(trip.sustainability.toString() + ' %')),
-                        ),
-                      ),
-                      // const SizedBox(height: 4),
-                      // Text('Sustainable')
-                    ],
-                  ),
-                  const SizedBox(width: 24),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: <Widget>[
-                          // Icon(Icons.location_on, size: 16,),
-                          Text('${trip.pois[1].poi.name}',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w600)),
-                          const SizedBox(width: 12),
-                          Text(
-                              '${_formatHour(DateTime.fromMillisecondsSinceEpoch(item.startTime))}',
-                              style: TextStyle(
-                                  fontSize: 12, color: Colors.grey[600])),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: <Widget>[
-                          Text('${trip.pois[0].poi.name}',
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w600)),
-                          const SizedBox(width: 12),
-                          Text(
-                              '${_formatHour(DateTime.fromMillisecondsSinceEpoch(item.startTime))}',
-                              style: TextStyle(
-                                  fontSize: 12, color: Colors.grey[600])),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
                   Row(
-                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
                     children: <Widget>[
-                      Icon(Icons.timeline, color: Colors.grey[350]),
-                      const SizedBox(width: 8),
-                      Text('${trip.distance} km',
-                          style: TextStyle(fontSize: 14, color: Colors.grey)),
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Icon(Icons.access_time, color: Colors.grey[350]),
-                      const SizedBox(width: 8),
-                      Text('${trip.endTime - trip.startTime} min',
-                          maxLines: 2,
+                      Text(
+                          _formatMonthAndDay(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  trip.startTime)),
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 14, color: Colors.grey)),
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Icon(Icons.beach_access, color: Colors.grey[350]),
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w600)),
                       const SizedBox(width: 8),
                       Text(
-                        '${trip.pois.length}',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
+                          _formatHour(DateTime.fromMillisecondsSinceEpoch(
+                              trip.startTime)),
+                          style: TextStyle(color: Colors.grey, fontSize: 13)),
                     ],
                   ),
+                  Spacer(),
+                  for (int i = 0; i < 3 - leafCount; i++)
+                    Image.asset('assets/eco_leaf.png',
+                        color: Colors.grey[300], height: 24, width: 24),
+                  for (int i = 0; i < leafCount; i++)
+                    Image.asset('assets/eco_leaf.png',
+                        color: const Color(0xFF7BCB91), height: 24, width: 24),
                 ],
               ),
-            )
-          ],
-        ),
-      ),
+              const SizedBox(height: 16),
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4, bottom: 4),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            height: 10,
+                            width: 10,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                color: Theme.of(context).accentColor),
+                          ),
+                          Expanded(
+                            child: CustomPaint(
+                              painter: DashedLinePainter(
+                                color: Colors.orange,
+                                minHeight: 4,
+                                minSpace: 4,
+                                dashWidth: 1,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 10,
+                            width: 10,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                color: Theme.of(context).accentColor),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      //makes text overflow work
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(trip.pois[0].poi.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontWeight: FontWeight.w600)),
+                          const SizedBox(height: 12),
+                          Text(
+                              '+' +
+                                  (trip.pois.length - 2).toString() +
+                                  ' Attractions',
+                              style: TextStyle(color: Colors.grey)),
+                          const SizedBox(height: 12),
+                          Text(trip.pois.last.poi.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          )),
     );
   }
 
-  _formatMonthAndDay(DateTime date) => DateFormat('MMMM d').format(date);
-  _formatHour(DateTime date) => DateFormat('jm').format(date);
+  _formatMonthAndDay(DateTime date) => Jiffy(date).format("MMMM do");
+  _formatHour(DateTime date) => DateFormat('Hm').format(date);
 }

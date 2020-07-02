@@ -24,68 +24,68 @@ class TripListBloc extends Bloc<TripListEvent, TripListState> {
     yield* _mapLoadToState(event);
   }
 
-  Stream<TripListState> _mapLoadToState(LoadTripList event) async* {
-    yield TripListLoading();
+  Stream<TripListState> _mapLoadToState(TripListLoad event) async* {
+    if (state is TripListLoading)
+      print('Already Loading!!');
+    else {
+      yield TripListLoading();
 
-    // // Testing purposes only
-    // // Test case: Add 5 planned trips. Start one of them
+      // // Testing purposes only
+      // // Test case: Add 5 planned trips. Start one of them
 
-    // // Clean Planned and Current stores
-    // await _tripRepository.testCleanPlannedAndCurrentStores();
-    await _tripRepository.testCleanEverything();
-    // print('Apaguei o planned e current');
-    // // Create Trip
-    var trip = coords.trip;
+      // // Clean Planned and Current stores
+      // await _tripRepository.testCleanPlannedAndCurrentStores();
+      await _tripRepository.testCleanEverything();
+      // print('Apaguei o planned e current');
+      // // Create Trip
+      var trip = coords.trip;
 
-    // //Add this trip to planned list
-    await _tripRepository.addPlannedTrip(trip);
-    await _tripRepository.addPlannedTrip(trip);
-    await _tripRepository.addPlannedTrip(trip);
-    // // await _tripRepository.addPlannedTrip(trip);
-    // // await _tripRepository.addPlannedTrip(trip);
+      // //Add this trip to planned list
+      await _tripRepository.addPlannedTrip(trip);
+      await _tripRepository.addPlannedTrip(trip);
+      await _tripRepository.addPlannedTrip(trip);
+      // // await _tripRepository.addPlannedTrip(trip);
+      // // await _tripRepository.addPlannedTrip(trip);
 
-    var tripsTest = await _tripRepository.getPlannedTrips();
-    await _tripRepository.startTrip(tripsTest[0]);
+      // var tripsTest = await _tripRepository.getPlannedTrips();
+      // await _tripRepository.startTrip(tripsTest[0]);
 
-    // await _tripRepository.testAddCompleted(ProgressionTripModel.initial(trip));
-    // await _tripRepository.testAddCompleted(ProgressionTripModel.initial(trip));
-    // await _tripRepository.testAddCompleted(ProgressionTripModel.initial(trip));
+      // await _tripRepository.testAddCompleted(ProgressionTripModel.initial(trip));
+      // await _tripRepository.testAddCompleted(ProgressionTripModel.initial(trip));
+      // await _tripRepository.testAddCompleted(ProgressionTripModel.initial(trip));
 
-    // //Get Planned trips
-    // List<TripModel> trips = await _tripRepository.getPlannedTrips();
-    // print('Isto devia ser 5 e é ${trips.length}');
+      // //Get Planned trips
+      // List<TripModel> trips = await _tripRepository.getPlannedTrips();
+      // print('Isto devia ser 5 e é ${trips.length}');
 
-    // //Start a trip
-    // await _tripRepository.startTrip(trips[0]);
+      // //Start a trip
+      // await _tripRepository.startTrip(trips[0]);
 
-    // //Check if it's 4 trips now
-    // List<TripModel> trips2 = await _tripRepository.getPlannedTrips();
-    // print('Isto devia ser 4 e é ${trips2.length}');
+      // //Check if it's 4 trips now
+      // List<TripModel> trips2 = await _tripRepository.getPlannedTrips();
+      // print('Isto devia ser 4 e é ${trips2.length}');
 
-    ProgressionTripModel currentTrip = await _tripRepository.getCurrentTrip();
-    List<TripModel> plannedList = await _tripRepository.getPlannedTrips();
-    List<ProgressionTripModel> completedList =
-        await _tripRepository.getCompletedTrips();
+      ProgressionTripModel currentTrip = await _tripRepository.getCurrentTrip();
+      List<TripModel> plannedList = await _tripRepository.getPlannedTrips();
+      List<ProgressionTripModel> completedList = await _tripRepository.getCompletedTrips();
 
-    int sumCalories = 0,
-        sumDistance = 0,
-        sumPOIsVisited = 0,
-        sumSustainability = 0;
+      int sumCalories = 0, sumDistance = 0, sumPOIsVisited = 0, sumSustainability = 0;
 
-    for (ProgressionTripModel trip in completedList) {
-      sumCalories += trip.originalTrip.calories;
-      sumDistance += trip.originalTrip.distance;
-      sumPOIsVisited += trip.originalTrip.pois?.length ?? 0;
-      sumSustainability += trip.originalTrip.sustainability;
+      for (ProgressionTripModel trip in completedList) {
+        sumCalories += trip.originalTrip.calories;
+        sumDistance += trip.originalTrip.distance;
+        sumPOIsVisited += trip.originalTrip.pois?.length ?? 0;
+        sumSustainability += trip.originalTrip.sustainability;
+      }
+
+      yield TripListLoaded(
+          sumCalories,
+          sumPOIsVisited,
+          sumDistance,
+          sumSustainability.toDouble() / completedList.length,
+          plannedList,
+          completedList,
+          currentTrip);
     }
-
-    yield TripListLoaded(
-        sumCalories,
-        sumPOIsVisited,
-        sumDistance,
-        sumSustainability.toDouble() / completedList.length,
-        plannedList,
-        completedList,
-        currentTrip);
   }
 }

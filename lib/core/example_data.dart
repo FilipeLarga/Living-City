@@ -97,4 +97,4 @@ var line = [
   LatLng(38.70861933474137, -9.140110592695562),
 ];
 
-var trip = TripModel([...markers], [...line], 60, 320, 81, 50, 100, 350);
+var trip = TripModel([...markers], [...line], 60, 320, 71, 50, 69, 350);

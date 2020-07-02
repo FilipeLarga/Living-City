@@ -7,8 +7,7 @@ class TripProvider {
   static const String PLANNED_TRIP_STORE_NAME = 'planned_trips';
   static const String CURRENT_TRIP_STORE_NAME = 'current_trip';
 
-  final _completedTripsStore =
-      intMapStoreFactory.store(COMPLETED_TRIP_STORE_NAME);
+  final _completedTripsStore = intMapStoreFactory.store(COMPLETED_TRIP_STORE_NAME);
   final _plannedTripsStore = intMapStoreFactory.store(PLANNED_TRIP_STORE_NAME);
   final _currentTripStore = intMapStoreFactory.store(CURRENT_TRIP_STORE_NAME);
 
@@ -94,8 +93,7 @@ class TripProvider {
     if (result != null) {
       ProgressionTripModel trip = ProgressionTripModel.fromJson(result.value);
       trip.id = result.key;
-      await _currentTripStore.delete(await _db,
-          finder: Finder(filter: Filter.byKey(trip.id)));
+      await _currentTripStore.delete(await _db, finder: Finder(filter: Filter.byKey(trip.id)));
       return trip;
     } else
       return null;
@@ -151,8 +149,7 @@ class TripProvider {
     );
 
     if (recordSnapshots.length > 1)
-      print(
-          'ERRO! Current Trip só deiva ser uma mas há: ${recordSnapshots.length}');
+      print('ERRO! Current Trip só deiva ser uma mas há: ${recordSnapshots.length}');
 
     if (recordSnapshots == null || recordSnapshots.isEmpty) return null;
 
@@ -181,9 +178,11 @@ class TripProvider {
   }
 
   Future testDeleteAllCurrent() async {
+    print('apagar');
     await _currentTripStore.delete(
       await _db,
     );
+    print('apaguei, sobraram: ' + (await _currentTripStore.count(await _db)).toString());
   }
 
   Future testDeleteAllCompleted() async {

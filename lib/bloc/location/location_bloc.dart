@@ -20,10 +20,12 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
   Stream<LocationState> mapEventToState(
     LocationEvent event,
   ) async* {
-    if (event is ResetLocation) {
+    if (event is ClearLocation) {
       yield const LocationInactive();
     } else if (event is LoadLocation) {
       yield* _mapLoadLocationToState(event);
+    } else if (event is ShowPreLoadedLocation) {
+      yield LocationLoaded(event.location);
     }
   }
 
@@ -41,6 +43,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
       await _locationRepository.saveLocation(locationResult);
       yield LocationLoaded(locationResult);
     } catch (e) {
+      print(e);
       yield LocationError(e);
     }
   }
