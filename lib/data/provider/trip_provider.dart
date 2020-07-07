@@ -1,14 +1,14 @@
-import 'package:living_city/data/models/trip_model.dart';
-import 'package:living_city/data/database/trip_database.dart';
 import 'package:sembast/sembast.dart';
+
+import '../database/trip_database.dart';
+import '../models/trip_model.dart';
 
 class TripProvider {
   static const String COMPLETED_TRIP_STORE_NAME = 'completed_trips';
   static const String PLANNED_TRIP_STORE_NAME = 'planned_trips';
   static const String CURRENT_TRIP_STORE_NAME = 'current_trip';
 
-  final _completedTripsStore =
-      intMapStoreFactory.store(COMPLETED_TRIP_STORE_NAME);
+  final _completedTripsStore = intMapStoreFactory.store(COMPLETED_TRIP_STORE_NAME);
   final _plannedTripsStore = intMapStoreFactory.store(PLANNED_TRIP_STORE_NAME);
   final _currentTripStore = intMapStoreFactory.store(CURRENT_TRIP_STORE_NAME);
 
@@ -20,20 +20,20 @@ class TripProvider {
     //_validateStores();
   }
 
-  Future insertCompleted(TripModel trip) async {
-    var key = await _completedTripsStore.add(await _db, trip.toMap());
+  Future insertCompleted(ProgressionTripModel trip) async {
+    await _completedTripsStore.add(await _db, trip.toMap());
   }
 
   Future insertPlanned(TripModel trip) async {
     await _plannedTripsStore.add(await _db, trip.toMap());
   }
 
-  Future insertCurrent(TripModel trip) async {
+  Future insertCurrent(ProgressionTripModel trip) async {
     //Maybe check for other trips here...
     await _currentTripStore.add(await _db, trip.toMap());
   }
 
-  Future updateCompleted(TripModel trip) async {
+  Future updateCompleted(ProgressionTripModel trip) async {
     final finder = Finder(filter: Filter.byKey(trip.id));
     await _completedTripsStore.update(
       await _db,
@@ -51,7 +51,7 @@ class TripProvider {
     );
   }
 
-  Future updateCurrent(TripModel trip) async {
+  Future updateCurrent(ProgressionTripModel trip) async {
     final finder = Finder(filter: Filter.byKey(trip.id));
     await _currentTripStore.update(
       await _db,
@@ -60,7 +60,7 @@ class TripProvider {
     );
   }
 
-  Future deleteCompleted(TripModel trip) async {
+  Future deleteCompleted(ProgressionTripModel trip) async {
     final finder = Finder(filter: Filter.byKey(trip.id));
     await _completedTripsStore.delete(
       await _db,
@@ -76,19 +76,31 @@ class TripProvider {
     );
   }
 
-  Future<TripModel> deleteAndGetCurrent() async {
+  // Future<TripModel> deleteAndGetPlanned(TripModel trip) async {
+  //   var result = await _plannedTripsStore.findFirst(await _db,
+  //       finder: Finder(filter: Filter.byKey(trip.id)));
+  //   if (result != null) {
+  //     TripModel trip = TripModel.fromJson(result.value);
+  //     trip.id = result.key;
+  //     await _plannedTripsStore.delete(await _db,
+  //         finder: Finder(filter: Filter.byKey(trip.id)));
+  //     return trip;
+  //   } else
+  //     return null;
+  // }
+
+  Future<ProgressionTripModel> deleteAndGetCurrent() async {
     var result = await _currentTripStore.findFirst(await _db);
     if (result != null) {
-      TripModel trip = TripModel.fromJson(result.value);
+      ProgressionTripModel trip = ProgressionTripModel.fromJson(result.value);
       trip.id = result.key;
-      await _currentTripStore.delete(await _db,
-          finder: Finder(filter: Filter.byKey(trip.id)));
+      await _currentTripStore.delete(await _db, finder: Finder(filter: Filter.byKey(trip.id)));
       return trip;
     } else
       return null;
   }
 
-  Future<List<TripModel>> getAllCompletedSortedByDate() async {
+  Future<List<ProgressionTripModel>> getAllCompletedSortedByDate() async {
     // Finder object can also sort data.
     final finder = Finder(sortOrders: [
       SortOrder('time.startTime'),
@@ -101,7 +113,7 @@ class TripProvider {
 
     // Making a List<Fruit> out of List<RecordSnapshot>
     return recordSnapshots.map((snapshot) {
-      final trip = TripModel.fromJson(snapshot.value);
+      final trip = ProgressionTripModel.fromJson(snapshot.value);
       // An ID is a key of a record from the database.
       trip.id = snapshot.key;
       return trip;
@@ -128,7 +140,7 @@ class TripProvider {
     }).toList();
   }
 
-  Future<TripModel> getCurrent() async {
+  Future<ProgressionTripModel> getCurrent() async {
     // Finder object can also sort data.
     final finder = Finder();
 
@@ -138,13 +150,12 @@ class TripProvider {
     );
 
     if (recordSnapshots.length > 1)
-      print(
-          'ERRO! Current Trip só deiva ser uma mas há: ${recordSnapshots.length}');
+      print('ERRO! Current Trip só deiva ser uma mas há: ${recordSnapshots.length}');
 
     if (recordSnapshots == null || recordSnapshots.isEmpty) return null;
 
     // Making a List<Fruit> out of List<RecordSnapshot>
-    final trip = TripModel.fromJson(recordSnapshots.first.value);
+    final trip = ProgressionTripModel.fromJson(recordSnapshots.first.value);
     trip.id = recordSnapshots.first.key;
     return trip;
   }
@@ -168,9 +179,11 @@ class TripProvider {
   }
 
   Future testDeleteAllCurrent() async {
+    print('apagar');
     await _currentTripStore.delete(
       await _db,
     );
+    print('apaguei, sobraram: ' + (await _currentTripStore.count(await _db)).toString());
   }
 
   Future testDeleteAllCompleted() async {

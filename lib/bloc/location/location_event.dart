@@ -12,6 +12,12 @@ class LoadLocation extends LocationEvent {
   LoadLocation({this.address, this.coordinates});
 }
 
-class ResetLocation extends LocationEvent {
-  const ResetLocation();
+class ShowPreLoadedLocation extends LocationEvent {
+  final LocationModel location;
+
+  ShowPreLoadedLocation({@required this.location});
+}
+
+class ClearLocation extends LocationEvent {
+  const ClearLocation();
 }

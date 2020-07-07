@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:living_city/bloc/location/location_bloc.dart';
+import 'package:living_city/bloc/points_of_interest/points_of_interest_bloc.dart';
+import 'package:living_city/dependency_injection/injection_container.dart';
 import 'journal_page/journal_page.dart';
 import 'map_page/map_page.dart';
 
@@ -14,6 +18,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
+    super.initState();
     _pageIndex = 0;
     _pageController.addListener(() {
       if (_pageController.page.round() != _pageIndex) {
@@ -22,7 +27,6 @@ class _MainScreenState extends State<MainScreen> {
         });
       }
     });
-    super.initState();
   }
 
   void _showPage(int index) {
@@ -55,10 +59,20 @@ class _MainScreenState extends State<MainScreen> {
           )
         ],
       ),
-      body: PageView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: _pageController,
-        children: [const MapPage(), JournalPage()],
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => LocationBloc(sl(), sl()),
+          ),
+          BlocProvider(
+            create: (context) => PointsOfInterestBloc(sl())..add(PointsOfInterestFetch()),
+          ),
+        ],
+        child: PageView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: _pageController,
+          children: [const MapPage(), JournalPage()],
+        ),
       ),
     );
   }

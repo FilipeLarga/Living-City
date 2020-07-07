@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:living_city/bloc/bottom_sheet/bottom_sheet_bloc.dart';
-import 'package:living_city/bloc/route/route_bloc.dart';
+import '../../../../bloc/bs_navigation/bs_navigation_bloc.dart';
 import 'package:living_city/bloc/search_history/search_history_bloc.dart';
 import 'package:living_city/data/models/location_model.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SearchPanel extends StatefulWidget {
+  static const routeName = 'map/explorer/search';
+
   final Function() openSheet;
   final Function() closeSheet;
   final ScrollController scrollController;
@@ -29,22 +31,19 @@ class _SearchPanelState extends State<SearchPanel> {
   bool _focusWhenOpen;
   @override
   void initState() {
-    if ((BlocProvider.of<RouteBloc>(context).state is RouteSearch) &&
-        !(BlocProvider.of<SearchHistoryBloc>(context).state
-            is SearchHistoryLoading)) {
+    super.initState();
+    if (!(BlocProvider.of<SearchHistoryBloc>(context).state is SearchHistoryLoading)) {
       BlocProvider.of<SearchHistoryBloc>(context).add(const FetchHistory());
     }
     _myFocusNode = FocusNode();
     _ignoretextfield = true;
     _focusWhenOpen = false;
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<RouteBloc, RouteState>(listener: (context, state) {}),
         BlocListener<BottomSheetBloc, BottomSheetState>(
           listener: (context, state) {
             if (state is SheetOpen) {
@@ -108,28 +107,25 @@ class _SearchPanelState extends State<SearchPanel> {
                       autocorrect: false,
                       maxLines: 1,
                       focusNode: _myFocusNode,
+                      onSubmitted: _onSubmitted,
                       decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.search,
                           color: const Color(0xFF808080),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 6.0, horizontal: 16),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 16),
                         hintText: 'Search here',
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                              color: Color(0xFFF0F0F0), width: 1.5),
+                          borderSide: const BorderSide(color: Color(0xFFF0F0F0), width: 1.5),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: Theme.of(context).cursorColor, width: 1),
+                          borderSide: BorderSide(color: Theme.of(context).cursorColor, width: 1),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                              color: Color(0xFFF0F0F0), width: 1.5),
+                          borderSide: const BorderSide(color: Color(0xFFF0F0F0), width: 1.5),
                         ),
                         fillColor: Colors.grey,
                       ),
@@ -149,8 +145,7 @@ class _SearchPanelState extends State<SearchPanel> {
                     Container(
                       height: 56,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: const Color(0xFFF0F0F0)),
+                          borderRadius: BorderRadius.circular(10), color: const Color(0xFFF0F0F0)),
                       child: Center(
                         child: Row(
                           children: <Widget>[
@@ -161,15 +156,13 @@ class _SearchPanelState extends State<SearchPanel> {
                             ),
                             const SizedBox(width: 12),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 12.0),
+                              padding: const EdgeInsets.symmetric(vertical: 12.0),
                               child: const Text(
                                 'Choose on map',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    color: const Color(0xFF4D4D4D)),
+                                style:
+                                    const TextStyle(fontSize: 12, color: const Color(0xFF4D4D4D)),
                               ),
                             ),
                           ],
@@ -180,8 +173,7 @@ class _SearchPanelState extends State<SearchPanel> {
                     Container(
                       height: 56,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: const Color(0xFFF0F0F0)),
+                          borderRadius: BorderRadius.circular(10), color: const Color(0xFFF0F0F0)),
                       child: Center(
                         child: Row(
                           children: <Widget>[
@@ -192,8 +184,7 @@ class _SearchPanelState extends State<SearchPanel> {
                             ),
                             const SizedBox(width: 12),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 12.0),
+                              padding: const EdgeInsets.symmetric(vertical: 12.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,16 +194,14 @@ class _SearchPanelState extends State<SearchPanel> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
-                                        fontSize: 12,
-                                        color: const Color(0xFF4D4D4D)),
+                                        fontSize: 12, color: const Color(0xFF4D4D4D)),
                                   ),
                                   const Text(
                                     'Avenida das Forças Armadas',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
-                                        fontSize: 10,
-                                        color: const Color(0xFF666666)),
+                                        fontSize: 10, color: const Color(0xFF666666)),
                                   ),
                                 ],
                               ),
@@ -233,10 +222,8 @@ class _SearchPanelState extends State<SearchPanel> {
                         )),
                     const SizedBox(height: 16),
                     BlocBuilder<SearchHistoryBloc, SearchHistoryState>(
-                      builder:
-                          (BuildContext context, SearchHistoryState state) {
-                        if (state is SearchHistoryLoading ||
-                            state is SearchHistoryInitial) {
+                      builder: (BuildContext context, SearchHistoryState state) {
+                        if (state is SearchHistoryLoading || state is SearchHistoryInitial) {
                           return const ShimmerList();
                         } else if (state is SearchHistoryEmpty) {
                           return Text('empty');
@@ -249,6 +236,7 @@ class _SearchPanelState extends State<SearchPanel> {
                               ...locations.map((location) {
                                 return SearchHistoryListItem(
                                   location: location,
+                                  onSelect: _onSelect,
                                 );
                               }),
                               const SizedBox(height: 24)
@@ -279,56 +267,68 @@ class _SearchPanelState extends State<SearchPanel> {
     });
     widget.openSheet();
   }
+
+  void _onSubmitted(String address) {
+    BlocProvider.of<BSNavigationBloc>(context).add(BSNavigationLocationSelected(address: address));
+  }
+
+  void _onSelect(LocationModel locationModel) {
+    BlocProvider.of<BSNavigationBloc>(context)
+        .add(BSNavigationLocationSelected(locationModel: locationModel));
+  }
 }
 
 class SearchHistoryListItem extends StatelessWidget {
   final LocationModel location;
+  final Function(LocationModel) onSelect;
 
-  const SearchHistoryListItem({Key key, this.location}) : super(key: key);
+  const SearchHistoryListItem({Key key, @required this.location, @required this.onSelect})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
-      child: Container(
-        height: 56,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          //color: const Color(0xFFF0F0F0)
-        ),
-        child: Center(
-          child: Row(
-            children: <Widget>[
-              const SizedBox(width: 12),
-              Icon(
-                Icons.history,
-                color: const Color(0xFF808080),
-              ),
-              const SizedBox(width: 12),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      location.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 12, color: const Color(0xFF4D4D4D)),
-                    ),
-                    Text(
-                      location.locality,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 10, color: const Color(0xFF666666)),
-                    ),
-                  ],
+      child: GestureDetector(
+        onTap: () => onSelect(location),
+        child: Container(
+          height: 56,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            //color: const Color(0xFFF0F0F0)
+          ),
+          child: Center(
+            child: Row(
+              children: <Widget>[
+                const SizedBox(width: 12),
+                Icon(
+                  Icons.history,
+                  color: const Color(0xFF808080),
                 ),
-              ),
-            ],
+                const SizedBox(width: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        location.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 12, color: const Color(0xFF4D4D4D)),
+                      ),
+                      Text(
+                        location.locality,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 10, color: const Color(0xFF666666)),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -361,8 +361,7 @@ class ShimmerList extends StatelessWidget {
                   Container(
                     height: 24,
                     width: 24,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.white),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
                   ),
                   const SizedBox(width: 12),
                   Expanded(

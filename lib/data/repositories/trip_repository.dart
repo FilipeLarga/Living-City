@@ -6,7 +6,7 @@ class TripRepository {
 
   const TripRepository(this._tripProvider);
 
-  Future<List<TripModel>> getCompletedTrips() async {
+  Future<List<ProgressionTripModel>> getCompletedTrips() async {
     var list = await _tripProvider.getAllCompletedSortedByDate();
     return list;
   }
@@ -16,15 +16,16 @@ class TripRepository {
     return list;
   }
 
-  Future<TripModel> getCurrentTrip() async {
+  Future<ProgressionTripModel> getCurrentTrip() async {
     var trip = await _tripProvider.getCurrent();
     return trip;
   }
 
   Future startTrip(TripModel trip) async {
+    final progressionTrip = ProgressionTripModel.initial(trip);
     await Future.wait([
       _tripProvider.deletePlanned(trip),
-      _tripProvider.insertCurrent(trip),
+      _tripProvider.insertCurrent(progressionTrip),
     ]);
     //This also works
     // await _tripProvider.deletePlanned(trip);
@@ -32,7 +33,7 @@ class TripRepository {
   }
 
   Future completeTrip() async {
-    TripModel trip = await _tripProvider.deleteAndGetCurrent();
+    ProgressionTripModel trip = await _tripProvider.deleteAndGetCurrent();
     trip.id = null;
     _tripProvider.insertCompleted(trip);
   }
@@ -62,7 +63,7 @@ class TripRepository {
     ]);
   }
 
-  Future testAddCompleted(TripModel trip) async {
+  Future testAddCompleted(ProgressionTripModel trip) async {
     await _tripProvider.insertCompleted(trip);
   }
 }

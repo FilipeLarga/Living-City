@@ -14,8 +14,8 @@ class LocationLoading extends LocationState {
 }
 
 class LocationError extends LocationState {
-  final Error error;
-  const LocationError(this.error);
+  final Exception exception;
+  const LocationError(this.exception);
 }
 
 class LocationLoaded extends LocationState {
