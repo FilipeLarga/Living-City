@@ -93,23 +93,23 @@ flutter:
     # - assets/map/12/1945/
     # - assets/map/12/1946/
     # - assets/map/12/1947/
-    # - assets/map/13/3878/ #13 3878-3894
-    # - assets/map/13/3879/
-    # - assets/map/13/3880/
-    # - assets/map/13/3881/
-    # - assets/map/13/3882/
-    # - assets/map/13/3883/
-    # - assets/map/13/3884/
-    # - assets/map/13/3885/
-    # - assets/map/13/3886/
-    # - assets/map/13/3887/
-    # - assets/map/13/3888/
-    # - assets/map/13/3889/
-    # - assets/map/13/3890/
-    # - assets/map/13/3891/
-    # - assets/map/13/3892/
-    # - assets/map/13/3893/
-    # - assets/map/13/3894/
+    - assets/map/13/3878/ #13 3878-3894
+    - assets/map/13/3879/
+    - assets/map/13/3880/
+    - assets/map/13/3881/
+    - assets/map/13/3882/
+    - assets/map/13/3883/
+    - assets/map/13/3884/
+    - assets/map/13/3885/
+    - assets/map/13/3886/
+    - assets/map/13/3887/
+    - assets/map/13/3888/
+    - assets/map/13/3889/
+    - assets/map/13/3890/
+    - assets/map/13/3891/
+    - assets/map/13/3892/
+    - assets/map/13/3893/
+    - assets/map/13/3894/
     # - assets/map/14/7757/ #14 7757-7789
     # - assets/map/14/7758/
     # - assets/map/14/7759/

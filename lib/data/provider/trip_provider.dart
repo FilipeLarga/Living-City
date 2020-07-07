@@ -1,6 +1,7 @@
-import 'package:living_city/data/models/trip_model.dart';
-import 'package:living_city/data/database/trip_database.dart';
 import 'package:sembast/sembast.dart';
+
+import '../database/trip_database.dart';
+import '../models/trip_model.dart';
 
 class TripProvider {
   static const String COMPLETED_TRIP_STORE_NAME = 'completed_trips';
@@ -20,7 +21,7 @@ class TripProvider {
   }
 
   Future insertCompleted(ProgressionTripModel trip) async {
-    var key = await _completedTripsStore.add(await _db, trip.toMap());
+    await _completedTripsStore.add(await _db, trip.toMap());
   }
 
   Future insertPlanned(TripModel trip) async {

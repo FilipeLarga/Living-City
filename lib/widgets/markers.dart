@@ -11,8 +11,7 @@ class CircleMarker extends StatelessWidget {
       decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.white,
-          border: Border.all(
-              color: color ?? Theme.of(context).accentColor, width: 2)),
+          border: Border.all(color: color ?? Theme.of(context).accentColor, width: 2)),
     );
   }
 }
@@ -21,8 +20,7 @@ class TargetCircleMarker extends StatelessWidget {
   final double spreadsize;
   final Color color;
 
-  const TargetCircleMarker({Key key, this.color, this.spreadsize = 8})
-      : super(key: key);
+  const TargetCircleMarker({Key key, this.color, this.spreadsize = 8}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +32,7 @@ class TargetCircleMarker extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: (color ?? Theme.of(context).accentColor)
-                      .withOpacity(0.5)),
+                  color: (color ?? Theme.of(context).accentColor).withOpacity(0.5)),
             ),
             SizedBox(
               height: constraints.maxHeight - spreadsize,
@@ -50,13 +47,25 @@ class TargetCircleMarker extends StatelessWidget {
     );
   }
 }
-// Container(
-//           height: size,
-//           width: size,
-//           decoration: BoxDecoration(
-//             color: Colors.white,
-//             shape: BoxShape.circle,
-//             border: Border.all(
-//                 color: color ?? Theme.of(context).accentColor, width: 2),
-//           ),
-//         ),
+
+class PointOfInterestMarker extends StatelessWidget {
+  final Color color;
+  final Function() onTapCallback;
+
+  const PointOfInterestMarker({Key key, this.color, @required this.onTapCallback})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTapCallback,
+      child: Container(
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white,
+            border: Border.all(color: color ?? Theme.of(context).accentColor, width: 2)),
+      ),
+    );
+  }
+}

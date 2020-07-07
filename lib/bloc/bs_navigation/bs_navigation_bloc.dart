@@ -1,26 +1,25 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
-import 'package:living_city/data/models/location_model.dart';
-import 'package:living_city/data/models/point_of_interest_model.dart';
-import 'package:living_city/data/models/trip_model.dart';
-import 'package:living_city/data/models/trip_plan_model.dart';
-import 'package:living_city/data/repositories/location_repository.dart';
-import 'package:living_city/data/repositories/trip_repository.dart';
-import 'package:meta/meta.dart';
 import 'package:latlong/latlong.dart';
+import 'package:meta/meta.dart';
+
+import '../../data/models/location_model.dart';
+import '../../data/models/point_of_interest_model.dart';
+import '../../data/models/trip_model.dart';
+import '../../data/models/trip_plan_model.dart';
+import '../../data/repositories/trip_repository.dart';
 
 part 'bs_navigation_event.dart';
 part 'bs_navigation_state.dart';
 
 class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
-  final LocationRepository _locationRepository;
   final TripRepository _tripRepository;
   final TripPlanModel _tripPlanModel;
 
   bool _originSelected;
 
   BSNavigationBloc(
-    this._locationRepository,
     this._tripRepository,
   ) : this._tripPlanModel = TripPlanModel();
 
