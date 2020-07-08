@@ -1,4 +1,5 @@
 import 'package:latlong/latlong.dart';
+import 'package:living_city/core/latlng_json_helper.dart';
 
 class BluetoothDeviceModel {
   int id;
@@ -17,7 +18,7 @@ class BluetoothDeviceModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'coordinates': coordinates.toMap(),
+      'coordinates': latLngToMap(coordinates),
       'timestamp': timestamp,
     };
   }
