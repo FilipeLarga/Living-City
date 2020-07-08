@@ -1,4 +1,5 @@
 import 'package:latlong/latlong.dart';
+import 'package:living_city/core/latlng_json_helper.dart';
 import 'package:living_city/data/models/point_of_interest_model.dart';
 
 class TripModel {
@@ -37,7 +38,7 @@ class TripModel {
       'distance': distance,
       'calories': calories,
       'time': _timeToMap(),
-      'line': line.map((coords) => coords.toMap()).toList(growable: false),
+      'line': line.map((coords) => latLngToMap(coords)).toList(growable: false),
       'pois': pois.map((timedPOI) => timedPOI.toMap()).toList(growable: false),
     };
   }
@@ -80,7 +81,7 @@ class ProgressionTripModel {
     return {
       'originalTrip': originalTrip.toMap(),
       'progressLine':
-          progressLine.map((e) => e.toMap()).toList(growable: false),
+          progressLine.map((e) => latLngToMap(e)).toList(growable: false),
       'progressPOIs':
           progressPOIs.map((e) => e.toMap()).toList(growable: false),
     };
