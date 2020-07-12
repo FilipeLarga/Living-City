@@ -7,8 +7,7 @@ part 'bottom_sheet_event.dart';
 part 'bottom_sheet_state.dart';
 
 class BottomSheetBloc extends Bloc<BottomSheetEvent, BottomSheetState> {
-  @override
-  BottomSheetState get initialState => SheetClosed();
+  BottomSheetBloc() : super(const SheetClosed());
 
   @override
   Stream<BottomSheetState> mapEventToState(

@@ -1,9 +1,13 @@
 part of 'trip_list_bloc.dart';
 
 @immutable
-abstract class TripListState {}
+abstract class TripListState {
+  const TripListState();
+}
 
-class TripListUninitialized extends TripListState {}
+class TripListUninitialized extends TripListState {
+  const TripListUninitialized();
+}
 
 class TripListLoaded extends TripListState {
   final int sumCalories;

@@ -15,10 +15,8 @@ part 'location_state.dart';
 class LocationBloc extends Bloc<LocationEvent, LocationState> {
   final LocationRepository _locationRepository;
   final PointsOfInterestRepository _poiRepository;
-  LocationBloc(this._locationRepository, this._poiRepository);
-
-  @override
-  LocationState get initialState => const LocationInactive();
+  LocationBloc(this._locationRepository, this._poiRepository)
+      : super(const LocationInactive());
 
   @override
   Stream<LocationState> mapEventToState(
@@ -42,14 +40,17 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
         final pois = await _poiRepository.getPointsOfInterest();
         for (PointOfInterestModel poi in pois) {
           if (event.address == poi.name) {
-            locationResult = LocationModel(poi.coordinates, name: poi.name, locality: 'Lisbon');
+            locationResult = LocationModel(poi.coordinates,
+                name: poi.name, locality: 'Lisbon');
             break;
           }
         }
         if (locationResult == null)
-          locationResult = await _locationRepository.getLocationFromAddress(event.address);
+          locationResult =
+              await _locationRepository.getLocationFromAddress(event.address);
       } else {
-        locationResult = await _locationRepository.getLocationFromCoordinates(event.coordinates);
+        locationResult = await _locationRepository
+            .getLocationFromCoordinates(event.coordinates);
       }
       await _locationRepository.saveLocation(locationResult);
       yield LocationLoaded(locationResult);

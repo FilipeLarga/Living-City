@@ -12,10 +12,7 @@ part 'trip_list_state.dart';
 class TripListBloc extends Bloc<TripListEvent, TripListState> {
   final TripRepository _tripRepository;
 
-  TripListBloc(this._tripRepository);
-
-  @override
-  TripListState get initialState => TripListUninitialized();
+  TripListBloc(this._tripRepository) : super(const TripListUninitialized());
 
   @override
   Stream<TripListState> mapEventToState(
@@ -67,9 +64,13 @@ class TripListBloc extends Bloc<TripListEvent, TripListState> {
 
       ProgressionTripModel currentTrip = await _tripRepository.getCurrentTrip();
       List<TripModel> plannedList = await _tripRepository.getPlannedTrips();
-      List<ProgressionTripModel> completedList = await _tripRepository.getCompletedTrips();
+      List<ProgressionTripModel> completedList =
+          await _tripRepository.getCompletedTrips();
 
-      int sumCalories = 0, sumDistance = 0, sumPOIsVisited = 0, sumSustainability = 0;
+      int sumCalories = 0,
+          sumDistance = 0,
+          sumPOIsVisited = 0,
+          sumSustainability = 0;
 
       for (ProgressionTripModel trip in completedList) {
         sumCalories += trip.originalTrip.calories;

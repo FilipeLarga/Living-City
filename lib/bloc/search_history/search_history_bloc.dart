@@ -11,9 +11,8 @@ part 'search_history_state.dart';
 class SearchHistoryBloc extends Bloc<SearchHistoryEvent, SearchHistoryState> {
   final LocationRepository _locationRepository;
 
-  SearchHistoryBloc(this._locationRepository);
-  @override
-  SearchHistoryState get initialState => SearchHistoryInitial();
+  SearchHistoryBloc(this._locationRepository)
+      : super(const SearchHistoryInitial());
 
   @override
   Stream<SearchHistoryState> mapEventToState(

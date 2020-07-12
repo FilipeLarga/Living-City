@@ -21,10 +21,8 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
 
   BSNavigationBloc(
     this._tripRepository,
-  ) : this._tripPlanModel = TripPlanModel();
-
-  @override
-  BSNavigationState get initialState => const BSNavigationExplore();
+  )   : this._tripPlanModel = TripPlanModel(),
+        super(const BSNavigationExplore());
 
   @override
   Stream<BSNavigationState> mapEventToState(
@@ -56,7 +54,8 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
     if (trip != null) yield BSNavigationActiveTrip(trip);
   }
 
-  Stream<BSNavigationState> _handleLocationSelected(BSNavigationLocationSelected event) async* {
+  Stream<BSNavigationState> _handleLocationSelected(
+      BSNavigationLocationSelected event) async* {
     if (state is BSNavigationExplore || state is BSNavigationSelectingLocation)
       yield BSNavigationShowingLocation(
           address: event.address,
@@ -64,14 +63,16 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
           locationModel: event.locationModel);
   }
 
-  Stream<BSNavigationState> _handleMapSelection(BSNavigationMapSelection event) async* {
+  Stream<BSNavigationState> _handleMapSelection(
+      BSNavigationMapSelection event) async* {
     if (state is BSNavigationExplore ||
         state is BSNavigationSelectingLocation ||
         state is BSNavigationShowingLocation)
       yield BSNavigationShowingLocation(coordinates: event.coordinates);
   }
 
-  Stream<BSNavigationState> _handleLocationAccepted(BSNavigationLocationAccepted event) async* {
+  Stream<BSNavigationState> _handleLocationAccepted(
+      BSNavigationLocationAccepted event) async* {
     if (state is BSNavigationShowingLocation) {
       if (event.origin != null) {
         if (event.origin)
@@ -86,7 +87,8 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
       }
       _originSelected = null;
       yield BSNavigationPlanningPoints(
-          origin: _tripPlanModel.origin, destination: _tripPlanModel.destination);
+          origin: _tripPlanModel.origin,
+          destination: _tripPlanModel.destination);
     }
   }
 
@@ -101,7 +103,8 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
     if (state is BSNavigationSelectingLocation) {
       _originSelected = null;
       yield BSNavigationPlanningPoints(
-          origin: _tripPlanModel.origin, destination: _tripPlanModel.destination);
+          origin: _tripPlanModel.origin,
+          destination: _tripPlanModel.destination);
     } else if (state is BSNavigationShowingLocation) {
       if (_originSelected == null)
         yield BSNavigationExplore();
@@ -115,17 +118,22 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
       _originSelected = null;
       _tripPlanModel.clearRestrictions();
       yield BSNavigationPlanningPoints(
-          origin: _tripPlanModel.origin, destination: _tripPlanModel.destination);
+          origin: _tripPlanModel.origin,
+          destination: _tripPlanModel.destination);
     } else if (state is BSNavigationPlanningInterests) {
       _tripPlanModel.clearInterests();
       yield BSNavigationPlanningRestrictions(
-          budget: _tripPlanModel.budget, date: _tripPlanModel.date, effort: _tripPlanModel.effort);
+          budget: _tripPlanModel.budget,
+          date: _tripPlanModel.date,
+          effort: _tripPlanModel.effort);
     }
   }
 
-  Stream<BSNavigationState> _handlePointSelected(BSNavigationPointSelected event) async* {
+  Stream<BSNavigationState> _handlePointSelected(
+      BSNavigationPointSelected event) async* {
     _originSelected = event.origin;
-    if (state is BSNavigationPlanningPoints) yield BSNavigationSelectingLocation();
+    if (state is BSNavigationPlanningPoints)
+      yield BSNavigationSelectingLocation();
   }
 
   Stream<BSNavigationState> _handleAdvanced() async* {
@@ -136,19 +144,24 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
     else if (state is BSNavigationPlanningInterests) print('done');
   }
 
-  Stream<BSNavigationState> _handleRestrictionAdded(BSNavigationRestrictionAdded event) async* {
+  Stream<BSNavigationState> _handleRestrictionAdded(
+      BSNavigationRestrictionAdded event) async* {
     if (state is BSNavigationPlanningRestrictions) {
       if (event.budget != null) _tripPlanModel.budget = event.budget;
       if (event.date != null) _tripPlanModel.date = event.date;
       if (event.effort != null) _tripPlanModel.effort = event.effort;
       yield BSNavigationPlanningRestrictions(
-          budget: _tripPlanModel.budget, date: _tripPlanModel.date, effort: _tripPlanModel.effort);
+          budget: _tripPlanModel.budget,
+          date: _tripPlanModel.date,
+          effort: _tripPlanModel.effort);
     }
   }
 
-  Stream<BSNavigationState> _handleInterestAdded(BSNavigationInterestAdded event) async* {
+  Stream<BSNavigationState> _handleInterestAdded(
+      BSNavigationInterestAdded event) async* {
     if (state is BSNavigationPlanningInterests) {
-      if (event.categories != null) _tripPlanModel.categories = event.categories;
+      if (event.categories != null)
+        _tripPlanModel.categories = event.categories;
       if (event.pois != null) _tripPlanModel.pois = event.pois;
       yield BSNavigationPlanningInterests();
     }

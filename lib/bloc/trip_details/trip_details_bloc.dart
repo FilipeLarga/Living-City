@@ -10,7 +10,7 @@ part 'trip_details_state.dart';
 class TripDetailsBloc extends Bloc<TripDetailsEvent, TripDetailsState> {
   final TripModel tripModel;
 
-  TripDetailsBloc(this.tripModel);
+  TripDetailsBloc(this.tripModel) : super(TripDetailsInitial(tripModel));
 
   @override
   TripDetailsState get initialState => TripDetailsInitial(tripModel);

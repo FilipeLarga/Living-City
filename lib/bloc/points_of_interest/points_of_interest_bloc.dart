@@ -8,12 +8,12 @@ import '../../data/repositories/points_of_interest_repository.dart';
 part 'points_of_interest_event.dart';
 part 'points_of_interest_state.dart';
 
-class PointsOfInterestBloc extends Bloc<PointsOfInterestEvent, PointsOfInterestState> {
+class PointsOfInterestBloc
+    extends Bloc<PointsOfInterestEvent, PointsOfInterestState> {
   final PointsOfInterestRepository _pointsOfInterestRepository;
 
-  PointsOfInterestBloc(this._pointsOfInterestRepository);
-  @override
-  PointsOfInterestState get initialState => PointsOfInterestInitial();
+  PointsOfInterestBloc(this._pointsOfInterestRepository)
+      : super(const PointsOfInterestInitial());
 
   @override
   Stream<PointsOfInterestState> mapEventToState(
