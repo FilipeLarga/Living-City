@@ -57,7 +57,6 @@ class BluetoothDetectionService {
     } catch (e) {
       print('Erro: $e');
     } finally {
-      print('Agendar outro');
       _timer = Timer(scanInterval, () => _workAndSetupTimer());
     }
   }

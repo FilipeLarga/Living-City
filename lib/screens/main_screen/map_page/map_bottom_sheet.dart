@@ -24,20 +24,19 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
   final PanelController _panelController = PanelController();
   bool _draggable;
   bool _backdrop;
+  // double _panelHeightFactor;
 
   Widget _panelWidget;
 
   ScrollController _scrollController;
+
+  double heightLimit;
 
   @override
   void initState() {
     super.initState();
     _draggable = true;
     _backdrop = true;
-    _panelWidget = BlocProvider.of<BSNavigationBloc>(context).state is BSNavigationActiveTrip
-        ? ActiveTripPanel()
-        : SearchPanel(
-            scrollController: _scrollController, openSheet: _openSheet, closeSheet: _closeSheet);
   }
 
   @override
@@ -56,6 +55,14 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                     scrollController: _scrollController,
                     openSheet: _openSheet,
                     closeSheet: _closeSheet);
+                _panelController
+                    .animatePanelToPosition(0,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInCubic)
+                    .then((value) {
+                  _backdrop = true;
+                  _draggable = true;
+                });
               });
             } else if (state is BSNavigationSelectingLocation) {
               setState(() {
@@ -63,19 +70,52 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                     scrollController: _scrollController,
                     openSheet: _openSheet,
                     closeSheet: _closeSheet);
+                _panelController
+                    .animatePanelToPosition(0,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInCubic)
+                    .then((value) {
+                  _backdrop = true;
+                  _draggable = true;
+                });
               });
+              // print('location');
+              // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              //   print('happenend');
+              //   setState(() {
+              //     _panelWidget = SearchPanel(
+              //         scrollController: _scrollController,
+              //         openSheet: _openSheet,
+              //         closeSheet: _closeSheet);
+              //     _backdrop = true;
+              //     _panelController.close();
+              //   });
+              // });
             } else if (state is BSNavigationShowingLocation) {
               setState(() {
-                _panelWidget = LocationPanel(
-                    key: UniqueKey(),
-                    address: state.address,
-                    coordinates: state.coordinates,
-                    locationModel: state.locationModel);
+                _draggable = false;
+                _backdrop = false;
+                print((194 / heightLimit));
+                _panelController.animatePanelToPosition(
+                    (194.0 / heightLimit).toDouble(),
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeInCubic);
+              });
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                setState(() {
+                  _panelWidget = LocationPanel(
+                      key: ValueKey(state.address ??
+                          state.coordinates ??
+                          state.locationModel),
+                      address: state.address,
+                      coordinates: state.coordinates,
+                      locationModel: state.locationModel);
+                });
               });
             } else if (state is BSNavigationPlanningPoints) {
               setState(() {
-                _panelWidget =
-                    PlanPointsPanel(origin: state.origin, destination: state.destination);
+                _panelWidget = PlanPointsPanel(
+                    origin: state.origin, destination: state.destination);
               });
             } else if (state is BSNavigationPlanningRestrictions) {
               setState(() {
@@ -95,9 +135,11 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
       ],
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final _panelMaxHeight = constraints.maxHeight - MediaQuery.of(context).padding.top - 16;
+          heightLimit =
+              constraints.maxHeight - MediaQuery.of(context).padding.top - 16;
+          print(heightLimit);
           return SlidingUpPanel(
-            maxHeight: _panelMaxHeight,
+            maxHeight: heightLimit /** _panelHeightFactor*/,
             minHeight: 88,
             backdropEnabled: _backdrop,
             backdropTapClosesPanel: _backdrop,
@@ -105,7 +147,8 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
             controller: _panelController,
             padding: EdgeInsets.only(left: 16, right: 16, top: 12),
             borderRadius: const BorderRadius.only(
-                topLeft: const Radius.circular(10), topRight: const Radius.circular(10)),
+                topLeft: const Radius.circular(10),
+                topRight: const Radius.circular(10)),
             panelBuilder: (ScrollController sc) {
               _scrollController = sc;
 
@@ -118,20 +161,35 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                     ),
                   ),
                   child: PageTransitionSwitcher(
-                    transitionBuilder: (
-                      Widget child,
-                      Animation<double> animation,
-                      Animation<double> secondaryAnimation,
-                    ) {
-                      return SharedAxisTransition(
-                        animation: animation,
-                        secondaryAnimation: secondaryAnimation,
-                        child: child,
-                        transitionType: SharedAxisTransitionType.scaled,
-                      );
-                    },
-                    child: _panelWidget,
-                  ));
+                      // duration: Duration(seconds: 3),
+                      // layoutBuilder: (_activeEntries) {
+                      //   return Stack(
+                      //     children: _activeEntries
+                      //         .map<Widget>((ChildEntry entry) => entry.transition)
+                      //         .toList(),
+                      //     alignment: Alignment.topCenter,
+                      //   );
+                      // },
+                      transitionBuilder: (
+                        Widget child,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation,
+                      ) {
+                        return SharedAxisTransition(
+                          animation: animation,
+                          secondaryAnimation: secondaryAnimation,
+                          child: child,
+                          transitionType: SharedAxisTransitionType.scaled,
+                        );
+                      },
+                      child: _panelWidget ??
+                          (BlocProvider.of<BSNavigationBloc>(context).state
+                                  is BSNavigationActiveTrip
+                              ? ActiveTripPanel()
+                              : SearchPanel(
+                                  scrollController: _scrollController,
+                                  openSheet: _openSheet,
+                                  closeSheet: _closeSheet))));
             },
             onPanelClosed: _onPanelClosed,
             onPanelOpened: _onPanelOpened,

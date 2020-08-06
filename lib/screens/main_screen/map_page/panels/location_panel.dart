@@ -25,12 +25,14 @@ class _LocationPanelState extends State<LocationPanel> {
   @override
   void initState() {
     super.initState();
+    print('initState');
     // This warnings are just false-positives.
     final locationBloc = BlocProvider.of<LocationBloc>(context);
     final needsLoading = widget.locationModel == null;
 
-    if (needsLoading && !(locationBloc.state is LocationLoading)) {
-      locationBloc.add(LoadLocation(address: widget.address, coordinates: widget.coordinates));
+    if (needsLoading /* && !(locationBloc.state is LocationLoading)*/) {
+      locationBloc.add(LoadLocation(
+          address: widget.address, coordinates: widget.coordinates));
     } else {
       locationBloc.add(ShowPreLoadedLocation(location: widget.locationModel));
     }
@@ -64,18 +66,23 @@ class _LocationPanelState extends State<LocationPanel> {
                           child: Text('LocationPanel'),
                         ),
                         MaterialButton(
-                          onPressed: () => BlocProvider.of<BSNavigationBloc>(context)
-                              .add(BSNavigationCanceled()),
+                          onPressed: () =>
+                              BlocProvider.of<BSNavigationBloc>(context)
+                                  .add(BSNavigationCanceled()),
                           child: Text('Cancel'),
                         ),
                         MaterialButton(
-                          onPressed: () => BlocProvider.of<BSNavigationBloc>(context)
-                              .add(BSNavigationLocationAccepted(location, origin: true)),
+                          onPressed: () =>
+                              BlocProvider.of<BSNavigationBloc>(context).add(
+                                  BSNavigationLocationAccepted(location,
+                                      origin: true)),
                           child: Text('Accept Origin'),
                         ),
                         MaterialButton(
-                          onPressed: () => BlocProvider.of<BSNavigationBloc>(context)
-                              .add(BSNavigationLocationAccepted(location, origin: false)),
+                          onPressed: () =>
+                              BlocProvider.of<BSNavigationBloc>(context).add(
+                                  BSNavigationLocationAccepted(location,
+                                      origin: false)),
                           child: Text('Accept Destination'),
                         )
                       ],

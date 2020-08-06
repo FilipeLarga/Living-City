@@ -11,7 +11,7 @@ void main() {
   var binding = WidgetsFlutterBinding.ensureInitialized();
   di.init(); //dependencies injection
   binding.addObserver(LifeCycleObserver(di.sl()..start()));
-  BlocSupervisor.delegate = SimpleBlocDelegate();
+  Bloc.observer = SimpleBlocObserver();
   runApp(App());
 }
 

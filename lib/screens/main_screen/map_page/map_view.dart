@@ -40,36 +40,39 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     //     BlocProvider.of<UserLocationBloc>(context).state is UserLocationLoaded;
     _isShowingPOIs = true;
     _mapController = MapController();
-    if (BlocProvider.of<PointsOfInterestBloc>(context).state is PointsOfInterestLoaded)
-      _pointsOfInterest =
-          (BlocProvider.of<PointsOfInterestBloc>(context).state as PointsOfInterestLoaded)
-              .pois
-              .map((poi) => Marker(
-                    height: 16,
-                    width: 16,
-                    point: poi.coordinates,
-                    builder: (context) => markers.PointOfInterestMarker(
-                      onTapCallback: () => BlocProvider.of<BSNavigationBloc>(context)
+    if (BlocProvider.of<PointsOfInterestBloc>(context).state
+        is PointsOfInterestLoaded)
+      _pointsOfInterest = (BlocProvider.of<PointsOfInterestBloc>(context).state
+              as PointsOfInterestLoaded)
+          .pois
+          .map((poi) => Marker(
+                height: 16,
+                width: 16,
+                point: poi.coordinates,
+                builder: (context) => markers.PointOfInterestMarker(
+                  onTapCallback: () =>
+                      BlocProvider.of<BSNavigationBloc>(context)
                           .add(BSNavigationLocationSelected(address: poi.name)),
-                    ),
-                  ))
-              .toList();
+                ),
+              ))
+          .toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(_pointsOfInterest.length);
     return MultiBlocListener(
       listeners: [
         BlocListener<LocationBloc, LocationState>(
           listener: (context, state) {
             if (state is LocationLoaded)
-              _animatedMapMove(state.location?.coordinates ?? state.location, _mapController.zoom)
+              _animatedMapMove(state.location?.coordinates ?? state.location,
+                      _mapController.zoom)
                   .then((value) => setState(() {
                         _locationMarkers.add(Marker(
                             height: 16,
                             width: 16,
-                            point: state.location?.coordinates ?? state.location,
+                            point:
+                                state.location?.coordinates ?? state.location,
                             builder: (context) => markers.CircleMarker()));
                       }));
           },
@@ -85,9 +88,9 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                           point: poi.coordinates,
                           builder: (context) => markers.PointOfInterestMarker(
                             onTapCallback: () {
-                              print('TRAP');
-                              BlocProvider.of<BSNavigationBloc>(context)
-                                  .add(BSNavigationLocationSelected(address: poi.name));
+                              BlocProvider.of<BSNavigationBloc>(context).add(
+                                  BSNavigationLocationSelected(
+                                      address: poi.name));
                             },
                           ),
                         ))
@@ -131,7 +134,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                       builder: (context) => markers.CircleMarker()));
                 if (state.origin != null && state.destination != null)
                   _animatedFitBounds(
-                      LatLngBounds(state.origin.coordinates, state.destination.coordinates),
+                      LatLngBounds(state.origin.coordinates,
+                          state.destination.coordinates),
                       options: FitBoundsOptions(
                         maxZoom: 16,
                         padding: EdgeInsets.only(
@@ -172,12 +176,16 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
               ),
               if ((_locationMarkers +
                       _pointMarkers +
-                      (_showControls && _isShowingPOIs ? _pointsOfInterest : []))
+                      (_showControls && _isShowingPOIs
+                          ? _pointsOfInterest
+                          : []))
                   .isNotEmpty)
                 MarkerLayerOptions(
                   markers: _locationMarkers +
                       _pointMarkers +
-                      (_showControls && _isShowingPOIs ? _pointsOfInterest : []),
+                      (_showControls && _isShowingPOIs
+                          ? _pointsOfInterest
+                          : []),
                 )
             ],
           ),
@@ -207,8 +215,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   }
 
   _onTap(LatLng position) {
-    print('tap');
-    BlocProvider.of<BSNavigationBloc>(context).add(BSNavigationMapSelection(position));
+    BlocProvider.of<BSNavigationBloc>(context)
+        .add(BSNavigationMapSelection(position));
   }
 
   LatLng _getInitialCenter(BuildContext context) {
@@ -237,20 +245,23 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   Future<void> _animatedMapMove(LatLng destLocation, double destZoom) async {
     // Create some tweens. These serve to split up the transition from one location to another.
     // In our case, we want to split the transition be<tween> our current map center and the destination.
-    final _latTween =
-        Tween<double>(begin: _mapController.center.latitude, end: destLocation.latitude);
-    final _lngTween =
-        Tween<double>(begin: _mapController.center.longitude, end: destLocation.longitude);
+    final _latTween = Tween<double>(
+        begin: _mapController.center.latitude, end: destLocation.latitude);
+    final _lngTween = Tween<double>(
+        begin: _mapController.center.longitude, end: destLocation.longitude);
     final _zoomTween = Tween<double>(begin: _mapController.zoom, end: destZoom);
 
     // Create a animation controller that has a duration and a TickerProvider.
-    var controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
+    var controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
     // The animation determines what path the animation will take. You can try different Curves values, although I found
     // fastOutSlowIn to be my favorite.
-    Animation<double> animation = CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+    Animation<double> animation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
 
     controller.addListener(() {
-      _mapController.move(LatLng(_latTween.evaluate(animation), _lngTween.evaluate(animation)),
+      _mapController.move(
+          LatLng(_latTween.evaluate(animation), _lngTween.evaluate(animation)),
           _zoomTween.evaluate(animation));
     });
 
@@ -265,30 +276,40 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     await controller.forward();
   }
 
-  Future<void> _animatedFitBounds(LatLngBounds bounds, {FitBoundsOptions options}) async {
+  Future<void> _animatedFitBounds(LatLngBounds bounds,
+      {FitBoundsOptions options}) async {
     // Create some tweens. These serve to split up the transition from one location to another.
     final _swLatTween = Tween<double>(
-        begin: _mapController.bounds.southWest.latitude, end: bounds.southWest.latitude);
+        begin: _mapController.bounds.southWest.latitude,
+        end: bounds.southWest.latitude);
     final _swLngTween = Tween<double>(
-        begin: _mapController.bounds.southWest.longitude, end: bounds.southWest.longitude);
+        begin: _mapController.bounds.southWest.longitude,
+        end: bounds.southWest.longitude);
     final _neLatTween = Tween<double>(
-        begin: _mapController.bounds.northEast.latitude, end: bounds.northEast.latitude);
+        begin: _mapController.bounds.northEast.latitude,
+        end: bounds.northEast.latitude);
     final _neLngTween = Tween<double>(
-        begin: _mapController.bounds.northEast.longitude, end: bounds.northEast.longitude);
+        begin: _mapController.bounds.northEast.longitude,
+        end: bounds.northEast.longitude);
 
-    final _paddingTween = Tween<EdgeInsets>(begin: EdgeInsets.all(0), end: options.padding);
+    final _paddingTween =
+        Tween<EdgeInsets>(begin: EdgeInsets.all(0), end: options.padding);
 
     // Create a animation controller that has a duration and a TickerProvider.
-    var controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
+    var controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
     // The animation determines what path the animation will take. You can try different Curves values, although I found
     // fastOutSlowIn to be my favorite.
-    Animation<double> animation = CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+    Animation<double> animation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
 
     controller.addListener(() {
       _mapController.fitBounds(
           LatLngBounds(
-            LatLng(_swLatTween.evaluate(animation), _swLngTween.evaluate(animation)),
-            LatLng(_neLatTween.evaluate(animation), _neLngTween.evaluate(animation)),
+            LatLng(_swLatTween.evaluate(animation),
+                _swLngTween.evaluate(animation)),
+            LatLng(_neLatTween.evaluate(animation),
+                _neLngTween.evaluate(animation)),
           ),
           options: FitBoundsOptions(
               padding: _paddingTween.evaluate(animation),

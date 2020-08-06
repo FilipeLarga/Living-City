@@ -132,8 +132,9 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
   Stream<BSNavigationState> _handlePointSelected(
       BSNavigationPointSelected event) async* {
     _originSelected = event.origin;
-    if (state is BSNavigationPlanningPoints)
+    if (state is BSNavigationPlanningPoints) {
       yield BSNavigationSelectingLocation();
+    }
   }
 
   Stream<BSNavigationState> _handleAdvanced() async* {

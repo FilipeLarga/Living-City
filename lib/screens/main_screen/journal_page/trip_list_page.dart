@@ -447,9 +447,10 @@ class _TripListTabState extends State<TripListTab> {
     keys = List.generate(widget.strings.length, (_) => GlobalKey(),
         growable: false);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        _ready = true;
-      });
+      if (this.mounted)
+        setState(() {
+          _ready = true;
+        });
     });
   }
 
