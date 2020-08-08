@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:living_city/bloc/bs_navigation/bs_navigation_bloc.dart';
 import 'package:living_city/data/models/location_model.dart';
-import 'package:living_city/widgets/dashed_line.dart';
 
 class PlanPointsPanel extends StatelessWidget {
   final LocationModel origin;

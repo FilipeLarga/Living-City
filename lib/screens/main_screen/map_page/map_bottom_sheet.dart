@@ -24,6 +24,8 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
   final PanelController _panelController = PanelController();
   bool _draggable;
   bool _backdrop;
+
+  bool _wasRestrictions; //Bug fix for keyboard issue on restrictions panel
   // double _panelHeightFactor;
 
   Widget _panelWidget;
@@ -37,6 +39,7 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
     super.initState();
     _draggable = true;
     _backdrop = true;
+    _wasRestrictions = false;
   }
 
   @override
@@ -60,8 +63,10 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                         duration: Duration(milliseconds: 300),
                         curve: Curves.easeInCubic)
                     .then((value) {
-                  _backdrop = true;
-                  _draggable = true;
+                  setState(() {
+                    _backdrop = true;
+                    _draggable = true;
+                  });
                 });
               });
             } else if (state is BSNavigationSelectingLocation) {
@@ -75,8 +80,10 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                         duration: Duration(milliseconds: 300),
                         curve: Curves.easeInCubic)
                     .then((value) {
-                  _backdrop = true;
-                  _draggable = true;
+                  setState(() {
+                    _backdrop = true;
+                    _draggable = true;
+                  });
                 });
               });
               // print('location');
@@ -95,7 +102,6 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
               setState(() {
                 _draggable = false;
                 _backdrop = false;
-                print((194 / heightLimit));
                 _panelController.animatePanelToPosition(
                     (194.0 / heightLimit).toDouble(),
                     duration: Duration(milliseconds: 300),
@@ -116,6 +122,10 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
               setState(() {
                 _panelWidget = PlanPointsPanel(
                     origin: state.origin, destination: state.destination);
+                _panelController.animatePanelToPosition(
+                    (194.0 / heightLimit).toDouble(),
+                    duration: Duration(milliseconds: 200),
+                    curve: Curves.easeInCubic);
               });
             } else if (state is BSNavigationPlanningRestrictions) {
               setState(() {
@@ -124,12 +134,24 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                   date: state.date,
                   effort: state.effort,
                 );
+                if (!_wasRestrictions)
+                  _panelController.animatePanelToPosition(
+                      (280.0 / heightLimit).toDouble(),
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.easeInCubic);
               });
             } else if (state is BSNavigationPlanningInterests) {
               setState(() {
-                _panelWidget = PlanInterestsPanel();
+                _panelWidget = PlanInterestsPanel(
+                  activeCategories: state.categories,
+                );
+                _panelController.animatePanelToPosition(
+                    (372 / heightLimit).toDouble(),
+                    duration: Duration(milliseconds: 200),
+                    curve: Curves.easeInCubic);
               });
             }
+            _wasRestrictions = state is BSNavigationPlanningRestrictions;
           },
         ),
       ],
@@ -137,10 +159,10 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
         builder: (context, constraints) {
           heightLimit =
               constraints.maxHeight - MediaQuery.of(context).padding.top - 16;
-          print(heightLimit);
           return SlidingUpPanel(
             maxHeight: heightLimit /** _panelHeightFactor*/,
             minHeight: 88,
+            color: Colors.white,
             backdropEnabled: _backdrop,
             backdropTapClosesPanel: _backdrop,
             isDraggable: _draggable,
@@ -161,6 +183,7 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                     ),
                   ),
                   child: PageTransitionSwitcher(
+                      duration: const Duration(milliseconds: 300),
                       // duration: Duration(seconds: 3),
                       // layoutBuilder: (_activeEntries) {
                       //   return Stack(
@@ -179,7 +202,7 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                           animation: animation,
                           secondaryAnimation: secondaryAnimation,
                           child: child,
-                          transitionType: SharedAxisTransitionType.scaled,
+                          transitionType: SharedAxisTransitionType.vertical,
                         );
                       },
                       child: _panelWidget ??

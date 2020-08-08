@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:latlong/latlong.dart';
 import 'package:meta/meta.dart';
 
+import '../../core/categories.dart';
 import '../../data/models/location_model.dart';
 import '../../data/models/point_of_interest_model.dart';
 import '../../data/models/trip_model.dart';
@@ -138,11 +139,20 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
   }
 
   Stream<BSNavigationState> _handleAdvanced() async* {
-    if (state is BSNavigationPlanningPoints)
-      yield BSNavigationPlanningRestrictions();
-    else if (state is BSNavigationPlanningRestrictions)
-      yield BSNavigationPlanningInterests();
-    else if (state is BSNavigationPlanningInterests) print('done');
+    if (state is BSNavigationPlanningPoints) {
+      _tripPlanModel.budget = 50;
+      _tripPlanModel.effort = 2;
+      _tripPlanModel.date = DateTime.now().millisecondsSinceEpoch;
+      yield BSNavigationPlanningRestrictions(
+          budget: _tripPlanModel.budget,
+          date: _tripPlanModel.date,
+          effort: _tripPlanModel.effort);
+    } else {
+      if (state is BSNavigationPlanningRestrictions)
+        yield BSNavigationPlanningInterests(
+            categories: List.generate(categories.length, (index) => index));
+      else if (state is BSNavigationPlanningInterests) print('done');
+    }
   }
 
   Stream<BSNavigationState> _handleRestrictionAdded(
@@ -164,7 +174,8 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
       if (event.categories != null)
         _tripPlanModel.categories = event.categories;
       if (event.pois != null) _tripPlanModel.pois = event.pois;
-      yield BSNavigationPlanningInterests();
+      yield BSNavigationPlanningInterests(
+          categories: _tripPlanModel.categories);
     }
   }
 }

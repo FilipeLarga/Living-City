@@ -45,6 +45,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _pageIndex,
         onTap: _showPage,
@@ -65,7 +66,8 @@ class _MainScreenState extends State<MainScreen> {
             create: (context) => LocationBloc(sl(), sl()),
           ),
           BlocProvider(
-            create: (context) => PointsOfInterestBloc(sl())..add(PointsOfInterestFetch()),
+            create: (context) =>
+                PointsOfInterestBloc(sl())..add(PointsOfInterestFetch()),
           ),
         ],
         child: PageView(

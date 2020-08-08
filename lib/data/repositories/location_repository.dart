@@ -29,7 +29,9 @@ class LocationRepository {
 
   Future<LocationModel> getCurrentLocation() async {
     LatLng coordinates = await _geolocatorProvider.getCurrentPosition();
-    return LocationModel(coordinates);
+    LocationModel location =
+        await _geolocatorProvider.getPlacemarkFromCoordinates(coordinates);
+    return location;
   }
 
   Future<LocationStatus> getLocationStatus() async {
