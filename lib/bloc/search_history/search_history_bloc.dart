@@ -23,12 +23,16 @@ class SearchHistoryBloc extends Bloc<SearchHistoryEvent, SearchHistoryState> {
 
   Stream<SearchHistoryState> _getSearchHistory() async* {
     yield const SearchHistoryLoading();
+    LocationModel location;
+    try {
+      location = await _locationRepository.getCurrentLocation();
+    } catch (e) {}
     final List<LocationModel> searchHistory =
         await _locationRepository.getSearchHistory();
     if (searchHistory == null || searchHistory.isEmpty) {
-      yield const SearchHistoryEmpty();
+      yield SearchHistoryEmpty(location);
     } else {
-      yield SearchHistoryLoaded(searchHistory);
+      yield SearchHistoryLoaded(searchHistory, location);
     }
   }
 }

@@ -82,7 +82,8 @@ class _SearchPanelState extends State<SearchPanel> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  _OptionsList(),
+                  _OptionsList(
+                      onSelect: _onSelect, closeSheet: widget.closeSheet),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -131,203 +132,6 @@ class _SearchPanelState extends State<SearchPanel> {
                 }
               },
             )
-
-            // Column(
-            //   mainAxisSize: MainAxisSize.max,
-            //   children: <Widget>[
-            //     Container(
-            //       height: 4,
-            //       width: 36,
-            //       decoration: BoxDecoration(
-            //         color: const Color(0xFFE0E0E0),
-            //         borderRadius: BorderRadius.circular(16),
-            //       ),
-            //     ),
-            //     const SizedBox(
-            //       height: 12,
-            //     ),
-            //     Stack(
-            //       children: <Widget>[
-            //         Positioned(
-            //           bottom: 0,
-            //           top: 0,
-            //           left: 0,
-            //           right: 0,
-            //           child: IgnorePointer(
-            //             ignoring: !_ignoretextfield,
-            //             child: GestureDetector(
-            //               behavior: HitTestBehavior.opaque,
-            //               onTap: _openAndFocusKeyboard,
-            //               child: Container(),
-            //             ),
-            //           ),
-            //         ),
-            //         IgnorePointer(
-            //           ignoring: _ignoretextfield,
-            //           child: ConstrainedBox(
-            //             constraints: BoxConstraints(maxHeight: 48, minHeight: 48),
-            //             child: TextField(
-            //               textCapitalization: TextCapitalization.words,
-            //               autocorrect: false,
-            //               maxLines: 1,
-            //               focusNode: _myFocusNode,
-            //               onSubmitted: _onSubmitted,
-            //               decoration: InputDecoration(
-            //                 prefixIcon: Icon(
-            //                   Icons.search,
-            //                   color: const Color(0xFF808080),
-            //                 ),
-            //                 contentPadding: const EdgeInsets.symmetric(
-            //                     vertical: 6.0, horizontal: 16),
-            //                 hintText: 'Search here',
-            //                 enabledBorder: OutlineInputBorder(
-            //                   borderRadius: BorderRadius.circular(10),
-            //                   borderSide: const BorderSide(
-            //                       color: Color(0xFFF0F0F0), width: 1.5),
-            //                 ),
-            //                 focusedBorder: OutlineInputBorder(
-            //                   borderRadius: BorderRadius.circular(10),
-            //                   borderSide: BorderSide(
-            //                       color: Theme.of(context).cursorColor, width: 1),
-            //                 ),
-            //                 border: OutlineInputBorder(
-            //                   borderRadius: BorderRadius.circular(10),
-            //                   borderSide: const BorderSide(
-            //                       color: Color(0xFFF0F0F0), width: 1.5),
-            //                 ),
-            //                 fillColor: Colors.grey,
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //     const SizedBox(height: 16),
-            //     Expanded(
-            //       child: SingleChildScrollView(
-            //         physics: BouncingScrollPhysics(),
-            //         controller: widget.scrollController,
-            //         child: Column(
-            //           mainAxisSize: MainAxisSize.min,
-            //           children: <Widget>[
-            //             Container(
-            //               height: 56,
-            //               decoration: BoxDecoration(
-            //                   borderRadius: BorderRadius.circular(10),
-            //                   color: const Color(0xFFF0F0F0)),
-            //               child: Center(
-            //                 child: Row(
-            //                   children: <Widget>[
-            //                     const SizedBox(width: 12),
-            //                     Icon(
-            //                       Icons.pin_drop,
-            //                       color: const Color(0xFF808080),
-            //                     ),
-            //                     const SizedBox(width: 12),
-            //                     Padding(
-            //                       padding:
-            //                           const EdgeInsets.symmetric(vertical: 12.0),
-            //                       child: const Text(
-            //                         'Choose on map',
-            //                         maxLines: 1,
-            //                         overflow: TextOverflow.ellipsis,
-            //                         style: const TextStyle(
-            //                             fontSize: 12,
-            //                             color: const Color(0xFF4D4D4D)),
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 ),
-            //               ),
-            //             ),
-            //             const SizedBox(height: 8),
-            //             Container(
-            //               height: 56,
-            //               decoration: BoxDecoration(
-            //                   borderRadius: BorderRadius.circular(10),
-            //                   color: const Color(0xFFF0F0F0)),
-            //               child: Center(
-            //                 child: Row(
-            //                   children: <Widget>[
-            //                     const SizedBox(width: 12),
-            //                     Icon(
-            //                       Icons.history,
-            //                       color: const Color(0xFF808080),
-            //                     ),
-            //                     const SizedBox(width: 12),
-            //                     Padding(
-            //                       padding:
-            //                           const EdgeInsets.symmetric(vertical: 12.0),
-            //                       child: Column(
-            //                         mainAxisAlignment: MainAxisAlignment.center,
-            //                         crossAxisAlignment: CrossAxisAlignment.start,
-            //                         children: <Widget>[
-            //                           const Text(
-            //                             'Current Location',
-            //                             maxLines: 1,
-            //                             overflow: TextOverflow.ellipsis,
-            //                             style: const TextStyle(
-            //                                 fontSize: 12,
-            //                                 color: const Color(0xFF4D4D4D)),
-            //                           ),
-            //                           const Text(
-            //                             'Avenida das Forças Armadas',
-            //                             maxLines: 1,
-            //                             overflow: TextOverflow.ellipsis,
-            //                             style: const TextStyle(
-            //                                 fontSize: 10,
-            //                                 color: const Color(0xFF666666)),
-            //                           ),
-            //                         ],
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 ),
-            //               ),
-            //             ),
-            //             const SizedBox(height: 24),
-            //             Align(
-            //                 alignment: Alignment.centerLeft,
-            //                 child: Text(
-            //                   'RECENT SEARCHES',
-            //                   style: const TextStyle(
-            //                       fontSize: 10,
-            //                       color: const Color(0xFF7F7E7E),
-            //                       fontWeight: FontWeight.w600),
-            //                 )),
-            //             const SizedBox(height: 16),
-            //             BlocBuilder<SearchHistoryBloc, SearchHistoryState>(
-            //               builder:
-            //                   (BuildContext context, SearchHistoryState state) {
-            //                 if (state is SearchHistoryLoading ||
-            //                     state is SearchHistoryInitial) {
-            //                   return const ShimmerList();
-            //                 } else if (state is SearchHistoryEmpty) {
-            //                   return Text('empty');
-            //                 } else {
-            //                   final List<LocationModel> locations =
-            //                       (state as SearchHistoryLoaded).searchHistory;
-            //                   return Column(
-            //                     mainAxisSize: MainAxisSize.min,
-            //                     children: <Widget>[
-            //                       ...locations.map((location) {
-            //                         return SearchHistoryListItem(
-            //                           location: location,
-            //                           onSelect: _onSelect,
-            //                         );
-            //                       }),
-            //                       const SizedBox(height: 24)
-            //                     ],
-            //                   );
-            //                 }
-            //               },
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
           ],
         ),
       ),
@@ -461,36 +265,46 @@ class _PersistentHeader extends SliverPersistentHeaderDelegate {
 }
 
 class _OptionsList extends StatelessWidget {
+  final Function(LocationModel) onSelect;
+  final Function() closeSheet;
+
+  const _OptionsList(
+      {Key key, @required this.onSelect, @required this.closeSheet})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Container(
-          height: 56,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: const Color(0xFFF0F0F0)),
-          child: Center(
-            child: Row(
-              children: <Widget>[
-                const SizedBox(width: 12),
-                Icon(
-                  Icons.pin_drop,
-                  color: const Color(0xFF808080),
-                ),
-                const SizedBox(width: 12),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: const Text(
-                    'Choose on map',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontSize: 12, color: const Color(0xFF4D4D4D)),
+        GestureDetector(
+          onTap: () => closeSheet(),
+          child: Container(
+            height: 56,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: const Color(0xFFF0F0F0)),
+            child: Center(
+              child: Row(
+                children: <Widget>[
+                  const SizedBox(width: 12),
+                  Icon(
+                    Icons.pin_drop,
+                    color: const Color(0xFF808080),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: const Text(
+                      'Choose on map',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 12, color: const Color(0xFF4D4D4D)),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -501,38 +315,113 @@ class _OptionsList extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               color: const Color(0xFFF0F0F0)),
           child: Center(
-            child: Row(
-              children: <Widget>[
-                const SizedBox(width: 12),
-                Icon(
-                  Icons.history,
-                  color: const Color(0xFF808080),
-                ),
-                const SizedBox(width: 12),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text(
-                        'Current Location',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 12, color: const Color(0xFF4D4D4D)),
+            child: BlocBuilder<SearchHistoryBloc, SearchHistoryState>(
+              builder: (context, state) {
+                if (state is SearchHistoryLoading ||
+                    state is SearchHistoryInitial) {
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey[300],
+                    highlightColor: Colors.grey[200],
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0, top: 8),
+                      child: Container(
+                        height: 56,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Row(
+                            children: <Widget>[
+                              const SizedBox(width: 12),
+                              Container(
+                                height: 24,
+                                width: 24,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 32.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Container(
+                                        height: 10,
+                                        color: Colors.white,
+                                        width: double.infinity,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      LayoutBuilder(
+                                        builder: (_, constraints) {
+                                          return Container(
+                                            height: 10,
+                                            color: Colors.white,
+                                            width: constraints.maxWidth / 2,
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      const Text(
-                        'Avenida das Forças Armadas',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 10, color: const Color(0xFF666666)),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                    ),
+                  );
+                } else {
+                  LocationModel location;
+                  if (state is SearchHistoryEmpty)
+                    location = state.currentLocation;
+                  if (state is SearchHistoryLoaded)
+                    location = state.currentLocation;
+                  return GestureDetector(
+                    onTap: () => (location != null && location.name != null)
+                        ? onSelect(location)
+                        : null,
+                    child: Row(
+                      children: <Widget>[
+                        const SizedBox(width: 12),
+                        Icon(
+                          Icons.history,
+                          color: const Color(0xFF808080),
+                        ),
+                        const SizedBox(width: 12),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              const Text(
+                                'Current Location',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    color: const Color(0xFF4D4D4D)),
+                              ),
+                              Text(
+                                location?.name ?? 'Unknown',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 10,
+                                    color: const Color(0xFF666666)),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
             ),
           ),
         ),
