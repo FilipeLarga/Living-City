@@ -103,7 +103,7 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                 _draggable = false;
                 _backdrop = false;
                 _panelController.animatePanelToPosition(
-                    (194.0 / heightLimit).toDouble(),
+                    (80.0 / heightLimit).toDouble(),
                     duration: Duration(milliseconds: 300),
                     curve: Curves.easeInCubic);
               });

@@ -52,16 +52,14 @@ class SearchHistoryProvider {
   }
 
   Future<List<LocationModel>> getSearches() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 1));
     // Init the database if it's not already.
     if (_db == null) {
       await _init();
     }
 
-    // Query the table for all The Dogs.
     final List<Map<String, dynamic>> maps = await _db.query('searches');
 
-    // Convert the List<Map<String, dynamic> into a List<Dog>.
     var list = List.generate(maps.length, (i) {
       return LocationModel.fromMap(maps[i]);
     }).reversed.toList();

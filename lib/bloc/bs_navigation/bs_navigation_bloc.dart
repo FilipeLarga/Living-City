@@ -61,7 +61,8 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
       yield BSNavigationShowingLocation(
           address: event.address,
           coordinates: event.coordinates,
-          locationModel: event.locationModel);
+          locationModel: event.locationModel,
+          origin: _originSelected ?? true);
   }
 
   Stream<BSNavigationState> _handleMapSelection(
@@ -69,7 +70,8 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
     if (state is BSNavigationExplore ||
         state is BSNavigationSelectingLocation ||
         state is BSNavigationShowingLocation)
-      yield BSNavigationShowingLocation(coordinates: event.coordinates);
+      yield BSNavigationShowingLocation(
+          coordinates: event.coordinates, origin: _originSelected ?? true);
   }
 
   Stream<BSNavigationState> _handleLocationAccepted(
@@ -81,6 +83,7 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
         else
           _tripPlanModel.destination = event.location;
       } else {
+        if (_originSelected == null) _originSelected = true;
         if (_originSelected)
           _tripPlanModel.origin = event.location;
         else
@@ -110,7 +113,7 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
       if (_originSelected == null)
         yield BSNavigationExplore();
       else
-        yield BSNavigationSelectingLocation();
+        yield BSNavigationSelectingLocation(_originSelected);
     } else if (state is BSNavigationPlanningPoints) {
       _originSelected = null;
       _tripPlanModel.clear();
@@ -134,7 +137,7 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
       BSNavigationPointSelected event) async* {
     _originSelected = event.origin;
     if (state is BSNavigationPlanningPoints) {
-      yield BSNavigationSelectingLocation();
+      yield BSNavigationSelectingLocation(event.origin);
     }
   }
 

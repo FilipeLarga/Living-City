@@ -25,7 +25,9 @@ class BSNavigationPlanningPoints extends BSNavigationState {
 }
 
 class BSNavigationSelectingLocation extends BSNavigationState {
-  const BSNavigationSelectingLocation();
+  final bool isOrigin;
+
+  const BSNavigationSelectingLocation(this.isOrigin);
 }
 
 class BSNavigationPlanningRestrictions extends BSNavigationState {
