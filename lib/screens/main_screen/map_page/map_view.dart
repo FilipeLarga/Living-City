@@ -107,8 +107,13 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 _pointMarkers?.clear();
                 _showControls = true;
               });
-            }
-            if (state is BSNavigationShowingLocation) {
+            } else if (state is BSNavigationSelectingLocation) {
+              setState(() {
+                _locationMarkers.clear();
+                _pointMarkers.clear();
+                _showControls = false;
+              });
+            } else if (state is BSNavigationShowingLocation) {
               setState(() {
                 _locationMarkers.clear();
                 _showControls = false;
@@ -151,6 +156,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
         ),
       ],
       child: Stack(
+        alignment: Alignment.center,
         children: <Widget>[
           FlutterMap(
             mapController: _mapController,
@@ -200,6 +206,34 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 showingPOIs: _isShowingPOIs,
               ),
             ),
+          BlocBuilder<BSNavigationBloc, BSNavigationState>(
+            builder: (context, state) {
+              return AnimatedPositioned(
+                duration: const Duration(milliseconds: 300),
+                top: state is BSNavigationSelectingLocation
+                    ? MediaQuery.of(context).padding.top + 16
+                    : MediaQuery.of(context).padding.top,
+                child: AnimatedOpacity(
+                  opacity: state is BSNavigationSelectingLocation ? 1 : 0,
+                  duration: const Duration(milliseconds: 300),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 13.0,
+                            color: Colors.black.withOpacity(.3),
+                            offset: Offset(6.0, 7.0),
+                          ),
+                        ]),
+                    padding: EdgeInsets.all(10),
+                    child: Text('Tap to select on map'),
+                  ),
+                ),
+              );
+            },
+          )
         ],
       ),
     );
