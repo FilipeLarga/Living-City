@@ -164,7 +164,7 @@ class PlanRestrictionsPanel extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Budget', style: TextStyle(fontSize: 14)),
+                    Text('Budget (per person)', style: TextStyle(fontSize: 14)),
                     const SizedBox(height: 8),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 16),

@@ -385,6 +385,7 @@ class _OptionsList extends StatelessWidget {
                         ? onSelect(location)
                         : null,
                     child: Row(
+                      mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         const SizedBox(width: 12),
                         Icon(
@@ -415,6 +416,11 @@ class _OptionsList extends StatelessWidget {
                                     color: const Color(0xFF666666)),
                               ),
                             ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            color: const Color(0xFFF0F0F0),
                           ),
                         ),
                       ],
@@ -555,3 +561,167 @@ class ShimmerList extends StatelessWidget {
     );
   }
 }
+
+// //Model Class
+// class ShoppingCartModel with ChangeNotifier {
+//   final List<Product> _products = [];
+
+//   List<Product> get products => List.from(_products);
+
+//   void addProduct(Product product) {
+//     //Could add some business logic here, such as checking for repeated products
+//     _products.add(product);
+//     notifyListeners(); //Notify the UI so it reflects the changes made
+//   }
+
+//   void removeProduct(Product product) {
+//     _products.remove(product);
+//     notifyListeners();
+//   }
+
+//   bool contains(Product product) {
+//     return _products.contains(product);
+//   }
+
+//   bool isEmpty() {
+//     return _products.isEmpty;
+//   }
+// }
+
+// //Provider
+// ChangeNotifierProvider<ShoppingCartModel>(
+//     create: (context) => ShoppingCartModel(),
+//     child: ... //the rest of the widget tree
+// );
+
+// //Product Details
+// Consumer<ShoppingCartModel>(
+//   builder: (model) {
+//     ... //Rest of the Product Details UI...
+//     RaisedButton(     //Button to add product to cart
+//       child: Text('Add to cart'),
+//       onPressed: () => model.addProduct(product),
+//     );
+//   },
+// );
+
+// //Shopping Cart
+// Consumer<ShoppingCartModel>(
+//   builder: (model) {
+//     //Obtaining the list of products to display
+//     final productList = model.getProducts();
+//     ...  //Rest of the Shopping Cart UI...
+//   },
+// );
+
+// @immutable
+// abstract class ShoppingCartState {
+//   const ShoppingCartState();
+// }
+
+// class ShoppingCartEmpty extends ShoppingCartState {
+//   const ShoppingCartEmpty();
+// }
+
+// class ShoppingCartLoaded extends ShoppingCartState {
+//   final List<Product> products;
+//   const ShoppingCartLoaded(this.products);
+
+//   bool contains(Product product) {
+//     return products.contains(product);
+//   }
+// }
+
+// @immutable
+// abstract class ShoppingCartEvent {
+//   const ShoppingCartEvent();
+// }
+
+// class AddProduct extends ShoppingCartEvent {
+//   final Product product;
+//   const AddProduct(this.product);
+// }
+
+// class RemoveProduct extends ShoppingCartEvent {
+//   final Product product;
+//   const RemoveProduct(this.product);
+// }
+
+// class ShoppingCartBloc extends Bloc<ShoppingCartEvent, ShoppingCartState> {
+//   final List<Product> _products = [];
+//   ShoppingCartBloc() : super(const ShoppingCartEmpty()); //Initial state
+
+//   @override
+//   Stream<ShoppingCartState> mapEventToState(  //Map the incoming events to states
+//     ShoppingCartEvent event,
+//   ) async* {
+//     if (event is AddProduct)
+//       yield* _addProduct(event.product);
+//     else if (event is RemoveProduct) yield* _removeProduct(event.product);
+//   }
+
+//   Stream<ShoppingCartState> _addProduct(Product product) async* {
+//     _products.add(product);  //We could add more business logic here, such as duplicate validation...
+//     yield ShoppingCartLoaded(List.from(_products));
+//   }
+
+//   Stream<ShoppingCartState> _removeProduct(Product product) async* {
+//     _products.remove(product);
+//     if (_products.isEmpty)
+//       yield ShoppingCartEmpty();
+//     else
+//       yield ShoppingCartLoaded(List.from(_products));
+//   }
+// }
+
+// //XML Layout omitted for brevity and irrelevance.
+
+// //Obtain the instance of the textview from the XML layout file
+// TextView textview = (TextView) findViewById(R.id.textview);
+// //Obtain the instance of the button from the XML layout file
+// Button button = (Button) findViewById(R.id.button);
+
+// //Create the listener function that will be given to the button
+// public onClickListener listener = new View.OnclickListener{
+//     onclick(View v){
+//       // Set the text property of the textview to display the new message
+//       textview.setText("Button clicked!");
+//     }
+// }
+
+// button.setOnClickListener(listener); //Add the listener to the button
+
+// class ExampleScreen extends StatefulWidget {
+//   @override
+//   _ExampleScreenState createState() => _ExampleScreenState();
+// }
+
+// class _ExampleScreenState extends State<ExampleScreen> {
+//   String _message = 'Click the button'; //The initial state of the UI
+
+//   @override
+//   Widget build(BuildContext context) {
+//     //Describes the part of the user interface represented by this widget.
+//     return Scaffold(
+//       body: Column(
+//         children: [
+//           Text(_message), //Text widget that displays the message
+//           MaterialButton(
+//             onPressed:
+//                 _updateMessage, //Method called when the button is clicked
+//             child: Text('BUTTON'),
+//           )
+//         ],
+//       ),
+//     );
+//   }
+
+//   //Method to update the message
+//   void _updateMessage() {
+//     //Calling [setState] notifies the framework that the internal state
+//     //of this object has changed in a way that might impact the
+//     //user interface in this subtree, which causes the framework to
+//     //schedule a [build] for this [State] object.
+//     setState(() => _message = 'Button clicked!');
+//   }
+// }
