@@ -103,7 +103,7 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                 _draggable = false;
                 _backdrop = false;
                 _panelController.animatePanelToPosition(
-                    (80.0 / heightLimit).toDouble(),
+                    (90.0 / heightLimit).toDouble(),
                     duration: Duration(milliseconds: 300),
                     curve: Curves.easeInCubic);
               });
@@ -147,7 +147,7 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                   activePOIs: List.from(state.pois),
                 );
                 _panelController.animatePanelToPosition(
-                    (478 / heightLimit).toDouble(),
+                    (490 / heightLimit).toDouble(),
                     duration: Duration(milliseconds: 200),
                     curve: Curves.easeInCubic);
               });
