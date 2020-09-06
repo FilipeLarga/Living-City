@@ -5,6 +5,7 @@ import 'package:latlong/latlong.dart';
 import 'package:meta/meta.dart';
 
 import '../../core/categories.dart';
+import '../../core/example_data.dart';
 import '../../data/models/location_model.dart';
 import '../../data/models/point_of_interest_model.dart';
 import '../../data/models/trip_model.dart';
@@ -151,10 +152,15 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
           date: _tripPlanModel.date,
           effort: _tripPlanModel.effort);
     } else {
-      if (state is BSNavigationPlanningRestrictions)
+      if (state is BSNavigationPlanningRestrictions) {
+        _tripPlanModel.categories =
+            List.generate(categories.length, (index) => index);
+        _tripPlanModel.pois = [];
         yield BSNavigationPlanningInterests(
-            categories: List.generate(categories.length, (index) => index));
-      else if (state is BSNavigationPlanningInterests) print('done');
+            categories: _tripPlanModel.categories, pois: _tripPlanModel.pois);
+      } else {
+        if (state is BSNavigationPlanningInterests) print('done');
+      }
     }
   }
 
@@ -178,7 +184,7 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
         _tripPlanModel.categories = event.categories;
       if (event.pois != null) _tripPlanModel.pois = event.pois;
       yield BSNavigationPlanningInterests(
-          categories: _tripPlanModel.categories);
+          categories: _tripPlanModel.categories, pois: _tripPlanModel.pois);
     }
   }
 }

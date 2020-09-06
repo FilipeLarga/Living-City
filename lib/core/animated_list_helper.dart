@@ -34,6 +34,10 @@ class ListModel<E> {
     return removedItem;
   }
 
+  bool contains(E item) {
+    return _items.contains(item);
+  }
+
   removeAll() {
     final limit = _items.length;
     for (int i = limit - 1; i >= 0; i--) {

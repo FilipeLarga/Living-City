@@ -143,10 +143,11 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
             } else if (state is BSNavigationPlanningInterests) {
               setState(() {
                 _panelWidget = PlanInterestsPanel(
-                  activeCategories: state.categories,
+                  activeCategories: List.from(state.categories),
+                  activePOIs: List.from(state.pois),
                 );
                 _panelController.animatePanelToPosition(
-                    (372 / heightLimit).toDouble(),
+                    (478 / heightLimit).toDouble(),
                     duration: Duration(milliseconds: 200),
                     curve: Curves.easeInCubic);
               });

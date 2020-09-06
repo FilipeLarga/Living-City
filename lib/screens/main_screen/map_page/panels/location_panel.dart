@@ -30,7 +30,6 @@ class _LocationPanelState extends State<LocationPanel> {
   @override
   void initState() {
     super.initState();
-    print('initState');
 
     origin = (BlocProvider.of<BSNavigationBloc>(context).state
             as BSNavigationShowingLocation)
@@ -71,10 +70,12 @@ class _LocationPanelState extends State<LocationPanel> {
                       return Padding(
                         padding: const EdgeInsets.only(right: 64.0),
                         child: Shimmer.fromColors(
-                          baseColor: Colors.grey[200],
-                          highlightColor: Colors.grey[100],
+                          baseColor: Colors.grey[100],
+                          highlightColor: Colors.grey[50],
                           child: Container(
-                            color: Colors.white,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(4)),
                             height: 25,
                             width: double.infinity,
                           ),
