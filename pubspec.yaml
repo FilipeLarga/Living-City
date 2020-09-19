@@ -25,7 +25,7 @@ dependencies:
       url: https://github.com/FilipeLarga/flutter_map
       ref: init-by-bounds
   geolocator: ^5.1.5
-  background_locator: ^1.1.11+1
+  # background_locator: ^1.1.11+1
   flutter_bloc: ^6.0.1
   # animations: ^1.1.1
   animations:
@@ -45,7 +45,10 @@ dependencies:
   jiffy: ^3.0.1
   flutter_blue: ^0.7.2
   flutter_bluetooth_serial: ^0.2.2
-
+  timeline_tile:
+    git:
+      url: https://github.com/FilipeLarga/timeline_tile
+    
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -76,6 +79,8 @@ flutter:
     - assets/category_icons/
     - assets/empty_list.png
     - assets/eco_leaf.png
+    - assets/empty_searches.png
+    - assets/error_trip.png
     # - assets/delivery.png
     # - assets/landscape.jpg
     # - assets/distance_map.png
@@ -99,23 +104,23 @@ flutter:
     # - assets/map/12/1945/
     # - assets/map/12/1946/
     # - assets/map/12/1947/
-    - assets/map/13/3878/ #13 3878-3894
-    - assets/map/13/3879/
-    - assets/map/13/3880/
-    - assets/map/13/3881/
-    - assets/map/13/3882/
-    - assets/map/13/3883/
-    - assets/map/13/3884/
-    - assets/map/13/3885/
-    - assets/map/13/3886/
-    - assets/map/13/3887/
-    - assets/map/13/3888/
-    - assets/map/13/3889/
-    - assets/map/13/3890/
-    - assets/map/13/3891/
-    - assets/map/13/3892/
-    - assets/map/13/3893/
-    - assets/map/13/3894/
+    # - assets/map/13/3878/ #13 3878-3894
+    # - assets/map/13/3879/
+    # - assets/map/13/3880/
+    # - assets/map/13/3881/
+    # - assets/map/13/3882/
+    # - assets/map/13/3883/
+    # - assets/map/13/3884/
+    # - assets/map/13/3885/
+    # - assets/map/13/3886/
+    # - assets/map/13/3887/
+    # - assets/map/13/3888/
+    # - assets/map/13/3889/
+    # - assets/map/13/3890/
+    # - assets/map/13/3891/
+    # - assets/map/13/3892/
+    # - assets/map/13/3893/
+    # - assets/map/13/3894/
     - assets/map/14/7757/ #14 7757-7789
     - assets/map/14/7758/
     - assets/map/14/7759/
@@ -150,71 +155,71 @@ flutter:
     - assets/map/14/7788/
     - assets/map/14/7789/
     - assets/map/14/7789/
-    - assets/map/15/15515/ #15 15515-15579
-    - assets/map/15/15516/
-    - assets/map/15/15517/
-    - assets/map/15/15518/
-    - assets/map/15/15519/
-    - assets/map/15/15520/
-    - assets/map/15/15521/
-    - assets/map/15/15522/
-    - assets/map/15/15523/
-    - assets/map/15/15524/
-    - assets/map/15/15525/
-    - assets/map/15/15526/
-    - assets/map/15/15527/
-    - assets/map/15/15528/
-    - assets/map/15/15529/
-    - assets/map/15/15530/
-    - assets/map/15/15531/
-    - assets/map/15/15532/
-    - assets/map/15/15533/
-    - assets/map/15/15534/
-    - assets/map/15/15535/
-    - assets/map/15/15536/
-    - assets/map/15/15537/
-    - assets/map/15/15538/
-    - assets/map/15/15539/
-    - assets/map/15/15540/
-    - assets/map/15/15541/
-    - assets/map/15/15542/
-    - assets/map/15/15543/
-    - assets/map/15/15544/
-    - assets/map/15/15545/
-    - assets/map/15/15546/
-    - assets/map/15/15547/
-    - assets/map/15/15548/
-    - assets/map/15/15549/
-    - assets/map/15/15550/
-    - assets/map/15/15551/
-    - assets/map/15/15552/
-    - assets/map/15/15553/
-    - assets/map/15/15554/
-    - assets/map/15/15555/
-    - assets/map/15/15556/
-    - assets/map/15/15557/
-    - assets/map/15/15558/
-    - assets/map/15/15559/
-    - assets/map/15/15560/
-    - assets/map/15/15561/
-    - assets/map/15/15562/
-    - assets/map/15/15563/
-    - assets/map/15/15564/
-    - assets/map/15/15565/
-    - assets/map/15/15566/
-    - assets/map/15/15567/
-    - assets/map/15/15568/
-    - assets/map/15/15569/
-    - assets/map/15/15570/
-    - assets/map/15/15571/
-    - assets/map/15/15572/
-    - assets/map/15/15573/
-    - assets/map/15/15574/
-    - assets/map/15/15575/
-    - assets/map/15/15576/
-    - assets/map/15/15577/
-    - assets/map/15/15578/
-    - assets/map/15/15579/
+    # - assets/map/15/15515/ #15 15515-15579
+    # - assets/map/15/15516/
+    # - assets/map/15/15517/
+    # - assets/map/15/15518/
+    # - assets/map/15/15519/
+    # - assets/map/15/15520/
+    # - assets/map/15/15521/
+    # - assets/map/15/15522/
+    # - assets/map/15/15523/
+    # - assets/map/15/15524/
+    # - assets/map/15/15525/
+    # - assets/map/15/15526/
+    # - assets/map/15/15527/
+    # - assets/map/15/15528/
+    # - assets/map/15/15529/
+    # - assets/map/15/15530/
+    # - assets/map/15/15531/
+    # - assets/map/15/15532/
+    # - assets/map/15/15533/
+    # - assets/map/15/15534/
+    # - assets/map/15/15535/
+    # - assets/map/15/15536/
+    # - assets/map/15/15537/
+    # - assets/map/15/15538/
+    # - assets/map/15/15539/
+    # - assets/map/15/15540/
+    # - assets/map/15/15541/
+    # - assets/map/15/15542/
+    # - assets/map/15/15543/
+    # - assets/map/15/15544/
+    # - assets/map/15/15545/
+    # - assets/map/15/15546/
+    # - assets/map/15/15547/
+    # - assets/map/15/15548/
+    # - assets/map/15/15549/
+    # - assets/map/15/15550/
+    # - assets/map/15/15551/
+    # - assets/map/15/15552/
+    # - assets/map/15/15553/
+    # - assets/map/15/15554/
+    # - assets/map/15/15555/
+    # - assets/map/15/15556/
+    # - assets/map/15/15557/
+    # - assets/map/15/15558/
+    # - assets/map/15/15559/
+    # - assets/map/15/15560/
+    # - assets/map/15/15561/
+    # - assets/map/15/15562/
+    # - assets/map/15/15563/
+    # - assets/map/15/15564/
+    # - assets/map/15/15565/
+    # - assets/map/15/15566/
+    # - assets/map/15/15567/
+    # - assets/map/15/15568/
+    # - assets/map/15/15569/
+    # - assets/map/15/15570/
+    # - assets/map/15/15571/
+    # - assets/map/15/15572/
+    # - assets/map/15/15573/
+    # - assets/map/15/15574/
+    # - assets/map/15/15575/
+    # - assets/map/15/15576/
+    # - assets/map/15/15577/
+    # - assets/map/15/15578/
+    # - assets/map/15/15579/
     # - assets/map/16/31030/
     # - assets/map/16/31031/
     # - assets/map/16/31032/
