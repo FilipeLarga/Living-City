@@ -8,3 +8,7 @@ abstract class PointsOfInterestEvent {
 class PointsOfInterestFetch extends PointsOfInterestEvent {
   const PointsOfInterestFetch();
 }
+
+class PointsOfInterestQuickFetch extends PointsOfInterestEvent {
+  const PointsOfInterestQuickFetch();
+}

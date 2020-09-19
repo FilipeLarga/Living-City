@@ -8,12 +8,22 @@ class PointOfInterestModel {
   final int categoryID;
   final String name;
   final int visitTime;
+  final int openingHour;
+  final int closureHour;
   final double price;
   final int sustainability;
   final LatLng coordinates;
 
-  PointOfInterestModel(this.pointID, this.categoryID, this.name, this.visitTime,
-      this.price, this.sustainability, this.coordinates);
+  PointOfInterestModel(
+      this.pointID,
+      this.categoryID,
+      this.name,
+      this.visitTime,
+      this.price,
+      this.sustainability,
+      this.openingHour,
+      this.closureHour,
+      this.coordinates);
 
   factory PointOfInterestModel.fromJson(Map<String, dynamic> json) {
     return PointOfInterestModel(
@@ -23,6 +33,8 @@ class PointOfInterestModel {
         json['visitTime'],
         json['normalPrice'],
         json['sustainability'],
+        json['openingHour'],
+        json['closureHour'],
         LatLng(
             json['coordinates']['latitude'], json['coordinates']['longitude']));
   }
@@ -35,6 +47,8 @@ class PointOfInterestModel {
       'visitTime': visitTime,
       'normalPrice': price,
       'sustainability': sustainability,
+      'openingHour': openingHour,
+      'closureHour': closureHour,
       'coordinates': latLngToMap(coordinates),
     };
   }

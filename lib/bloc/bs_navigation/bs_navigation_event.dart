@@ -14,7 +14,8 @@ class BSNavigationLocationSelected extends BSNavigationEvent {
   final LatLng coordinates;
   final LocationModel locationModel;
 
-  const BSNavigationLocationSelected({this.address, this.coordinates, this.locationModel});
+  const BSNavigationLocationSelected(
+      {this.address, this.coordinates, this.locationModel});
 }
 
 class BSNavigationCanceled extends BSNavigationEvent {
@@ -32,8 +33,12 @@ class BSNavigationMapSelection extends BSNavigationEvent {
   const BSNavigationMapSelection(this.coordinates);
 }
 
-class BSNavigationPlanStarted extends BSNavigationEvent {
-  const BSNavigationPlanStarted();
+// class BSNavigationPlanStarted extends BSNavigationEvent {
+//   const BSNavigationPlanStarted();
+// }
+
+class BSNavigationTripCancelled extends BSNavigationEvent {
+  const BSNavigationTripCancelled();
 }
 
 class BSNavigationPointSelected extends BSNavigationEvent {
@@ -46,10 +51,11 @@ class BSNavigationAdvanced extends BSNavigationEvent {
 }
 
 class BSNavigationRestrictionAdded extends BSNavigationEvent {
-  final int date;
+  final int visitTime;
   final int effort;
   final int budget;
-  const BSNavigationRestrictionAdded({this.date, this.effort, this.budget});
+  const BSNavigationRestrictionAdded(
+      {this.visitTime, this.effort, this.budget});
 }
 
 class BSNavigationInterestAdded extends BSNavigationEvent {
@@ -57,4 +63,10 @@ class BSNavigationInterestAdded extends BSNavigationEvent {
   final List<PointOfInterestModel> pois;
 
   const BSNavigationInterestAdded({this.categories, this.pois});
+}
+
+class BSNavigationDepartureTimeAdded extends BSNavigationEvent {
+  final int date;
+
+  const BSNavigationDepartureTimeAdded({@required this.date});
 }

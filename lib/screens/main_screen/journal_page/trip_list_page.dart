@@ -371,7 +371,37 @@ class _TripListState extends State<TripList> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 15,
-                      ))
+                      )),
+                  if (_selection == 0) ...[
+                    const SizedBox(height: 28),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 84.0),
+                      child: Material(
+                        color: Theme.of(context).accentColor,
+                        clipBehavior: Clip.antiAlias,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Center(
+                          child: InkWell(
+                            onTap: () {},
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              height: 38,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                  child: Text('PLAN TRIP',
+                                      style: TextStyle(
+                                          wordSpacing: 1.2,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15))),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
                 ],
               ),
             ),

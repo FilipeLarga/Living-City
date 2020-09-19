@@ -6,6 +6,7 @@ import 'package:living_city/screens/main_screen/map_page/panels/active_trip_pane
 import 'package:living_city/screens/main_screen/map_page/panels/plan_interests_panel.dart';
 import 'package:living_city/screens/main_screen/map_page/panels/plan_points_panel.dart';
 import 'package:living_city/screens/main_screen/map_page/panels/plan_restrictions_panel.dart';
+import 'package:living_city/screens/main_screen/map_page/panels/trip_confirmation_panel.dart';
 import '../../../bloc/bs_navigation/bs_navigation_bloc.dart';
 import '../../../bloc/bottom_sheet/bottom_sheet_bloc.dart';
 import 'panels/location_panel.dart';
@@ -33,13 +34,22 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
   ScrollController _scrollController;
 
   double heightLimit;
+  double _minHeight;
 
   @override
   void initState() {
     super.initState();
-    _draggable = true;
+    /*_draggable = true;
     _backdrop = true;
+    _wasRestrictions = false;*/
+    _draggable = false;
+    _backdrop = false;
     _wasRestrictions = false;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _panelController.animatePanelToPosition((308.0 / heightLimit).toDouble(),
+          duration: Duration(milliseconds: 300), curve: Curves.easeInCubic);
+    });
+    _minHeight = 88;
   }
 
   @override
@@ -86,18 +96,6 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                   });
                 });
               });
-              // print('location');
-              // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              //   print('happenend');
-              //   setState(() {
-              //     _panelWidget = SearchPanel(
-              //         scrollController: _scrollController,
-              //         openSheet: _openSheet,
-              //         closeSheet: _closeSheet);
-              //     _backdrop = true;
-              //     _panelController.close();
-              //   });
-              // });
             } else if (state is BSNavigationShowingLocation) {
               setState(() {
                 _draggable = false;
@@ -120,23 +118,36 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
               });
             } else if (state is BSNavigationPlanningPoints) {
               setState(() {
-                _panelWidget = PlanPointsPanel(
-                    origin: state.origin, destination: state.destination);
+                _draggable = false;
+                _backdrop = false;
                 _panelController.animatePanelToPosition(
-                    (194.0 / heightLimit).toDouble(),
+                    (302.0 / heightLimit).toDouble(),
                     duration: Duration(milliseconds: 200),
                     curve: Curves.easeInCubic);
               });
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                setState(() {
+                  _panelWidget = PlanPointsPanel(
+                      origin: state.origin,
+                      destination: state.destination,
+                      date: state.date);
+                });
+              });
             } else if (state is BSNavigationPlanningRestrictions) {
               setState(() {
+                _draggable = false;
+                _backdrop = false;
                 _panelWidget = PlanRestrictionsPanel(
                   budget: state.budget,
-                  date: state.date,
+                  visitTime: state.visitTime,
+                  minVisitTime: state.minVisitTime,
                   effort: state.effort,
+                  minBudget: state.minBudget,
+                  departureDate: state.departureDate,
                 );
                 if (!_wasRestrictions)
                   _panelController.animatePanelToPosition(
-                      (280.0 / heightLimit).toDouble(),
+                      (352.0 / heightLimit).toDouble(),
                       duration: Duration(milliseconds: 200),
                       curve: Curves.easeInCubic);
               });
@@ -145,11 +156,31 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                 _panelWidget = PlanInterestsPanel(
                   activeCategories: List.from(state.categories),
                   activePOIs: List.from(state.pois),
+                  date: state.departureHour,
+                  origin: state.origin,
                 );
                 _panelController.animatePanelToPosition(
-                    (490 / heightLimit).toDouble(),
+                    (564 / heightLimit).toDouble(),
                     duration: Duration(milliseconds: 200),
                     curve: Curves.easeInCubic);
+              });
+            } else if (state is BSNavigationConfirmingTrip) {
+              setState(() {
+                _panelWidget = TripConfirmationPanel(
+                    tripPlanModel: state.tripPlanModel,
+                    scrollController: _scrollController,
+                    heightLimit: heightLimit);
+                _panelController
+                    .animatePanelToPosition(1,
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInCubic)
+                    .then((value) {
+                  setState(() {
+                    _minHeight = 64;
+                    _backdrop = true;
+                    _draggable = true;
+                  });
+                });
               });
             }
             _wasRestrictions = state is BSNavigationPlanningRestrictions;
@@ -162,7 +193,7 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
               constraints.maxHeight - MediaQuery.of(context).padding.top - 16;
           return SlidingUpPanel(
             maxHeight: heightLimit /** _panelHeightFactor*/,
-            minHeight: 88,
+            minHeight: _minHeight,
             color: Colors.white,
             backdropEnabled: _backdrop,
             backdropTapClosesPanel: _backdrop,
@@ -210,10 +241,15 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
                           (BlocProvider.of<BSNavigationBloc>(context).state
                                   is BSNavigationActiveTrip
                               ? ActiveTripPanel()
-                              : SearchPanel(
+                              : _panelWidget = PlanPointsPanel(
+                                  origin: null,
+                                  destination: null,
+                                  date:
+                                      null) /*SearchPanel(
                                   scrollController: _scrollController,
                                   openSheet: _openSheet,
-                                  closeSheet: _closeSheet))));
+                                  closeSheet: _closeSheet)*/
+                          )));
             },
             onPanelClosed: _onPanelClosed,
             onPanelOpened: _onPanelOpened,

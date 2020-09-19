@@ -22,7 +22,6 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   bool _initialMove;
 
   //flags for map control widget
-  bool _showControls;
   bool _isCenteringUser;
   bool _isShowingPOIs;
 
@@ -34,7 +33,6 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _initialMove = true;
-    _showControls = true;
     _isCenteringUser = true;
     // _isCenteringUser =
     //     BlocProvider.of<UserLocationBloc>(context).state is UserLocationLoaded;
@@ -105,24 +103,21 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
               setState(() {
                 _locationMarkers?.clear();
                 _pointMarkers?.clear();
-                _showControls = true;
               });
             } else if (state is BSNavigationSelectingLocation) {
               setState(() {
                 _locationMarkers.clear();
                 _pointMarkers.clear();
-                _showControls = false;
               });
             } else if (state is BSNavigationShowingLocation) {
               setState(() {
                 _locationMarkers.clear();
-                _showControls = false;
               });
             } else if (state is BSNavigationPlanningPoints) {
               setState(() {
                 _locationMarkers.clear();
                 _pointMarkers.clear();
-                _showControls = false;
+                _isShowingPOIs = true;
               });
               setState(() {
                 if (state.origin != null)
@@ -137,7 +132,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                       width: 16,
                       point: state.destination.coordinates,
                       builder: (context) => markers.CircleMarker()));
-                if (state.origin != null && state.destination != null)
+                if (state.origin != null && state.destination != null) {
+                  _isShowingPOIs = false;
                   _animatedFitBounds(
                       LatLngBounds(state.origin.coordinates,
                           state.destination.coordinates),
@@ -147,9 +143,11 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                             top: MediaQuery.of(context).padding.top + 32,
                             right: 32,
                             left: 32,
-                            bottom: MediaQuery.of(context).size.height / 2 -
-                                MediaQuery.of(context).padding.top),
+                            bottom:
+                                (MediaQuery.of(context).size.height + 48) / 2 -
+                                    MediaQuery.of(context).padding.top),
                       ));
+                }
               });
             }
           },
@@ -182,30 +180,15 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
               ),
               if ((_locationMarkers +
                       _pointMarkers +
-                      (_showControls && _isShowingPOIs
-                          ? _pointsOfInterest
-                          : []))
+                      (_isShowingPOIs ? _pointsOfInterest : []))
                   .isNotEmpty)
                 MarkerLayerOptions(
                   markers: _locationMarkers +
                       _pointMarkers +
-                      (_showControls && _isShowingPOIs
-                          ? _pointsOfInterest
-                          : []),
+                      (_isShowingPOIs ? _pointsOfInterest : []),
                 )
             ],
           ),
-          if (_showControls)
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 16,
-              right: 8,
-              child: MapControls(
-                centerCallback: _centerUser,
-                poiCallback: _showPOIs,
-                centeringUser: _isCenteringUser,
-                showingPOIs: _isShowingPOIs,
-              ),
-            ),
           BlocBuilder<BSNavigationBloc, BSNavigationState>(
             builder: (context, state) {
               return AnimatedPositioned(
@@ -242,10 +225,11 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   _onPositionChanged() {
     if (_initialMove) {
       _initialMove = false;
-    } else if (_showControls)
-      setState(() {
-        _isCenteringUser = false;
-      });
+    }
+    // } else if (_showControls)
+    //   setState(() {
+    //     _isCenteringUser = false;
+    //   });
   }
 
   _onTap(LatLng position) {
@@ -259,7 +243,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     //       .location
     //       .coordinates;
     // } else
-    return LatLng(38.713, -9.136);
+    return LatLng(38.704, -9.136);
   }
 
   void _centerUser(bool center) {

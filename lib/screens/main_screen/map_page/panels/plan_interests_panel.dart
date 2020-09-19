@@ -3,25 +3,64 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/animated_list_helper.dart';
 import '../../../../core/example_data.dart';
 import 'dart:math' as Math;
+import 'package:living_city/bloc/points_of_interest/points_of_interest_bloc.dart';
 import '../../../../data/models/point_of_interest_model.dart';
 
 import '../../../../bloc/bs_navigation/bs_navigation_bloc.dart';
 import '../../../../core/categories.dart';
+import 'package:latlong/latlong.dart';
 
 class PlanInterestsPanel extends StatelessWidget {
   final List<int> activeCategories;
   final List<PointOfInterestModel> activePOIs;
+  final int date;
+  final LatLng origin;
 
   const PlanInterestsPanel(
-      {Key key, @required this.activeCategories, @required this.activePOIs})
+      {Key key,
+      @required this.activeCategories,
+      @required this.activePOIs,
+      @required this.date,
+      @required this.origin})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final List<PointOfInterestModel> displayItems = pois
+    // print(date);
+    final pois = (BlocProvider.of<PointsOfInterestBloc>(context).state
+            as PointsOfInterestLoaded)
+        .pois;
+
+    //Filter for schedule
+    final List<PointOfInterestModel> scheduleItems = pois
+        .where((element) =>
+            date >= element.openingHour && date <= element.closureHour)
+        .toList();
+
+    // scheduleItems..sort((a, b) => b.sustainability.compareTo(a.sustainability));
+    // print(scheduleItems.length);
+    // for (PointOfInterestModel poi in scheduleItems) print(poi.name);
+
+    // for (int i in activeCategories) print(i);
+
+    //Filter for category
+    final List<PointOfInterestModel> displayItems = scheduleItems
         .where((element) => activeCategories.contains(element.categoryID))
         .toList()
           ..sort((a, b) => b.sustainability.compareTo(a.sustainability));
+
+    final int price = activePOIs.fold<int>(
+        0,
+        (previousValue, element) =>
+            previousValue.toInt() + element.price.toInt());
+
+    final int visitTime = activePOIs.fold<int>(
+        0, (previousValue, element) => previousValue + element.visitTime);
+
+    int sustainability = activePOIs.fold<int>(
+        0, (previousValue, element) => previousValue + element.sustainability);
+    if (sustainability != 0)
+      sustainability = (sustainability / activePOIs.length).round();
 
     return Container(
       padding: EdgeInsets.only(top: 12),
@@ -62,7 +101,8 @@ class PlanInterestsPanel extends StatelessWidget {
                     height: 12,
                     width: 12,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).accentColor,
+                      border: Border.all(
+                          color: Theme.of(context).accentColor, width: 1.5),
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -71,7 +111,99 @@ class PlanInterestsPanel extends StatelessWidget {
             ],
           ),
           const SizedBox(
-            height: 16,
+            height: 28,
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        width: 1,
+                        color: const Color(0xFFF0F0F0),
+                      )),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.euro_symbol),
+                      const SizedBox(width: 8),
+                      Padding(
+                        padding: EdgeInsets.only(left: price == 0 ? 7 : 0),
+                        child: Text(
+                          price == 0 ? '--' : '$price',
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        width: 1,
+                        color: const Color(0xFFF0F0F0),
+                      )),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.access_time),
+                      const SizedBox(width: 8),
+                      Padding(
+                        padding: EdgeInsets.only(left: visitTime == 0 ? 7 : 0),
+                        child: Text(
+                          (visitTime == 0 ? '--' : '$visitTime') + '  Min',
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        width: 1,
+                        color: const Color(0xFFF0F0F0),
+                      )),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset('assets/eco_leaf.png',
+                          color: Theme.of(context).iconTheme.color,
+                          height: 24,
+                          width: 24),
+                      const SizedBox(width: 8),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(left: sustainability == 0 ? 7 : 0),
+                        child: Text(
+                          (sustainability == 0 ? '--' : '$sustainability') +
+                              '  %',
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 28,
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -104,15 +236,15 @@ class PlanInterestsPanel extends StatelessWidget {
                 (index) => Padding(
                   padding: EdgeInsets.only(right: 16),
                   child: GestureDetector(
-                    onTap: () => _onTapCategory(
-                        index, activeCategories.contains(index), context),
+                    onTap: () => _onTapCategory(index + 1,
+                        activeCategories.contains(index + 1), context),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       padding:
                           EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: (!activeCategories.contains(index) ||
+                        color: (!activeCategories.contains(index + 1) ||
                                 activeCategories.length == categories.length)
                             ? Colors.grey[100]
                             : Theme.of(context).accentColor,
@@ -120,7 +252,7 @@ class PlanInterestsPanel extends StatelessWidget {
                       child: Text(categories[index].name,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: !(!activeCategories.contains(index) ||
+                            color: !(!activeCategories.contains(index + 1) ||
                                     activeCategories.length ==
                                         categories.length)
                                 ? Colors.white
@@ -133,7 +265,7 @@ class PlanInterestsPanel extends StatelessWidget {
               ),
             ]),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           SizedBox(
             height: 300,
             child: ListView.builder(
@@ -146,6 +278,7 @@ class PlanInterestsPanel extends StatelessWidget {
                         bottom: index != displayItems.length - 1 ? 12 : 0),
                     child: PointOfInterestItem(
                       item: displayItems[index],
+                      origin: origin,
                       onTap: () => _onTapItem(displayItems[index],
                           activePOIs.contains(displayItems[index]), context),
                       selected: activePOIs.contains(displayItems[index]),
@@ -160,11 +293,14 @@ class PlanInterestsPanel extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 child: Center(
                   child: Ink(
+                    height: 42,
+                    width: 48,
                     decoration: BoxDecoration(
                       color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: IconButton(
+                      padding: EdgeInsets.all(2),
                       icon: Icon(
                         Icons.arrow_back_ios,
                         size: 18,
@@ -189,12 +325,12 @@ class PlanInterestsPanel extends StatelessWidget {
                           .add(BSNavigationAdvanced()),
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
-                        height: 48,
+                        height: 42,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Center(
-                            child: Text('NEXT',
+                            child: Text(activePOIs.length > 0 ? 'NEXT' : 'SKIP',
                                 style: TextStyle(
                                     wordSpacing: 1.2,
                                     color: Colors.white,
@@ -338,29 +474,35 @@ class PlanInterestsPanel extends StatelessWidget {
 // }
 
 class PointOfInterestItem extends StatelessWidget {
-  const PointOfInterestItem(
+  PointOfInterestItem(
       {Key key,
       // @required this.animation,
       this.onTap,
+      @required this.origin,
       @required this.item,
       this.selected: false})
       :
         // : assert(animation != null),
         assert(item != null),
         assert(selected != null),
+        leafCount = item.sustainability >= 80
+            ? 3
+            : item.sustainability >= 70 ? 2 : item.sustainability >= 60 ? 1 : 0,
+        distance = Distance(roundResult: false)
+            .as(LengthUnit.Kilometer, origin, item.coordinates)
+            .toStringAsFixed(1),
         super(key: key);
 
   // final Animation<double> animation;
   final VoidCallback onTap;
   final PointOfInterestModel item;
   final bool selected;
+  final LatLng origin;
+  final int leafCount;
+  final String distance;
 
   @override
   Widget build(BuildContext context) {
-    int leafCount = item.sustainability >= 80
-        ? 3
-        : item.sustainability >= 70 ? 2 : item.sustainability >= 60 ? 1 : 0;
-
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -382,12 +524,24 @@ class PointOfInterestItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                    child: Text(
-                  item.name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w600),
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      categories[item.categoryID - 1].name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    Text(
+                      item.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w600),
+                    ),
+                  ],
                 )),
                 const SizedBox(width: 8),
                 for (int i = 0; i < 3 - leafCount; i++)
@@ -403,9 +557,9 @@ class PointOfInterestItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                  child: Text(categories[item.categoryID].name),
+                  child: Text('Visit Time: ${item.visitTime} min'),
                 ),
-                Text('${item.visitTime} min',
+                Text('$distance Km',
                     overflow: TextOverflow.ellipsis,
                     style:
                         TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),

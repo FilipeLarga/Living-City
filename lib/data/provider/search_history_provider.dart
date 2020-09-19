@@ -52,7 +52,7 @@ class SearchHistoryProvider {
   }
 
   Future<List<LocationModel>> getSearches() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: 500));
     // Init the database if it's not already.
     if (_db == null) {
       await _init();

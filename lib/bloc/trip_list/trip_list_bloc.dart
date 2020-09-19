@@ -38,9 +38,9 @@ class TripListBloc extends Bloc<TripListEvent, TripListState> {
       var trip = coords.trip;
 
       // //Add this trip to planned list
-      await _tripRepository.addPlannedTrip(trip);
-      await _tripRepository.addPlannedTrip(trip);
-      await _tripRepository.addPlannedTrip(trip);
+      // await _tripRepository.addPlannedTrip(trip);
+      // await _tripRepository.addPlannedTrip(trip);
+      // await _tripRepository.addPlannedTrip(trip);
       // // await _tripRepository.addPlannedTrip(trip);
       // // await _tripRepository.addPlannedTrip(trip);
 
