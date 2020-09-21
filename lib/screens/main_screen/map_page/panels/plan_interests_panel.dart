@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/animated_list_helper.dart';
-import '../../../../core/example_data.dart';
-import 'dart:math' as Math;
-import 'package:living_city/bloc/points_of_interest/points_of_interest_bloc.dart';
-import '../../../../data/models/point_of_interest_model.dart';
+import 'package:latlong/latlong.dart';
 
 import '../../../../bloc/bs_navigation/bs_navigation_bloc.dart';
+import '../../../../bloc/points_of_interest/points_of_interest_bloc.dart';
 import '../../../../core/categories.dart';
-import 'package:latlong/latlong.dart';
+import '../../../../core/leaf_colors.dart' as leafColors;
+import '../../../../data/models/point_of_interest_model.dart';
 
 class PlanInterestsPanel extends StatelessWidget {
   final List<int> activeCategories;
@@ -184,7 +182,13 @@ class PlanInterestsPanel extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Image.asset('assets/eco_leaf.png',
-                          color: Theme.of(context).iconTheme.color,
+                          color: sustainability == 0
+                              ? Theme.of(context).iconTheme.color
+                              : leafColors.leafColor(sustainability >= 80
+                                  ? 3
+                                  : sustainability >= 70
+                                      ? 2
+                                      : sustainability >= 60 ? 1 : 0),
                           height: 24,
                           width: 24),
                       const SizedBox(width: 8),
@@ -549,7 +553,9 @@ class PointOfInterestItem extends StatelessWidget {
                       color: Colors.grey[300], height: 24, width: 24),
                 for (int i = 0; i < leafCount; i++)
                   Image.asset('assets/eco_leaf.png',
-                      color: const Color(0xFF7BCB91), height: 24, width: 24),
+                      color: leafColors.leafColor(leafCount),
+                      height: 24,
+                      width: 24),
               ],
             ),
             const SizedBox(height: 8),
