@@ -34,7 +34,7 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
   ScrollController _scrollController;
 
   double heightLimit;
-  double _minHeight;
+  double _minHeight = 88;
 
   @override
   void initState() {
@@ -49,7 +49,6 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
       _panelController.animatePanelToPosition((308.0 / heightLimit).toDouble(),
           duration: Duration(milliseconds: 300), curve: Curves.easeInCubic);
     });
-    _minHeight = 88;
   }
 
   @override
@@ -64,6 +63,7 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
               });
             } else if (state is BSNavigationExplore) {
               setState(() {
+                _minHeight = 88;
                 _panelWidget = SearchPanel(
                     scrollController: _scrollController,
                     openSheet: _openSheet,
@@ -81,6 +81,7 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
               });
             } else if (state is BSNavigationSelectingLocation) {
               setState(() {
+                _minHeight = 88;
                 _panelWidget = SearchPanel(
                     scrollController: _scrollController,
                     openSheet: _openSheet,

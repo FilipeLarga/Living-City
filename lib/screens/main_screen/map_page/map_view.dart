@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:living_city/bloc/location/location_bloc.dart';
 import 'package:latlong/latlong.dart';
+import 'package:living_city/bloc/route_request/route_request_bloc.dart';
+import 'package:living_city/data/models/trip_model.dart';
 import '../../../bloc/bs_navigation/bs_navigation_bloc.dart';
 import '../../../bloc/points_of_interest/points_of_interest_bloc.dart';
 import '../../../widgets/markers.dart' as markers;
@@ -28,6 +30,10 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   List<Marker> _pointsOfInterest = [];
   List<Marker> _locationMarkers = [];
   List<Marker> _pointMarkers = [];
+
+  TripModel _tripModel;
+
+  bool _wasTrip = false;
 
   @override
   void initState() {
@@ -60,6 +66,38 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        BlocListener<RouteRequestBloc, RouteRequestState>(
+          listener: (context, state) {
+            if (state is RouteRequestLoaded) {
+              setState(() {
+                _wasTrip = true;
+                _isShowingPOIs = false;
+                _locationMarkers.clear();
+                _pointMarkers.clear();
+                _tripModel = state.tripModel;
+                state.tripModel.pois.forEach((element) {
+                  _pointMarkers.add(Marker(
+                    point: element.poi.coordinates,
+                    height: 32,
+                    width: 32,
+                    builder: (context) => markers.TripPOIMarker(),
+                  ));
+                });
+              });
+              _animatedFitBounds(
+                  LatLngBounds(state.tripModel.origin.coordinates,
+                      state.tripModel.destination.coordinates),
+                  options: FitBoundsOptions(
+                      maxZoom: 15,
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top + 32,
+                          right: 48,
+                          left: 48,
+                          bottom: 64)));
+            } else
+              _tripModel = null;
+          },
+        ),
         BlocListener<LocationBloc, LocationState>(
           listener: (context, state) {
             if (state is LocationLoaded)
@@ -99,6 +137,13 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
         ),
         BlocListener<BSNavigationBloc, BSNavigationState>(
           listener: (context, state) {
+            if (!(state is BSNavigationConfirmingTrip))
+              setState(() {
+                if (_wasTrip) _tripModel = null;
+                _locationMarkers.clear();
+                _pointMarkers.clear();
+                _wasTrip = false;
+              });
             if (state is BSNavigationExplore) {
               setState(() {
                 _locationMarkers?.clear();
@@ -108,6 +153,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
               setState(() {
                 _locationMarkers.clear();
                 _pointMarkers.clear();
+                _isShowingPOIs = true;
               });
             } else if (state is BSNavigationShowingLocation) {
               setState(() {
@@ -176,12 +222,20 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
               ),
               PolylineLayerOptions(
                 polylineCulling: true,
-                polylines: [],
+                polylines: _tripModel == null
+                    ? []
+                    : [
+                        Polyline(
+                            points: _tripModel.line,
+                            color: Colors.blue[300],
+                            strokeWidth: 2.5)
+                      ],
               ),
               if ((_locationMarkers +
-                      _pointMarkers +
-                      (_isShowingPOIs ? _pointsOfInterest : []))
-                  .isNotEmpty)
+                          _pointMarkers +
+                          (_isShowingPOIs ? _pointsOfInterest : []))
+                      .isNotEmpty ||
+                  _tripModel != null)
                 MarkerLayerOptions(
                   markers: _locationMarkers +
                       _pointMarkers +

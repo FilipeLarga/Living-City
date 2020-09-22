@@ -431,8 +431,12 @@ class PlanRestrictionsPanel extends StatelessWidget {
       selection = await showCupertinoModalPopup(
         context: context,
         builder: (context) => CupertinoActionSheet(
-          title: Text('Effort'),
-          message: Text('Please select the effort best suited for you'),
+          title: Text(
+            'Effort',
+            style: const TextStyle(fontSize: 16),
+          ),
+          message: Text('Please select the effort best suited for you',
+              style: const TextStyle(fontSize: 14)),
           // message: ,
           actions: [
             CupertinoActionSheetAction(
