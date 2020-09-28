@@ -1,5 +1,6 @@
 import 'package:latlong/latlong.dart';
 import 'package:living_city/core/latlng_json_helper.dart';
+import '../models/location_model.dart';
 import 'package:living_city/data/models/point_of_interest_model.dart';
 
 class TripModel {
@@ -9,26 +10,49 @@ class TripModel {
   final List<LatLng> line;
   final int startTime;
   final int endTime;
+  final LocationModel origin;
+  final LocationModel destination;
   final int sustainability;
   final int price;
   final int distance;
   final int calories;
 
-  TripModel(this.pois, this.line, this.startTime, this.endTime,
-      this.sustainability, this.price, this.distance, this.calories);
+  TripModel(
+      this.pois,
+      this.line,
+      this.startTime,
+      this.endTime,
+      this.sustainability,
+      this.price,
+      this.distance,
+      this.calories,
+      this.origin,
+      this.destination);
 
   factory TripModel.fromJson(Map<String, dynamic> json) {
     var poiList = json['pois'] as List;
     var line = json['line'] as List;
     return TripModel(
-        poiList.map((e) => TimedPointOfInterestModel.fromJson(e)).toList(),
-        line.map((e) => LatLng(e['latitude'], e['longitude'])).toList(),
-        json['time']['startTime'],
-        json['time']['endTime'],
-        json['sustainability'],
-        json['price'],
-        json['distance'],
-        json['calories']);
+      poiList.map((e) => TimedPointOfInterestModel.fromJson(e)).toList(),
+      line.map((e) => LatLng(e['latitude'], e['longitude'])).toList(),
+      json['time']['startTime'],
+      json['time']['endTime'],
+      json['sustainability'],
+      json['price'],
+      json['distance'],
+      json['calories'],
+      LocationModel(
+        LatLng(json['origin']['latitude'], json['origin']['longitude']),
+        name: json['origin']['name'],
+        locality: json['origin']['locality'],
+      ),
+      LocationModel(
+        LatLng(
+            json['destination']['latitude'], json['destination']['longitude']),
+        name: json['destination']['name'],
+        locality: json['destination']['locality'],
+      ),
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -38,6 +62,8 @@ class TripModel {
       'distance': distance,
       'calories': calories,
       'time': _timeToMap(),
+      'origin': origin.toMap(),
+      'destination': destination.toMap(),
       'line': line.map((coords) => latLngToMap(coords)).toList(growable: false),
       'pois': pois.map((timedPOI) => timedPOI.toMap()).toList(growable: false),
     };

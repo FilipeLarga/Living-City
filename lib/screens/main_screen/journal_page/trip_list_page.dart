@@ -1,22 +1,22 @@
 import 'dart:ui';
 
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jiffy/jiffy.dart';
-import 'package:living_city/bloc/trip_list/trip_list_bloc.dart';
-import 'package:living_city/core/example_data.dart';
-import 'package:living_city/data/models/trip_model.dart';
-import 'package:living_city/screens/main_screen/journal_page/trip_details_page.dart';
-import 'package:living_city/widgets/dashed_line.dart';
-import 'package:living_city/widgets/map_widgets.dart';
-import 'package:vector_math/vector_math_64.dart' as vectors;
-import '../../../core/animated_list_helper.dart';
-import '../../../widgets/map_widgets.dart';
-import '../../../bloc/trip_details/trip_details_bloc.dart';
-import 'package:animations/animations.dart';
 import 'package:intl/intl.dart';
-import '../../../widgets/circle_progress.dart';
+import 'package:jiffy/jiffy.dart';
+import 'package:vector_math/vector_math_64.dart' as vectors;
+
+import '../../../bloc/trip_details/trip_details_bloc.dart';
+import '../../../bloc/trip_list/trip_list_bloc.dart';
+import '../../../core/animated_list_helper.dart';
+import '../../../core/example_data.dart';
+import '../../../core/leaf_colors.dart' as leafColor;
+import '../../../data/models/trip_model.dart';
+import '../../../widgets/dashed_line.dart';
 import '../../../widgets/exceptions.dart';
+import '../../../widgets/map_widgets.dart';
+import 'trip_details_page.dart';
 
 class TripListPage extends StatelessWidget {
   static const routeName = 'journal/trip_list';
@@ -111,7 +111,7 @@ class StatsDisplay extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: StatsItem(
-              value: avgSustainability.toString() + ' %',
+              value: avgSustainability.round().toString() + ' %',
               name: 'Sustainable',
             ),
           ),
@@ -371,7 +371,37 @@ class _TripListState extends State<TripList> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 15,
-                      ))
+                      )),
+                  if (_selection == 0) ...[
+                    const SizedBox(height: 28),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 84.0),
+                      child: Material(
+                        color: Theme.of(context).accentColor,
+                        clipBehavior: Clip.antiAlias,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Center(
+                          child: InkWell(
+                            onTap: () {},
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              height: 38,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                  child: Text('PLAN TRIP',
+                                      style: TextStyle(
+                                          wordSpacing: 1.2,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15))),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
                 ],
               ),
             ),
@@ -587,7 +617,9 @@ class TripListItem extends StatelessWidget {
                         color: Colors.grey[300], height: 24, width: 24),
                   for (int i = 0; i < leafCount; i++)
                     Image.asset('assets/eco_leaf.png',
-                        color: const Color(0xFF7BCB91), height: 24, width: 24),
+                        color: leafColor.leafColor(leafCount),
+                        height: 24,
+                        width: 24),
                 ],
               ),
               const SizedBox(height: 16),

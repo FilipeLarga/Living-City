@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:living_city/bloc/route_request/route_request_bloc.dart';
 
 import './map_bottom_sheet.dart';
 import './map_view.dart';
@@ -17,11 +18,16 @@ class MapPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<BSNavigationBloc>(
-            create: (BuildContext context) =>
-                BSNavigationBloc(sl())..add(BSNavigationLoadActiveTrip())),
-        BlocProvider<BottomSheetBloc>(create: (BuildContext context) => BottomSheetBloc()),
-        BlocProvider<SearchHistoryBloc>(create: (BuildContext context) => SearchHistoryBloc(sl())),
-        BlocProvider<LocationBloc>(create: (BuildContext context) => LocationBloc(sl(), sl())),
+            create: (BuildContext context) => BSNavigationBloc(sl(), sl())
+              ..add(BSNavigationLoadActiveTrip())),
+        BlocProvider<BottomSheetBloc>(
+            create: (BuildContext context) => BottomSheetBloc()),
+        BlocProvider<SearchHistoryBloc>(
+            create: (BuildContext context) => SearchHistoryBloc(sl())),
+        BlocProvider<LocationBloc>(
+            create: (BuildContext context) => LocationBloc(sl(), sl())),
+        BlocProvider<RouteRequestBloc>(
+            create: (BuildContext context) => RouteRequestBloc())
       ],
       child: Stack(
         children: <Widget>[

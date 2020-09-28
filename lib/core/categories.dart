@@ -6,12 +6,12 @@ class PoiCategory {
 }
 
 List<PoiCategory> categories = [
-  PoiCategory(0, 'Local Store'),
-  PoiCategory(1, 'Religious Spot'),
-  PoiCategory(2, 'Viewpoint'),
-  PoiCategory(3, 'Restaurant'),
-  PoiCategory(4, 'Tasquinha'),
-  PoiCategory(5, 'Museum'),
-  PoiCategory(6, 'Monument'),
-  PoiCategory(7, 'Square'),
+  PoiCategory(1, 'Local Store'),
+  PoiCategory(2, 'Religious Spot'),
+  PoiCategory(3, 'Viewpoint'),
+  PoiCategory(4, 'Restaurant'),
+  PoiCategory(5, 'Tasquinha'),
+  PoiCategory(6, 'Museum'),
+  PoiCategory(7, 'Monument'),
+  PoiCategory(8, 'Square'),
 ];

@@ -7,8 +7,8 @@ class PointsOfInterestRepository {
   final PointsOfInterestRemoteProvider _pointsOfInterestRemoteProvider;
   final PointsOfInterestLocalProvider _pointsOfInterestLocalProvider;
 
-  PointsOfInterestRepository(
-      this._pointsOfInterestLocalProvider, this._pointsOfInterestRemoteProvider);
+  PointsOfInterestRepository(this._pointsOfInterestLocalProvider,
+      this._pointsOfInterestRemoteProvider);
 
   Future<List<PointOfInterestModel>> getPointsOfInterest() async {
     try {
@@ -19,6 +19,11 @@ class PointsOfInterestRepository {
       final pois = await _pointsOfInterestLocalProvider.getPointsOfInterest();
       return pois;
     }
+  }
+
+  Future<List<PointOfInterestModel>> getLocalPointsOfInterest() async {
+    final pois = await _pointsOfInterestLocalProvider.getPointsOfInterest();
+    return pois;
   }
 
   Future<void> _storePointsOfInterest(List<PointOfInterestModel> pois) async {

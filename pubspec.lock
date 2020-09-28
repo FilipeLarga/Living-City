@@ -24,13 +24,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.2"
-  background_locator:
-    dependency: "direct main"
-    description:
-      name: background_locator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.11+1"
   bloc:
     dependency: transitive
     description:
@@ -496,6 +489,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.17"
+  timeline_tile:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "413049e5b86943e21845b5b8993644f5f75e3f61"
+      url: "https://github.com/FilipeLarga/timeline_tile"
+    source: git
+    version: "1.0.0"
   transparent_image:
     dependency: transitive
     description:

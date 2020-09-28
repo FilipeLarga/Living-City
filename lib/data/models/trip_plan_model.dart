@@ -4,7 +4,8 @@ import 'package:living_city/data/models/point_of_interest_model.dart';
 class TripPlanModel {
   LocationModel origin;
   LocationModel destination;
-  int date;
+  int departureDate;
+  int visitTime;
   int effort;
   int budget;
   List<int> categories;
@@ -13,7 +14,8 @@ class TripPlanModel {
   clear() {
     this.origin = null;
     this.destination = null;
-    this.date = null;
+    this.departureDate = null;
+    this.visitTime = null;
     this.effort = null;
     this.budget = null;
     this.categories = null;
@@ -21,9 +23,9 @@ class TripPlanModel {
   }
 
   void clearRestrictions() {
-    this.date = null;
     this.effort = null;
     this.budget = null;
+    this.visitTime = null;
   }
 
   void clearInterests() {

@@ -19,12 +19,23 @@ class PointsOfInterestBloc
   Stream<PointsOfInterestState> mapEventToState(
     PointsOfInterestEvent event,
   ) async* {
-    if (event is PointsOfInterestFetch) yield* _handleFetch();
+    if (event is PointsOfInterestFetch)
+      yield* _handleFetch();
+    else if (event is PointsOfInterestQuickFetch) yield* _handleQuickFetch();
   }
 
   Stream<PointsOfInterestState> _handleFetch() async* {
     yield PointsOfInterestLoading();
     final pois = await _pointsOfInterestRepository.getPointsOfInterest();
+    if (pois == null || pois.isEmpty)
+      yield PointsOfInterestEmpty();
+    else
+      yield PointsOfInterestLoaded(pois);
+  }
+
+  Stream<PointsOfInterestState> _handleQuickFetch() async* {
+    yield PointsOfInterestLoading();
+    final pois = await _pointsOfInterestRepository.getLocalPointsOfInterest();
     if (pois == null || pois.isEmpty)
       yield PointsOfInterestEmpty();
     else

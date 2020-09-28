@@ -97,9 +97,10 @@ class _SearchPanelState extends State<SearchPanel> {
                       child: Text(
                         'RECENT SEARCHES',
                         style: const TextStyle(
-                            fontSize: 10,
+                            fontSize: 13,
                             color: const Color(0xFF7F7E7E),
-                            fontWeight: FontWeight.w600),
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5),
                       )),
                   const SizedBox(height: 16),
                 ],
@@ -111,7 +112,37 @@ class _SearchPanelState extends State<SearchPanel> {
                     state is SearchHistoryInitial) {
                   return SliverToBoxAdapter(child: const ShimmerList());
                 } else if (state is SearchHistoryEmpty) {
-                  return SliverToBoxAdapter(child: Text('empty'));
+                  return SliverToBoxAdapter(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 24),
+                      FractionallySizedBox(
+                        widthFactor: 0.55,
+                        child: FittedBox(
+                            alignment: Alignment.center,
+                            fit: BoxFit.scaleDown,
+                            child: ConstrainedBox(
+                              constraints:
+                                  BoxConstraints(minWidth: 1, minHeight: 1),
+                              child: Image.asset(
+                                'assets/empty_searches.png',
+                              ),
+                            )),
+                      ),
+                      const SizedBox(height: 20),
+                      Text('No recent searches',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 4),
+                      Text('Your searches will be stored here',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 15,
+                          )),
+                    ],
+                  ));
                 } else {
                   final List<LocationModel> locations =
                       (state as SearchHistoryLoaded).searchHistory;
@@ -280,7 +311,7 @@ class _OptionsList extends StatelessWidget {
         GestureDetector(
           onTap: () => closeSheet(),
           child: Container(
-            height: 56,
+            height: 64,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: const Color(0xFFF0F0F0)),
@@ -300,7 +331,7 @@ class _OptionsList extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                          fontSize: 12, color: const Color(0xFF4D4D4D)),
+                          fontSize: 14, color: const Color(0xFF4D4D4D)),
                     ),
                   ),
                 ],
@@ -310,7 +341,7 @@ class _OptionsList extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Container(
-          height: 56,
+          height: 64,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: const Color(0xFFF0F0F0)),
@@ -404,7 +435,7 @@ class _OptionsList extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     color: const Color(0xFF4D4D4D)),
                               ),
                               Text(
@@ -412,7 +443,7 @@ class _OptionsList extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                    fontSize: 10,
+                                    fontSize: 12,
                                     color: const Color(0xFF666666)),
                               ),
                             ],
@@ -451,7 +482,7 @@ class SearchHistoryListItem extends StatelessWidget {
       child: GestureDetector(
         onTap: () => onSelect(location),
         child: Container(
-          height: 56,
+          height: 64,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             //color: const Color(0xFFF0F0F0)
@@ -465,27 +496,29 @@ class SearchHistoryListItem extends StatelessWidget {
                   color: const Color(0xFF808080),
                 ),
                 const SizedBox(width: 12),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        location.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 12, color: const Color(0xFF4D4D4D)),
-                      ),
-                      Text(
-                        location.locality,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 10, color: const Color(0xFF666666)),
-                      ),
-                    ],
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          location.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 14, color: const Color(0xFF4D4D4D)),
+                        ),
+                        Text(
+                          location.locality,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 12, color: const Color(0xFF666666)),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -511,7 +544,7 @@ class ShimmerList extends StatelessWidget {
         itemBuilder: (_, __) => Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Container(
-            height: 56,
+            height: 64,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
             ),

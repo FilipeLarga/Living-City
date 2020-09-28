@@ -25,7 +25,7 @@ dependencies:
       url: https://github.com/FilipeLarga/flutter_map
       ref: init-by-bounds
   geolocator: ^5.1.5
-  background_locator: ^1.1.11+1
+  # background_locator: ^1.1.11+1
   flutter_bloc: ^6.0.1
   # animations: ^1.1.1
   animations:
@@ -45,7 +45,10 @@ dependencies:
   jiffy: ^3.0.1
   flutter_blue: ^0.7.2
   flutter_bluetooth_serial: ^0.2.2
-
+  timeline_tile:
+    git:
+      url: https://github.com/FilipeLarga/timeline_tile
+    
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -76,6 +79,8 @@ flutter:
     - assets/category_icons/
     - assets/empty_list.png
     - assets/eco_leaf.png
+    - assets/empty_searches.png
+    - assets/error_trip.png
     # - assets/delivery.png
     # - assets/landscape.jpg
     # - assets/distance_map.png
