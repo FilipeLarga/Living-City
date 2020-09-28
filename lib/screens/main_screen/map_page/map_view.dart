@@ -71,7 +71,9 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
       _userLocation = Marker(
         height: 28,
         width: 28,
-        point: LatLng(38.71254559446653, -9.135023677359982),
+        point: (BlocProvider.of<UserLocationBloc>(context).state
+                as UserLocationLoaded)
+            .location,
         builder: (context) => markers.TargetCircleMarker(spreadsize: 14),
       );
   }
@@ -262,8 +264,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                     : [
                         Polyline(
                             points: _tripModel.line,
-                            color: Colors.blue[300],
-                            strokeWidth: 2.5)
+                            color: Colors.blue[400],
+                            strokeWidth: 3)
                       ],
               ),
               if ((_locationMarkers +
@@ -336,8 +338,10 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                       children: [
                         Icon(Icons.navigation,
                             color: Colors.blue[800], size: 20),
-                        const SizedBox(width: 4),
-                        Text('Tap to recenter the route'),
+                        const SizedBox(width: 8),
+                        Text('Recalculate route',
+                            style:
+                                const TextStyle(fontWeight: FontWeight.w600)),
                       ],
                     ),
                   ),

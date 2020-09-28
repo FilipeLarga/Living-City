@@ -12,7 +12,7 @@ part 'user_location_state.dart';
 class UserLocationBloc extends Bloc<UserLocationEvent, UserLocationState> {
   final LocationRepository _locationRepository;
 
-  bool initial;
+  bool initial = true;
 
   UserLocationBloc(this._locationRepository) : super(UserLocationInitial()) {
     _getInitialLocation();
