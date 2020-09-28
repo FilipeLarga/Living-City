@@ -40,6 +40,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     super.initState();
     _initialMove = true;
     _isCenteringUser = true;
+
     // _isCenteringUser =
     //     BlocProvider.of<UserLocationBloc>(context).state is UserLocationLoaded;
     _isShowingPOIs = true;
@@ -154,6 +155,13 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 _locationMarkers.clear();
                 _pointMarkers.clear();
                 _isShowingPOIs = true;
+                _locationMarkers.add(Marker(
+                  height: 28,
+                  width: 28,
+                  point: LatLng(38.71254559446653, -9.135023677359982),
+                  builder: (context) =>
+                      markers.TargetCircleMarker(spreadsize: 14),
+                ));
               });
             } else if (state is BSNavigationShowingLocation) {
               setState(() {
@@ -237,9 +245,9 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                       .isNotEmpty ||
                   _tripModel != null)
                 MarkerLayerOptions(
-                  markers: _locationMarkers +
-                      _pointMarkers +
-                      (_isShowingPOIs ? _pointsOfInterest : []),
+                  markers: _pointMarkers +
+                      (_isShowingPOIs ? _pointsOfInterest : []) +
+                      _locationMarkers,
                 )
             ],
           ),

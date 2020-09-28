@@ -40,8 +40,11 @@ class TargetCircleMarker extends StatelessWidget {
             SizedBox(
               height: constraints.maxHeight - spreadsize,
               width: constraints.maxWidth - spreadsize,
-              child: CircleMarker(
-                color: color,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color ?? Theme.of(context).accentColor,
+                ),
               ),
             ),
           ],

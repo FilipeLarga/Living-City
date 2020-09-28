@@ -41,8 +41,17 @@ class TripModel {
       json['price'],
       json['distance'],
       json['calories'],
-      json['origin'],
-      json['destination'],
+      LocationModel(
+        LatLng(json['origin']['latitude'], json['origin']['longitude']),
+        name: json['origin']['name'],
+        locality: json['origin']['locality'],
+      ),
+      LocationModel(
+        LatLng(
+            json['destination']['latitude'], json['destination']['longitude']),
+        name: json['destination']['name'],
+        locality: json['destination']['locality'],
+      ),
     );
   }
 

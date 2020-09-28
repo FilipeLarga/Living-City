@@ -51,12 +51,12 @@ class _MainScreenState extends State<MainScreen> {
         onTap: _showPage,
         items: [
           BottomNavigationBarItem(
-            icon: const Icon(Icons.thumb_up),
+            icon: const Icon(Icons.directions_walk),
             title: const Text('Travel'),
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.thumb_down),
-            title: const Text('Journal'),
+            icon: const Icon(Icons.list),
+            title: const Text('History'),
           )
         ],
       ),

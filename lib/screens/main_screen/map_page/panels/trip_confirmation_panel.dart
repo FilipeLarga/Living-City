@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:living_city/core/categories.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../../core/leaf_colors.dart' as leafColor;
 
 import '../../../../bloc/bs_navigation/bs_navigation_bloc.dart';
 import '../../../../bloc/location/location_bloc.dart';
@@ -225,7 +226,15 @@ class _TripConfirmationPanelState extends State<TripConfirmationPanel> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Image.asset('assets/eco_leaf.png',
-                                  color: Theme.of(context).iconTheme.color,
+                                  color: leafColor.leafColor(state
+                                              .tripModel.sustainability >=
+                                          80
+                                      ? 3
+                                      : state.tripModel.sustainability >= 70
+                                          ? 2
+                                          : state.tripModel.sustainability >= 60
+                                              ? 1
+                                              : 0),
                                   height: 24,
                                   width: 24),
                               const SizedBox(width: 8),

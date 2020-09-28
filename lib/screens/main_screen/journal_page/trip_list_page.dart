@@ -111,7 +111,7 @@ class StatsDisplay extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: StatsItem(
-              value: avgSustainability.toString() + ' %',
+              value: avgSustainability.round().toString() + ' %',
               name: 'Sustainable',
             ),
           ),

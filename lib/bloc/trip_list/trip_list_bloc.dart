@@ -39,17 +39,20 @@ class TripListBloc extends Bloc<TripListEvent, TripListState> {
 
       // //Add this trip to planned list
       // await _tripRepository.addPlannedTrip(trip);
-      // await _tripRepository.addPlannedTrip(trip);
-      // await _tripRepository.addPlannedTrip(trip);
+      await _tripRepository.addPlannedTrip(trip);
+      await _tripRepository.addPlannedTrip(trip);
       // // await _tripRepository.addPlannedTrip(trip);
       // // await _tripRepository.addPlannedTrip(trip);
 
       // var tripsTest = await _tripRepository.getPlannedTrips();
       // await _tripRepository.startTrip(tripsTest[0]);
 
-      // await _tripRepository.testAddCompleted(ProgressionTripModel.initial(trip));
-      // await _tripRepository.testAddCompleted(ProgressionTripModel.initial(trip));
-      // await _tripRepository.testAddCompleted(ProgressionTripModel.initial(trip));
+      await _tripRepository
+          .testAddCompleted(ProgressionTripModel.initial(trip));
+      await _tripRepository
+          .testAddCompleted(ProgressionTripModel.initial(trip));
+      await _tripRepository
+          .testAddCompleted(ProgressionTripModel.initial(trip));
 
       // //Get Planned trips
       // List<TripModel> trips = await _tripRepository.getPlannedTrips();
