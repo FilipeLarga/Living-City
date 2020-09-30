@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:living_city/bloc/location/location_bloc.dart';
+import '../../../bloc/location/location_bloc.dart';
 import 'package:latlong/latlong.dart';
-import 'package:living_city/bloc/route_request/route_request_bloc.dart';
-import 'package:living_city/data/models/trip_model.dart';
+import 'dart:math' as Math;
+import '../../../core/distance_helper.dart';
+import '../../../bloc/route_request/route_request_bloc.dart';
+import '../../../bloc/user_location/user_location_bloc.dart';
+import '../../../data/models/trip_model.dart';
 import '../../../bloc/bs_navigation/bs_navigation_bloc.dart';
 import '../../../bloc/points_of_interest/points_of_interest_bloc.dart';
 import '../../../widgets/markers.dart' as markers;
-import 'package:living_city/screens/main_screen/map_page/map_controls.dart';
+import 'map_controls.dart';
 
 class MapView extends StatefulWidget {
   const MapView();
@@ -30,10 +33,13 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   List<Marker> _pointsOfInterest = [];
   List<Marker> _locationMarkers = [];
   List<Marker> _pointMarkers = [];
+  Marker _userLocation;
 
   TripModel _tripModel;
 
   bool _wasTrip = false;
+
+  bool _showRecenter = false;
 
   @override
   void initState() {
@@ -61,12 +67,42 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 ),
               ))
           .toList();
+    if (BlocProvider.of<UserLocationBloc>(context).state is UserLocationLoaded)
+      _userLocation = Marker(
+        height: 28,
+        width: 28,
+        point: (BlocProvider.of<UserLocationBloc>(context).state
+                as UserLocationLoaded)
+            .location,
+        builder: (context) => markers.TargetCircleMarker(spreadsize: 14),
+      );
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        BlocListener<UserLocationBloc, UserLocationState>(
+            listener: (context, state) {
+          if (state is UserLocationLoaded) {
+            bool isNear;
+            if (_tripModel?.line != null) {
+              int result = locationIndexOnEdgeOrPath(
+                  state.location, _tripModel?.line, false, true, 30);
+              isNear = result != -1;
+            }
+            setState(() {
+              _showRecenter = isNear != null ? !isNear : false;
+              _userLocation = Marker(
+                height: 28,
+                width: 28,
+                point: state.location,
+                builder: (context) =>
+                    markers.TargetCircleMarker(spreadsize: 14),
+              );
+            });
+          }
+        }),
         BlocListener<RouteRequestBloc, RouteRequestState>(
           listener: (context, state) {
             if (state is RouteRequestLoaded) {
@@ -76,14 +112,18 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 _locationMarkers.clear();
                 _pointMarkers.clear();
                 _tripModel = state.tripModel;
-                state.tripModel.pois.forEach((element) {
+                for (int i = 0; i < state.tripModel.pois.length; i++) {
                   _pointMarkers.add(Marker(
-                    point: element.poi.coordinates,
-                    height: 32,
-                    width: 32,
-                    builder: (context) => markers.TripPOIMarker(),
+                    point: state.tripModel.pois.elementAt(i).poi.coordinates,
+                    height: i == 0 ? 32 : 16,
+                    width: i == 0 ? 32 : 16,
+                    builder: (context) => i == 0
+                        ? markers.TripDestinationMarker()
+                        : markers.PointOfInterestMarker(
+                            onTapCallback: null,
+                          ),
                   ));
-                });
+                }
               });
               _animatedFitBounds(
                   LatLngBounds(state.tripModel.origin.coordinates,
@@ -155,13 +195,6 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 _locationMarkers.clear();
                 _pointMarkers.clear();
                 _isShowingPOIs = true;
-                _locationMarkers.add(Marker(
-                  height: 28,
-                  width: 28,
-                  point: LatLng(38.71254559446653, -9.135023677359982),
-                  builder: (context) =>
-                      markers.TargetCircleMarker(spreadsize: 14),
-                ));
               });
             } else if (state is BSNavigationShowingLocation) {
               setState(() {
@@ -235,8 +268,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                     : [
                         Polyline(
                             points: _tripModel.line,
-                            color: Colors.blue[300],
-                            strokeWidth: 2.5)
+                            color: Colors.blue[400],
+                            strokeWidth: 3)
                       ],
               ),
               if ((_locationMarkers +
@@ -247,7 +280,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 MarkerLayerOptions(
                   markers: _pointMarkers +
                       (_isShowingPOIs ? _pointsOfInterest : []) +
-                      _locationMarkers,
+                      _locationMarkers +
+                      (_userLocation != null ? [_userLocation] : []),
                 )
             ],
           ),
@@ -274,6 +308,46 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                         ]),
                     padding: EdgeInsets.all(10),
                     child: Text('Tap to select on map'),
+                  ),
+                ),
+              );
+            },
+          ),
+          BlocBuilder<BSNavigationBloc, BSNavigationState>(
+            builder: (context, state) {
+              return AnimatedPositioned(
+                duration: const Duration(milliseconds: 300),
+                top: (state is BSNavigationConfirmingTrip && _showRecenter)
+                    ? MediaQuery.of(context).padding.top + 16
+                    : MediaQuery.of(context).padding.top,
+                child: AnimatedOpacity(
+                  opacity:
+                      (state is BSNavigationConfirmingTrip && _showRecenter)
+                          ? 1
+                          : 0,
+                  duration: const Duration(milliseconds: 300),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            blurRadius: 13.0,
+                            color: Colors.black.withOpacity(.3),
+                            offset: Offset(6.0, 7.0),
+                          ),
+                        ]),
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        Icon(Icons.navigation,
+                            color: Colors.blue[800], size: 20),
+                        const SizedBox(width: 8),
+                        Text('Recalculate route',
+                            style:
+                                const TextStyle(fontWeight: FontWeight.w600)),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -306,14 +380,6 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
     //       .coordinates;
     // } else
     return LatLng(38.704, -9.136);
-  }
-
-  void _centerUser(bool center) {
-    // if (BlocProvider.of<UserLocationBloc>(context).state is UserLocationLoaded &&
-    //     center)
-    //   setState(() {
-    //     _isCenteringUser = center;
-    //   });
   }
 
   void _showPOIs(bool show) {

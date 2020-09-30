@@ -72,7 +72,7 @@ class PointOfInterestMarker extends StatelessWidget {
             shape: BoxShape.circle,
             color: Colors.white,
             border: Border.all(
-                color: color ?? Theme.of(context).accentColor, width: 2)),
+                color: color ?? Theme.of(context).accentColor, width: 3)),
       ),
     );
   }
@@ -82,6 +82,39 @@ class TripPOIMarker extends StatelessWidget {
   final Color color;
 
   const TripPOIMarker({Key key, this.color}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.translate(
+      offset: const Offset(-2, -12),
+      child: Icon(
+        Icons.place,
+        color: color ?? Theme.of(context).accentColor,
+        size: 32,
+      ),
+    );
+  }
+}
+
+class TripOriginMarker extends StatelessWidget {
+  final Color color;
+
+  const TripOriginMarker({Key key, this.color}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      Icons.trip_origin,
+      color: color ?? Theme.of(context).accentColor,
+      size: 18,
+    );
+  }
+}
+
+class TripDestinationMarker extends StatelessWidget {
+  final Color color;
+
+  const TripDestinationMarker({Key key, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

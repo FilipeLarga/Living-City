@@ -45,10 +45,7 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
     _draggable = false;
     _backdrop = false;
     _wasRestrictions = false;
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _panelController.animatePanelToPosition((308.0 / heightLimit).toDouble(),
-          duration: Duration(milliseconds: 300), curve: Curves.easeInCubic);
-    });
+    _initPanel();
   }
 
   @override
@@ -261,29 +258,18 @@ class _MapBottomSheetState extends State<MapBottomSheet> {
     );
   }
 
-  // Widget _getPanelWidget(BSNavigationState state) {
-  //   if (state is BSNavigationInitial) {
-  //     return SearchPanel(
-  //       key: ValueKey<int>(1),
-  //       openSheet: _openSheet,
-  //       closeSheet: _closeSheet,
-  //       scrollController: _scrollController,
-  //     );
-  //   } else if (state is BSNavigationShowingLocation) {
-  //     return LocationPanel(
-  //       key: ValueKey<int>(2),
-  //     );
-  //   } else
-  //     return Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
-  //       Align(
-  //         alignment: Alignment.topCenter,
-  //         child: Container(
-  //           height: 200,
-  //           color: Colors.orange,
-  //         ),
-  //       ),
-  //     ]);
-  // }
+  _initPanel() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (_panelController.isAttached) {
+        _panelController.animatePanelToPosition(
+            (308.0 / heightLimit).toDouble(),
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInCubic);
+      } else {
+        _initPanel();
+      }
+    });
+  }
 
   void _openSheet() {
     _panelController.open();

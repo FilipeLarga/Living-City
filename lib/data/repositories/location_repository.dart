@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
 import 'package:living_city/data/models/location_model.dart';
 import 'package:living_city/data/provider/search_history_provider.dart';
@@ -36,6 +37,10 @@ class LocationRepository {
 
   Future<LocationStatus> getLocationStatus() async {
     return await _geolocatorProvider.getLocationStatus();
+  }
+
+  Stream<Position> getPositionStream() {
+    return _geolocatorProvider.getPositionStream();
   }
 
   // Future<> requestLocationPermission() async {
