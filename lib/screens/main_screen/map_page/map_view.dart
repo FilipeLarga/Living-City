@@ -112,14 +112,18 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 _locationMarkers.clear();
                 _pointMarkers.clear();
                 _tripModel = state.tripModel;
-                state.tripModel.pois.forEach((element) {
+                for (int i = 0; i < state.tripModel.pois.length; i++) {
                   _pointMarkers.add(Marker(
-                    point: element.poi.coordinates,
-                    height: 32,
-                    width: 32,
-                    builder: (context) => markers.TripPOIMarker(),
+                    point: state.tripModel.pois.elementAt(i).poi.coordinates,
+                    height: i == 0 ? 32 : 16,
+                    width: i == 0 ? 32 : 16,
+                    builder: (context) => i == 0
+                        ? markers.TripDestinationMarker()
+                        : markers.PointOfInterestMarker(
+                            onTapCallback: null,
+                          ),
                   ));
-                });
+                }
               });
               _animatedFitBounds(
                   LatLngBounds(state.tripModel.origin.coordinates,
