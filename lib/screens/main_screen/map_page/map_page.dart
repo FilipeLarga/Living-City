@@ -9,6 +9,7 @@ import '../../../bloc/bs_navigation/bs_navigation_bloc.dart';
 import '../../../bloc/location/location_bloc.dart';
 import '../../../bloc/search_history/search_history_bloc.dart';
 import '../../../dependency_injection/injection_container.dart';
+import 'package:http/http.dart' as http;
 
 class MapPage extends StatelessWidget {
   const MapPage();
@@ -27,7 +28,7 @@ class MapPage extends StatelessWidget {
         BlocProvider<LocationBloc>(
             create: (BuildContext context) => LocationBloc(sl(), sl())),
         BlocProvider<RouteRequestBloc>(
-            create: (BuildContext context) => RouteRequestBloc())
+            create: (BuildContext context) => RouteRequestBloc(http.Client()))
       ],
       child: Stack(
         children: <Widget>[

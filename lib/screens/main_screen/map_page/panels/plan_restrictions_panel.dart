@@ -354,7 +354,7 @@ class PlanRestrictionsPanel extends StatelessWidget {
               // original: departureDate,
               initial: visitTime ?? minVisitTime,
               minimum: minVisitTime,
-              maximum: 6 * 60,
+              maximum: 9 * 60,
             )),
       ),
     );

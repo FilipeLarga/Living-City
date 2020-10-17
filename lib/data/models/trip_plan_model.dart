@@ -32,4 +32,22 @@ class TripPlanModel {
     this.categories = null;
     this.pois = null;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'origin': origin.toMapCoords(),
+      'destination': destination.toMapCoords(),
+      'departureDate': departureDate,
+      'visitationTime': visitTime,
+      'budget': budget,
+      'effortLevel': effort,
+      'selectedPoints': pois.map((e) => e.pointID).toList(growable: false),
+      'selectedCategories': categories,
+      'checkWeather': true,
+    };
+  }
+
+  // Map<String, dynamic> _timeToMap() {
+  //   return {'startTime': startTime, 'endTime': endTime};
+  // }
 }

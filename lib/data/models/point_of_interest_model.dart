@@ -1,5 +1,6 @@
 import 'package:latlong/latlong.dart';
-import 'package:living_city/core/latlng_json_helper.dart';
+
+import '../../core/latlng_json_helper.dart';
 
 class PointOfInterestModel {
   int id; //database

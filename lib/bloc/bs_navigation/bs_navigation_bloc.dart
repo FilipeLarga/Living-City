@@ -1,18 +1,16 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:latlong/latlong.dart';
 import 'package:meta/meta.dart';
 
 import '../../core/categories.dart';
-import '../../core/example_data.dart';
 import '../../data/models/location_model.dart';
 import '../../data/models/point_of_interest_model.dart';
 import '../../data/models/trip_model.dart';
 import '../../data/models/trip_plan_model.dart';
+import '../../data/repositories/location_repository.dart';
 import '../../data/repositories/trip_repository.dart';
-import 'package:living_city/data/repositories/location_repository.dart';
 
 part 'bs_navigation_event.dart';
 part 'bs_navigation_state.dart';
@@ -162,7 +160,7 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
       yield BSNavigationPlanningInterests(
           categories: _tripPlanModel.categories,
           pois: _tripPlanModel.pois,
-          origin: _tripPlanModel.origin.coordinates,
+          origin: _tripPlanModel.origin?.coordinates,
           departureHour:
               DateTime.fromMillisecondsSinceEpoch(_tripPlanModel.departureDate)
                   .hour);
@@ -205,7 +203,7 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
       yield BSNavigationPlanningInterests(
           categories: _tripPlanModel.categories,
           pois: _tripPlanModel.pois,
-          origin: _tripPlanModel.origin.coordinates,
+          origin: _tripPlanModel.origin?.coordinates,
           departureHour:
               DateTime.fromMillisecondsSinceEpoch(_tripPlanModel.departureDate)
                   .hour);
@@ -285,7 +283,7 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
       yield BSNavigationPlanningInterests(
           categories: _tripPlanModel.categories,
           pois: _tripPlanModel.pois,
-          origin: _tripPlanModel.origin.coordinates,
+          origin: _tripPlanModel.origin?.coordinates,
           departureHour:
               DateTime.fromMillisecondsSinceEpoch(_tripPlanModel.departureDate)
                   .hour);

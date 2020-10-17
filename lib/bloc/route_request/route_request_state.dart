@@ -7,7 +7,11 @@ class RouteRequestInitial extends RouteRequestState {}
 
 class RouteRequestLoading extends RouteRequestState {}
 
-class RouteRequestError extends RouteRequestState {}
+abstract class RouteRequestError extends RouteRequestState {}
+
+class RouteRequestConnectionError extends RouteRequestState {}
+
+class RouteRequestTripError extends RouteRequestState {}
 
 class RouteRequestLoaded extends RouteRequestState {
   final TripModel tripModel;
