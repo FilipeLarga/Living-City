@@ -207,7 +207,13 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 _isShowingPOIs = true;
               });
               setState(() {
-                if (state.origin != null)
+                bool roundtrip = state.origin != null &&
+                    state.destination != null &&
+                    state.origin.coordinates.latitude ==
+                        state.destination.coordinates.latitude &&
+                    state.origin.coordinates.longitude ==
+                        state.destination.coordinates.longitude;
+                if (state.origin != null && !roundtrip)
                   _pointMarkers.add(Marker(
                       height: 16,
                       width: 16,
@@ -218,7 +224,7 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                       height: 16,
                       width: 16,
                       point: state.destination.coordinates,
-                      builder: (context) => markers.CircleMarker()));
+                      builder: (context) => markers.TripDestinationMarker()));
                 if (state.origin != null && state.destination != null) {
                   _isShowingPOIs = false;
                   _animatedFitBounds(

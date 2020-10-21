@@ -20,6 +20,14 @@ class LocationModel {
     return map;
   }
 
+  Map<String, dynamic> toMapCoords() {
+    var map = <String, dynamic>{
+      'latitude': coordinates.latitude,
+      'longitude': coordinates.longitude,
+    };
+    return map;
+  }
+
   factory LocationModel.fromMap(Map<String, dynamic> map) {
     return LocationModel(
       LatLng(map['latitude'], map['longitude']),

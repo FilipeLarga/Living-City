@@ -1,4 +1,3 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:living_city/core/bluetooth_detection_service.dart';
 import 'package:living_city/data/database/ble_devices_database.dart';

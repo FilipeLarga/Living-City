@@ -57,6 +57,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  test: ^1.3.0
+  bloc_test: ^7.0.0
+  
 
 
 # For information on the generic Dart part of this file, see the
@@ -220,134 +223,134 @@ flutter:
     - assets/map/15/15577/
     - assets/map/15/15578/
     - assets/map/15/15579/
-    # - assets/map/16/31030/
-    # - assets/map/16/31031/
-    # - assets/map/16/31032/
-    # - assets/map/16/31033/
-    # - assets/map/16/31034/
-    # - assets/map/16/31035/
-    # - assets/map/16/31036/
-    # - assets/map/16/31037/
-    # - assets/map/16/31038/
-    # - assets/map/16/31039/
-    # - assets/map/16/31040/
-    # - assets/map/16/31041/
-    # - assets/map/16/31042/
-    # - assets/map/16/31043/
-    # - assets/map/16/31044/
-    # - assets/map/16/31045/
-    # - assets/map/16/31046/
-    # - assets/map/16/31047/
-    # - assets/map/16/31048/
-    # - assets/map/16/31049/
-    # - assets/map/16/31050/
-    # - assets/map/16/31051/
-    # - assets/map/16/31052/
-    # - assets/map/16/31053/
-    # - assets/map/16/31054/
-    # - assets/map/16/31055/
-    # - assets/map/16/31056/
-    # - assets/map/16/31057/
-    # - assets/map/16/31058/
-    # - assets/map/16/31059/
-    # - assets/map/16/31060/
-    # - assets/map/16/31061/
-    # - assets/map/16/31062/
-    # - assets/map/16/31063/
-    # - assets/map/16/31064/
-    # - assets/map/16/31065/
-    # - assets/map/16/31066/
-    # - assets/map/16/31067/
-    # - assets/map/16/31068/
-    # - assets/map/16/31069/
-    # - assets/map/16/31070/
-    # - assets/map/16/31071/
-    # - assets/map/16/31072/
-    # - assets/map/16/31073/
-    # - assets/map/16/31074/
-    # - assets/map/16/31075/
-    # - assets/map/16/31076/
-    # - assets/map/16/31077/
-    # - assets/map/16/31078/
-    # - assets/map/16/31079/
-    # - assets/map/16/31080/
-    # - assets/map/16/31081/
-    # - assets/map/16/31082/
-    # - assets/map/16/31083/
-    # - assets/map/16/31084/
-    # - assets/map/16/31085/
-    # - assets/map/16/31086/
-    # - assets/map/16/31087/
-    # - assets/map/16/31088/
-    # - assets/map/16/31089/
-    # - assets/map/16/31090/
-    # - assets/map/16/31091/
-    # - assets/map/16/31092/
-    # - assets/map/16/31093/
-    # - assets/map/16/31094/
-    # - assets/map/16/31095/
-    # - assets/map/16/31096/
-    # - assets/map/16/31097/
-    # - assets/map/16/31098/
-    # - assets/map/16/31099/
-    # - assets/map/16/31100/
-    # - assets/map/16/31101/
-    # - assets/map/16/31102/
-    # - assets/map/16/31103/
-    # - assets/map/16/31104/
-    # - assets/map/16/31105/
-    # - assets/map/16/31106/
-    # - assets/map/16/31107/
-    # - assets/map/16/31108/
-    # - assets/map/16/31109/
-    # - assets/map/16/31110/
-    # - assets/map/16/31111/
-    # - assets/map/16/31112/
-    # - assets/map/16/31113/
-    # - assets/map/16/31114/
-    # - assets/map/16/31115/
-    # - assets/map/16/31116/
-    # - assets/map/16/31117/
-    # - assets/map/16/31118/
-    # - assets/map/16/31119/
-    # - assets/map/16/31120/
-    # - assets/map/16/31121/
-    # - assets/map/16/31122/
-    # - assets/map/16/31123/
-    # - assets/map/16/31124/
-    # - assets/map/16/31125/
-    # - assets/map/16/31126/
-    # - assets/map/16/31127/
-    # - assets/map/16/31128/
-    # - assets/map/16/31129/
-    # - assets/map/16/31130/
-    # - assets/map/16/31131/
-    # - assets/map/16/31132/
-    # - assets/map/16/31133/
-    # - assets/map/16/31134/
-    # - assets/map/16/31135/
-    # - assets/map/16/31136/
-    # - assets/map/16/31137/
-    # - assets/map/16/31138/
-    # - assets/map/16/31139/
-    # - assets/map/16/31140/
-    # - assets/map/16/31141/
-    # - assets/map/16/31142/
-    # - assets/map/16/31143/
-    # - assets/map/16/31144/
-    # - assets/map/16/31145/
-    # - assets/map/16/31146/
-    # - assets/map/16/31147/
-    # - assets/map/16/31148/
-    # - assets/map/16/31149/
-    # - assets/map/16/31150/
-    # - assets/map/16/31151/
-    # - assets/map/16/31152/
-    # - assets/map/16/31153/
-    # - assets/map/16/31154/
-    # - assets/map/16/31155/
-    # - assets/map/16/31156/
-    # - assets/map/16/31157/
+    - assets/map/16/31030/
+    - assets/map/16/31031/
+    - assets/map/16/31032/
+    - assets/map/16/31033/
+    - assets/map/16/31034/
+    - assets/map/16/31035/
+    - assets/map/16/31036/
+    - assets/map/16/31037/
+    - assets/map/16/31038/
+    - assets/map/16/31039/
+    - assets/map/16/31040/
+    - assets/map/16/31041/
+    - assets/map/16/31042/
+    - assets/map/16/31043/
+    - assets/map/16/31044/
+    - assets/map/16/31045/
+    - assets/map/16/31046/
+    - assets/map/16/31047/
+    - assets/map/16/31048/
+    - assets/map/16/31049/
+    - assets/map/16/31050/
+    - assets/map/16/31051/
+    - assets/map/16/31052/
+    - assets/map/16/31053/
+    - assets/map/16/31054/
+    - assets/map/16/31055/
+    - assets/map/16/31056/
+    - assets/map/16/31057/
+    - assets/map/16/31058/
+    - assets/map/16/31059/
+    - assets/map/16/31060/
+    - assets/map/16/31061/
+    - assets/map/16/31062/
+    - assets/map/16/31063/
+    - assets/map/16/31064/
+    - assets/map/16/31065/
+    - assets/map/16/31066/
+    - assets/map/16/31067/
+    - assets/map/16/31068/
+    - assets/map/16/31069/
+    - assets/map/16/31070/
+    - assets/map/16/31071/
+    - assets/map/16/31072/
+    - assets/map/16/31073/
+    - assets/map/16/31074/
+    - assets/map/16/31075/
+    - assets/map/16/31076/
+    - assets/map/16/31077/
+    - assets/map/16/31078/
+    - assets/map/16/31079/
+    - assets/map/16/31080/
+    - assets/map/16/31081/
+    - assets/map/16/31082/
+    - assets/map/16/31083/
+    - assets/map/16/31084/
+    - assets/map/16/31085/
+    - assets/map/16/31086/
+    - assets/map/16/31087/
+    - assets/map/16/31088/
+    - assets/map/16/31089/
+    - assets/map/16/31090/
+    - assets/map/16/31091/
+    - assets/map/16/31092/
+    - assets/map/16/31093/
+    - assets/map/16/31094/
+    - assets/map/16/31095/
+    - assets/map/16/31096/
+    - assets/map/16/31097/
+    - assets/map/16/31098/
+    - assets/map/16/31099/
+    - assets/map/16/31100/
+    - assets/map/16/31101/
+    - assets/map/16/31102/
+    - assets/map/16/31103/
+    - assets/map/16/31104/
+    - assets/map/16/31105/
+    - assets/map/16/31106/
+    - assets/map/16/31107/
+    - assets/map/16/31108/
+    - assets/map/16/31109/
+    - assets/map/16/31110/
+    - assets/map/16/31111/
+    - assets/map/16/31112/
+    - assets/map/16/31113/
+    - assets/map/16/31114/
+    - assets/map/16/31115/
+    - assets/map/16/31116/
+    - assets/map/16/31117/
+    - assets/map/16/31118/
+    - assets/map/16/31119/
+    - assets/map/16/31120/
+    - assets/map/16/31121/
+    - assets/map/16/31122/
+    - assets/map/16/31123/
+    - assets/map/16/31124/
+    - assets/map/16/31125/
+    - assets/map/16/31126/
+    - assets/map/16/31127/
+    - assets/map/16/31128/
+    - assets/map/16/31129/
+    - assets/map/16/31130/
+    - assets/map/16/31131/
+    - assets/map/16/31132/
+    - assets/map/16/31133/
+    - assets/map/16/31134/
+    - assets/map/16/31135/
+    - assets/map/16/31136/
+    - assets/map/16/31137/
+    - assets/map/16/31138/
+    - assets/map/16/31139/
+    - assets/map/16/31140/
+    - assets/map/16/31141/
+    - assets/map/16/31142/
+    - assets/map/16/31143/
+    - assets/map/16/31144/
+    - assets/map/16/31145/
+    - assets/map/16/31146/
+    - assets/map/16/31147/
+    - assets/map/16/31148/
+    - assets/map/16/31149/
+    - assets/map/16/31150/
+    - assets/map/16/31151/
+    - assets/map/16/31152/
+    - assets/map/16/31153/
+    - assets/map/16/31154/
+    - assets/map/16/31155/
+    - assets/map/16/31156/
+    - assets/map/16/31157/
 
 
 

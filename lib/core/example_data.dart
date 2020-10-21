@@ -1,7 +1,8 @@
 import 'package:latlong/latlong.dart';
-import 'package:living_city/data/models/point_of_interest_model.dart';
-import 'package:living_city/data/models/trip_model.dart';
+
 import '../data/models/location_model.dart';
+import '../data/models/point_of_interest_model.dart';
+import '../data/models/trip_model.dart';
 
 final LatLng swBound = LatLng(38.358, -9.634);
 final LatLng neBound = LatLng(39.15, -8.458);
@@ -113,68 +114,78 @@ var trip = TripModel(
 );
 
 var pois = [
-  PointOfInterestModel(13, 7, 'Castelo de São Jorge', 20, 10, 3, 9, 17,
+  PointOfInterestModel(1, 7, 'Castelo de São Jorge', 20, 10, 65, 9, 17,
       LatLng(38.7139092, -9.1334762)),
-  PointOfInterestModel(14, 2, 'Capela Nossa Senhora da Saúde', 20, 15, 5, 9, 17,
+  PointOfInterestModel(2, 2, 'Capela Nossa Senhora da Saúde', 20, 15, 88, 9, 17,
       LatLng(38.71586278, -9.13569194)),
-  PointOfInterestModel(15, 5, 'Tasquinha A Vaidosa', 20, 7.5, 2, 9, 17,
+  PointOfInterestModel(3, 5, 'Tasquinha A Vaidosa', 20, 7.5, 2, 9, 17,
       LatLng(38.71695138, -9.13441912)),
-  PointOfInterestModel(16, 7, 'Palácio da Rosa', 20, 15, 1, 9, 17,
-      LatLng(38.714776, -9.1346331)),
-  PointOfInterestModel(17, 1, 'Pérola do Rossio', 20, 15, 1, 8, 12,
+  PointOfInterestModel(
+      4, 7, 'Palácio da Rosa', 20, 15, 1, 9, 17, LatLng(38.714776, -9.1346331)),
+  PointOfInterestModel(5, 1, 'Pérola do Rossio', 20, 15, 1, 8, 12,
       LatLng(38.71356062, -9.13862817)),
-  PointOfInterestModel(18, 6, 'Casa dos Bicos - Fundação José Saramago', 20, 3,
+  PointOfInterestModel(6, 6, 'Casa dos Bicos - Fundação José Saramago', 20, 3,
       8, 12, 2, LatLng(38.709058, -9.1326586)),
-  PointOfInterestModel(19, 3, 'Miradouro do Recolhimento', 20, 25, 5, 8, 12,
+  PointOfInterestModel(7, 3, 'Miradouro do Recolhimento', 20, 0, 5, 8, 21,
       LatLng(38.71267494, -9.13171991)),
-  PointOfInterestModel(20, 3, 'Miradouro de Santa Luzia', 20, 25, 1, 8, 12,
+  PointOfInterestModel(8, 3, 'Miradouro de Santa Luzia', 20, 25, 1, 8, 12,
       LatLng(38.71159619, -9.13034395)),
-  PointOfInterestModel(22, 7, 'Elevador da Bica', 20, 3.7, 5, 18, 24,
+  PointOfInterestModel(9, 7, 'Elevador da Bica', 20, 3.7, 5, 18, 24,
       LatLng(38.70858166, -9.14669643)),
-  PointOfInterestModel(23, 7, 'Elevador de Santa Justa', 20, 5.15, 2, 18, 24,
+  PointOfInterestModel(10, 7, 'Elevador de Santa Justa', 20, 5.15, 2, 18, 24,
       LatLng(38.71212908, -9.1394235)),
-  PointOfInterestModel(24, 7, 'Elevador da Glória', 20, 3.7, 3, 18, 24,
+  PointOfInterestModel(11, 7, 'Elevador da Glória', 20, 3.7, 3, 18, 24,
       LatLng(38.71539594, -9.14335103)),
-  PointOfInterestModel(25, 2, 'Igreja de São Nicolau', 20, 25, 3, 18, 24,
+  PointOfInterestModel(12, 2, 'Igreja de São Nicolau', 20, 25, 3, 18, 24,
       LatLng(38.71093597, -9.13669238)),
   PointOfInterestModel(
-      26, 1, 'Nicolau Café', 20, 0, 1, 18, 24, LatLng(38.7105554, -9.1364516)),
-  PointOfInterestModel(27, 8, 'Praça do Comércio', 20, 20, 5, 18, 24,
+      13, 1, 'Nicolau Café', 20, 0, 1, 18, 24, LatLng(38.7105554, -9.1364516)),
+  PointOfInterestModel(14, 8, 'Praça do Comércio', 20, 20, 5, 18, 24,
       LatLng(38.707532, -9.1364489)),
-  PointOfInterestModel(28, 3, 'Cais das Colunas', 20, 20, 2, 18, 24,
+  PointOfInterestModel(15, 3, 'Cais das Colunas', 20, 20, 2, 18, 24,
       LatLng(38.70661524, -9.1360868)),
-  PointOfInterestModel(29, 6, 'Museu de Lisboa - Torreão Poente', 20, 20, 3, 7,
+  PointOfInterestModel(16, 6, 'Museu de Lisboa - Torreão Poente', 20, 20, 3, 7,
       19, LatLng(38.7067785, -9.13726697)),
-  PointOfInterestModel(30, 6, 'Museu do Design e da Moda', 20, 0, 5, 7, 19,
+  PointOfInterestModel(17, 6, 'Museu do Design e da Moda', 20, 0, 5, 7, 19,
       LatLng(38.7090582, -9.1369361)),
-  PointOfInterestModel(31, 3, 'Arco da Rua Augusta', 20, 0, 1, 7, 19,
+  PointOfInterestModel(18, 3, 'Arco da Rua Augusta', 20, 0, 1, 7, 19,
       LatLng(38.70839262, -9.13682345)),
-  PointOfInterestModel(32, 2, 'Igreja da Nossa Senhora da Conceição Velha', 20,
+  PointOfInterestModel(19, 2, 'Igreja da Nossa Senhora da Conceição Velha', 20,
       0, 3, 7, 19, LatLng(38.70896476, -9.13423873)),
-  PointOfInterestModel(33, 8, 'Praça do Rossio', 20, 10, 1, 7, 19,
+  PointOfInterestModel(20, 8, 'Praça do Rossio', 20, 10, 1, 7, 19,
       LatLng(38.7137188, -9.1396806)),
-  PointOfInterestModel(34, 6, 'O Mundo Fantástico da Sardinha Portuguesa', 20,
+  PointOfInterestModel(21, 6, 'O Mundo Fantástico da Sardinha Portuguesa', 20,
       0, 4, 7, 19, LatLng(38.7144703, -9.1393499)),
   PointOfInterestModel(
-      35, 1, 'Nicola Café', 20, 0, 3, 7, 19, LatLng(38.71321458, -9.13967177)),
-  PointOfInterestModel(36, 8, 'Praça da Figueira', 20, 7.5, 4, 7, 19,
+      22, 1, 'Nicola Café', 20, 0, 3, 7, 19, LatLng(38.71321458, -9.13967177)),
+  PointOfInterestModel(23, 8, 'Praça da Figueira', 20, 7.5, 4, 7, 19,
       LatLng(38.71372417, -9.13786591)),
-  PointOfInterestModel(37, 2, 'Igreja da Madalena', 20, 7.5, 2, 7, 19,
+  PointOfInterestModel(24, 2, 'Igreja da Madalena', 20, 7.5, 2, 7, 19,
       LatLng(38.7101015, -9.13476212)),
-  PointOfInterestModel(38, 2, 'Igreja de Santo António de Lisboa', 20, 7.5, 2,
-      7, 19, LatLng(38.70999347, -9.13401066)),
-  PointOfInterestModel(39, 7, 'Sé de Lisboa', 20, 0, 77, 7, 19,
+  PointOfInterestModel(25, 2, 'Igreja de Santo António de Lisboa', 20, 0, 2, 7,
+      19, LatLng(38.70999347, -9.13401066)),
+  PointOfInterestModel(26, 7, 'Sé de Lisboa', 20, 0, 77, 7, 19,
       LatLng(38.70980306, -9.13340813)),
-  PointOfInterestModel(40, 2, 'Igreja de São Domingos', 20, 0, 92, 7, 19,
+  PointOfInterestModel(27, 2, 'Igreja de São Domingos', 20, 0, 92, 7, 19,
       LatLng(38.71470839, -9.13875324)),
-  PointOfInterestModel(41, 1, 'Hospital de Bonecas', 20, 5, 18, 7, 19,
+  PointOfInterestModel(28, 1, 'Hospital de Bonecas', 20, 5, 18, 7, 19,
       LatLng(38.71417458, -9.13776636)),
-  PointOfInterestModel(42, 1, 'Manteigaria Silva', 20, 5, 32, 7, 19,
+  PointOfInterestModel(29, 1, 'Manteigaria Silva', 20, 5, 32, 7, 19,
       LatLng(38.71406446, -9.13876112)),
-  PointOfInterestModel(43, 6, 'Museu Arqueológico do Carmo', 20, 5, 50, 7, 19,
+  PointOfInterestModel(30, 6, 'Museu Arqueológico do Carmo', 20, 5, 50, 7, 19,
       LatLng(38.71190513, -9.14063627)),
-  PointOfInterestModel(44, 6, 'Museu Nacional de Arte Contemporânea do Chiado',
-      20, 25, 97, 7, 19, LatLng(38.70968009, -9.14102261)),
+  PointOfInterestModel(31, 6, 'Museu Nacional de Arte Contemporânea do Chiado',
+      20, 25, 97, 7, 19, LatLng(38.70968009, -9.143269)),
+  PointOfInterestModel(32, 6, 'Museu Nacional do Desporto', 70, 9, 97, 10, 17,
+      LatLng(38.70968009, -9.14102261)),
+  PointOfInterestModel(33, 4, 'Casa Portuguesa do Pastel de Bacalhau', 40, 5,
+      97, 10, 22, LatLng(38.70968009, -9.14102261)),
+  PointOfInterestModel(36, 4, 'Martinho da Arcada', 60, 35, 97, 7, 17,
+      LatLng(38.70968009, -9.14102261)),
+  PointOfInterestModel(34, 5, 'As Bifanas do Afonso', 40, 5, 97, 7, 19,
+      LatLng(38.70968009, -9.14102261)),
+  PointOfInterestModel(38, 4, 'A Brasileira', 35, 10, 97, 7, 19,
+      LatLng(38.70968009, -9.14102261)),
 ];
 
 var pois2 = [
@@ -205,3 +216,6 @@ var pois2 = [
   PointOfInterestModel(44, 6, 'Museu Nacional de Arte Contemporânea do Chiado',
       7, 19, 20, 0, 97, LatLng(38.70968009, -9.14102261)),
 ];
+
+String formattedJsonTrip =
+    '{"price":50,"sustainability":71,"distance":69,"calories":350,"time":{"startTime":1600363604329,"endTime":1600377189985},"origin":{"name":"RuaAlexandreFerreira","locality":null,"latitude":38.7139092,"longitude":-9.1334762},"destination":{"name":"RuaAlexandreFerreira","locality":null,"latitude":38.70861933474137,"longitude":-9.140110592695562},"line":[{"latitude":38.713434885851484,"longitude":-9.133620912637578},{"latitude":38.71343483135331,"longitude":-9.133724513658684},{"latitude":38.71324502780836,"longitude":-9.133734199413677},{"latitude":38.71309061452204,"longitude":-9.133682231612852},{"latitude":38.71275384827153,"longitude":-9.133697132774378},{"latitude":38.71257708324292,"longitude":-9.133622254437705},{"latitude":38.712520086300074,"longitude":-9.133470076325612},{"latitude":38.7125320072293,"longitude":-9.133323299884571},{"latitude":38.71264637364402,"longitude":-9.133129398520204},{"latitude":38.712553613913514,"longitude":-9.133022296421728},{"latitude":38.712477990518764,"longitude":-9.133037197583254},{"latitude":38.71223938566981,"longitude":-9.133013355724811},{"latitude":38.71217437935265,"longitude":-9.132974053911285},{"latitude":38.71220474046926,"longitude":-9.13264883606096},{"latitude":38.712169909004196,"longitude":-9.132681991145358},{"latitude":38.71212446046154,"longitude":-9.132868069399924},{"latitude":38.711820663030906,"longitude":-9.132854472090031},{"latitude":38.71144962410889,"longitude":-9.132901783277878},{"latitude":38.71154368769103,"longitude":-9.133191610869577},{"latitude":38.71158764611753,"longitude":-9.133569727843323},{"latitude":38.71142168443102,"longitude":-9.133362787962618},{"latitude":38.71135388414608,"longitude":-9.133308398723045},{"latitude":38.71115663002036,"longitude":-9.13329927176161},{"latitude":38.71108733961926,"longitude":-9.133432450892757},{"latitude":38.7109256620167,"longitude":-9.133821743737647},{"latitude":38.7109578857785,"longitude":-9.133902023745373},{"latitude":38.71051085093269,"longitude":-9.134197811801682},{"latitude":38.710107029455315,"longitude":-9.134513343897016},{"latitude":38.70985538609003,"longitude":-9.134505148258175},{"latitude":38.709415429295944,"longitude":-9.136328119106475},{"latitude":38.708626971586654,"longitude":-9.136026370585554},{"latitude":38.70836638752445,"longitude":-9.135901945886804},{"latitude":38.70833304617553,"longitude":-9.13594143396485},{"latitude":38.70816559446653,"longitude":-9.136622677359982},{"latitude":38.70816559446653,"longitude":-9.136622677359982},{"latitude":38.70815032068231,"longitude":-9.136684815660525},{"latitude":38.71235524220069,"longitude":-9.138360823803264},{"latitude":38.713064351224844,"longitude":-9.138629976033345},{"latitude":38.7130911733156,"longitude":-9.138627182065559},{"latitude":38.71315413072305,"longitude":-9.13875123423527},{"latitude":38.71321876451117,"longitude":-9.138806368532919},{"latitude":38.71387348429576,"longitude":-9.139063786098296},{"latitude":38.71444326745964,"longitude":-9.139310586586086},{"latitude":38.71448331433125,"longitude":-9.139421972768499},{"latitude":38.7147131647478,"longitude":-9.139278735353322},{"latitude":38.714845226291835,"longitude":-9.139238874746239},{"latitude":38.714906321054094,"longitude":-9.139247629178636},{"latitude":38.71502161879141,"longitude":-9.13942793323311},{"latitude":38.71494972068704,"longitude":-9.139698016785786},{"latitude":38.71493746027443,"longitude":-9.139745024718508},{"latitude":38.71493746027443,"longitude":-9.139745024718508},{"latitude":38.71480797338801,"longitude":-9.14024153665248},{"latitude":38.714701988876655,"longitude":-9.140203724955105},{"latitude":38.71448405938933,"longitude":-9.140144306573516},{"latitude":38.7144350718208,"longitude":-9.139976854770858},{"latitude":38.71425830679219,"longitude":-9.139893222001788},{"latitude":38.713176482465336,"longitude":-9.13944227560108},{"latitude":38.712871194918556,"longitude":-9.139416943626484},{"latitude":38.71282928540176,"longitude":-9.139605815848839},{"latitude":38.71201530945335,"longitude":-9.139631334087953},{"latitude":38.71096794406253,"longitude":-9.13963412805574},{"latitude":38.71083532372494,"longitude":-9.140478092591719},{"latitude":38.70971345252648,"longitude":-9.140140395018616},{"latitude":38.70930255299738,"longitude":-9.140005725771317},{"latitude":38.70915894305316,"longitude":-9.139934572725025},{"latitude":38.70914739465298,"longitude":-9.140087123366158},{"latitude":38.709128581936554,"longitude":-9.140144865367075},{"latitude":38.709054634922474,"longitude":-9.140170756135227},{"latitude":38.70861933474137,"longitude":-9.140110592695562}],"pois":[{"timestamp":1600535700000,"poi":{"pointID":1,"categoryID":7,"name":"CastelodeS.Jorge","visitTime":15,"normalPrice":15.0,"sustainability":61,"openingHour":9,"closureHour":17,"coordinates":{"latitude":38.713434885851484,"longitude":-9.133620912637578}}},{"timestamp":1600538940000,"poi":{"pointID":1,"categoryID":8,"name":"PraçadoComércio","visitTime":20,"normalPrice":15.0,"sustainability":61,"openingHour":9,"closureHour":17,"coordinates":{"latitude":38.70816559446653,"longitude":-9.136622677359982}}},{"timestamp":1600541520000,"poi":{"pointID":1,"categoryID":8,"name":"LargodoRegedor","visitTime":60,"normalPrice":15.0,"sustainability":61,"openingHour":9,"closureHour":17,"coordinates":{"latitude":38.71493746027443,"longitude":-9.139745024718508}}},{"timestamp":1600544220000,"poi":{"pointID":1,"categoryID":8,"name":"LargodaAcademiaNacionaldeBelasArtes","visitTime":30,"normalPrice":15.0,"sustainability":61,"openingHour":9,"closureHour":17,"coordinates":{"latitude":38.70861933474137,"longitude":-9.140110592695562}}}]}';
