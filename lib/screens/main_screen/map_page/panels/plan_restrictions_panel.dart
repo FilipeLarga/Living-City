@@ -824,6 +824,24 @@ class _BudgetDialogState extends State<BudgetDialog> {
           style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 16),
+        // Row(
+        //   children: [
+        //     Expanded(
+        //       child: CupertinoSlider(
+        //         value: value,
+        //         onChanged: (v) {
+        //           setState(() => v == widget.minimum
+        //               ? value = v
+        //               : value = (v / 10).round().toDouble() * 10);
+        //         },
+        //         divisions: ((200.0 - widget.minimum) / 10).round(),
+        //         min: widget.minimum.toDouble(),
+        //         max: 200.0,
+        //       ),
+        //     ),
+        //   ],
+        // ),
+
         Slider.adaptive(
           value: value,
           onChanged: (v) {

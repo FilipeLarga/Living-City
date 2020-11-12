@@ -14,8 +14,9 @@ class TripModel {
   final LocationModel destination;
   final int sustainability;
   final int price;
-  final int distance;
+  final double distance;
   final int calories;
+  final int durationTime;
 
   TripModel(
       this.pois,
@@ -27,7 +28,8 @@ class TripModel {
       this.distance,
       this.calories,
       this.origin,
-      this.destination);
+      this.destination,
+      this.durationTime);
 
   factory TripModel.fromJson(Map<String, dynamic> json) {
     var poiList = json['pois'] as List;
@@ -52,6 +54,7 @@ class TripModel {
         name: json['destination']['name'],
         locality: json['destination']['locality'],
       ),
+      json['durationTime'],
     );
   }
 
@@ -66,6 +69,7 @@ class TripModel {
       'destination': destination.toMap(),
       'line': line.map((coords) => latLngToMap(coords)).toList(growable: false),
       'pois': pois.map((timedPOI) => timedPOI.toMap()).toList(growable: false),
+      'durationTime': durationTime,
     };
   }
 

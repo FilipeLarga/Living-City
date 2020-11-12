@@ -61,7 +61,7 @@ class _TripConfirmationPanelState extends State<TripConfirmationPanel> {
                   ),
                 ),
               );
-            } else if (state is RouteRequestError) {
+            } else if (state is RouteRequestConnectionError) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -133,6 +133,68 @@ class _TripConfirmationPanelState extends State<TripConfirmationPanel> {
                               letterSpacing: 1,
                               fontWeight: FontWeight.bold,
                               fontSize: 15))),
+                ],
+              );
+            } else if (state is RouteRequestTripError) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 184),
+                  FractionallySizedBox(
+                    widthFactor: 0.55,
+                    child: FittedBox(
+                        alignment: Alignment.center,
+                        fit: BoxFit.scaleDown,
+                        child: ConstrainedBox(
+                          constraints:
+                              BoxConstraints(minWidth: 1, minHeight: 1),
+                          child: Image.asset(
+                            'assets/error_trip.png',
+                          ),
+                        )),
+                  ),
+                  const SizedBox(height: 20),
+                  Text('Sorry, we couldn\'t find a trip',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 8),
+                  Text('Please try again with a different configuration',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 15,
+                      )),
+                  const SizedBox(height: 28),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 84.0),
+                    child: Material(
+                      color: Theme.of(context).accentColor,
+                      clipBehavior: Clip.antiAlias,
+                      borderRadius: BorderRadius.circular(8),
+                      child: Center(
+                        child: InkWell(
+                          onTap: () =>
+                              BlocProvider.of<BSNavigationBloc>(context)
+                                  .add(BSNavigationTripCancelled()),
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            height: 38,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                                child: Text('Try Again',
+                                    style: TextStyle(
+                                        wordSpacing: 1.2,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15))),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               );
             } else if (state is RouteRequestLoaded) {
@@ -427,10 +489,21 @@ class TripOverviewPOIItem extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 8),
-        Text(categories
-            .where((element) => element.id == poi.poi.categoryID)
-            .first
-            .name),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Text(categories
+                  .where((element) => element.id == poi.poi.categoryID)
+                  .first
+                  .name),
+            ),
+            const SizedBox(width: 8),
+            Text('${poi.poi.visitTime} Min'),
+          ],
+        ),
       ],
     );
   }

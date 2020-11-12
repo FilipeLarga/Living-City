@@ -112,16 +112,25 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 _locationMarkers.clear();
                 _pointMarkers.clear();
                 _tripModel = state.tripModel;
+                _pointMarkers.add(Marker(
+                    point: state.tripModel.origin.coordinates,
+                    height: 20,
+                    width: 20,
+                    builder: (context) => markers.TripOriginMarker()));
+                _pointMarkers.add(Marker(
+                    point: state.tripModel.destination.coordinates,
+                    height: 32,
+                    width: 32,
+                    builder: (context) => markers.TripDestinationMarker()));
                 for (int i = 0; i < state.tripModel.pois.length; i++) {
                   _pointMarkers.add(Marker(
                     point: state.tripModel.pois.elementAt(i).poi.coordinates,
-                    height: i == 0 ? 32 : 16,
-                    width: i == 0 ? 32 : 16,
-                    builder: (context) => i == 0
-                        ? markers.TripDestinationMarker()
-                        : markers.PointOfInterestMarker(
-                            onTapCallback: null,
-                          ),
+                    height: 20,
+                    width: 20,
+                    builder: (context) => markers.TripPOIMarker(
+                      color: const Color(0xFF666666),
+                      order: i + 1,
+                    ),
                   ));
                 }
               });
@@ -274,8 +283,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                     : [
                         Polyline(
                             points: _tripModel.line,
-                            color: Colors.blue[400],
-                            strokeWidth: 3)
+                            color: const Color(0xFF75B1F9),
+                            strokeWidth: 3.2)
                       ],
               ),
               if ((_locationMarkers +

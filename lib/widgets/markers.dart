@@ -72,7 +72,7 @@ class PointOfInterestMarker extends StatelessWidget {
             shape: BoxShape.circle,
             color: Colors.white,
             border: Border.all(
-                color: color ?? Theme.of(context).accentColor, width: 3)),
+                color: color ?? Theme.of(context).accentColor, width: 2)),
       ),
     );
   }
@@ -80,18 +80,31 @@ class PointOfInterestMarker extends StatelessWidget {
 
 class TripPOIMarker extends StatelessWidget {
   final Color color;
+  final int order;
 
-  const TripPOIMarker({Key key, this.color}) : super(key: key);
+  const TripPOIMarker({Key key, this.color, this.order}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Transform.translate(
-      offset: const Offset(-2, -12),
-      child: Icon(
-        Icons.place,
-        color: color ?? Theme.of(context).accentColor,
-        size: 32,
-      ),
+    return Stack(
+      alignment: Alignment.center,
+      overflow: Overflow.clip,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              border: Border.all(
+                  color: color ?? Theme.of(context).accentColor, width: 2)),
+        ),
+        Transform.translate(
+          offset: Offset(0, -1),
+          child: Text(
+            '$order',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -103,10 +116,24 @@ class TripOriginMarker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Icon(
-      Icons.trip_origin,
-      color: color ?? Theme.of(context).accentColor,
-      size: 18,
+    return Stack(
+      fit: StackFit.expand,
+      alignment: Alignment.center,
+      children: [
+        Container(
+            decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white,
+        )),
+        Transform.translate(
+          offset: Offset(-3, -3),
+          child: Icon(
+            Icons.play_circle_outline,
+            color: const Color(0xFF666666),
+            size: 25,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -119,7 +146,7 @@ class TripDestinationMarker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Transform.translate(
-      offset: const Offset(-2, -12),
+      offset: const Offset(-1, -14),
       child: Icon(
         Icons.place,
         color: color ?? Theme.of(context).accentColor,
