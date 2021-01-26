@@ -1,16 +1,15 @@
-# living_city
+## Living City
 
-A new Flutter project.
+A *Mobile Tour Guide* cross-platform app built with Flutter.
 
-## Getting Started
+This project was developed as part of my Master of Science in Computer Science and Management degree, as a sustainable solution to the problem of overcrowding in the Santa Maria Maior district in Lisbon.
 
-This project is a starting point for a Flutter application.
+It is a prototype mobile app that provides tourists with sustainable walking tour recommendations. Here are some screenshots:
 
-A few resources to get you started if this is your first Flutter project:
+![App Screenshots](./screenshots/screens.png?raw=true "App Screenshots")
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+##### Key Features:
+- Location and (reverse) geocoding using the device's GPS
+- Local storage using [sembast](https://pub.dev/packages/sembast), a NoSQL persistent store database
+- Bluetooth scanning for nearby devices
+- Integration with other components of the project via [http](https://pub.dev/packages/http)
