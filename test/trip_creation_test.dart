@@ -403,8 +403,8 @@ void main() {
       'Test successful response from the ROUTE microservice',
       build: () {
         final client = MockClient();
-        when(client.get('placeholder')).thenAnswer(
-            (_) async => http.Response(example.formattedJsonTrip, 200));
+        when(client.get('placeholder'))
+            .thenAnswer((_) async => http.Response(example.cenario2, 200));
         return RouteRequestBloc(client);
       },
       act: (cubit) {

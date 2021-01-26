@@ -75,3 +75,4 @@
 # Map assets
 **/assets/map/
 .flutter-plugins-dependencies
+coverage/lcov.info

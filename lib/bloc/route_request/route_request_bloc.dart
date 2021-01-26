@@ -32,27 +32,28 @@ class RouteRequestBloc extends Bloc<RouteRequestEvent, RouteRequestState> {
     yield RouteRequestLoading();
     origin = event.tripPlanModel.origin;
     destination = event.tripPlanModel.destination;
-    var json = jsonDecode(example.cenario1);
+    var json = jsonDecode(example.cenario2);
     json['origin']['name'] = origin.name;
     json['destination']['name'] = destination.name;
     final route = TripModel.fromJson(json);
-    // try {
-    //   final response = await client.get('placeholder');
-    // print('status code:' + response.statusCode.toString());
-    // if (response.statusCode == 200) {
-    //   var json = jsonDecode(response.body);
-    //   json['origin']['name'] = origin.name;
-    //   json['destination']['name'] = destination.name;
-    //   final route = TripModel.fromJson(jsonDecode(response.body));
-    //   yield RouteRequestLoaded(example.trip);
-    // } else {
-    //   yield RouteRequestTripError();
-    // }
-    // } on Exception catch (e) {
-    //   print('exception: ' + e.toString());
-    //   yield RouteRequestConnectionError();
-    // }
-    yield RouteRequestTripError();
+    yield RouteRequestLoaded(route);
+    /* try {
+      final response = await client.get('placeholder');
+      print('status code:' + response.statusCode.toString());
+      if (response.statusCode == 200) {
+        var json = jsonDecode(response.body);
+        //json['origin']['name'] = origin.name;
+        //json['destination']['name'] = destination.name;
+        final route = TripModel.fromJson(json);
+        yield RouteRequestLoaded(route);
+      } else {
+        yield RouteRequestTripError();
+      }
+    } on Exception catch (e) {
+      print('exception: ' + e.toString());
+      yield RouteRequestConnectionError();
+    } */
+    // yield RouteRequestTripError();
     // yield RouteRequestLoaded(route);
   }
 

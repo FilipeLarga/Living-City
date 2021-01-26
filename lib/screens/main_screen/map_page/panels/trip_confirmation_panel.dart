@@ -262,13 +262,14 @@ class _TripConfirmationPanelState extends State<TripConfirmationPanel> {
                             children: [
                               Icon(Icons.access_time),
                               const SizedBox(width: 8),
-                              Text(
-                                _formatDuration(
+                              Text(_formatDuration(
+                                      (state.tripModel.durationTime / 60000)
+                                          .round())
+                                  /*_formatDuration(
                                     DateTime.fromMillisecondsSinceEpoch(
-                                            state.tripModel.endTime -
-                                                state.tripModel.startTime)
-                                        .minute),
-                              )
+                                            state.tripModel.durationTime)
+                                        .minute),*/
+                                  )
                             ],
                           ),
                         ),
@@ -454,9 +455,9 @@ _formatDuration(int duration) {
   else if (duration % 60 == 0)
     return '${(duration / 60).truncate()} Hours';
   else if (duration > 120)
-    return '${(duration / 60).truncate()} Hours ${(duration % 60).toInt()} Minutes';
+    return '${(duration / 60).truncate()} H ${(duration % 60).toInt()} Min';
   else
-    return '${(duration / 60).truncate()} Hour ${(duration % 60).toInt()} Minutes';
+    return '${(duration / 60).truncate()} H ${(duration % 60).toInt()} Min';
 }
 
 class TripOverviewPOIItem extends StatelessWidget {

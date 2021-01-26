@@ -1,7 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:living_city/core/shared_axis_page_route.dart';
 import 'package:living_city/screens/main_screen/map_page/panels/active_trip_panel.dart';
 import 'package:living_city/screens/main_screen/map_page/panels/plan_interests_panel.dart';
 import 'package:living_city/screens/main_screen/map_page/panels/plan_points_panel.dart';
