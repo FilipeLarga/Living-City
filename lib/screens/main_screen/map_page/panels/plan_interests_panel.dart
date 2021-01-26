@@ -28,8 +28,8 @@ class PlanInterestsPanel extends StatelessWidget {
     final pois = (BlocProvider.of<PointsOfInterestBloc>(context).state
             as PointsOfInterestLoaded)
         .pois;
-
     //Filter for schedule
+
     final List<PointOfInterestModel> scheduleItems = pois
         .where((element) =>
             date >= element.openingHour && date <= element.closureHour)

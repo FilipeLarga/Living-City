@@ -70,10 +70,9 @@ class TripListBloc extends Bloc<TripListEvent, TripListState> {
       List<ProgressionTripModel> completedList =
           await _tripRepository.getCompletedTrips();
 
-      int sumCalories = 0,
-          sumDistance = 0,
-          sumPOIsVisited = 0,
-          sumSustainability = 0;
+      int sumCalories = 0, sumPOIsVisited = 0, sumSustainability = 0;
+
+      double sumDistance = 0;
 
       for (ProgressionTripModel trip in completedList) {
         sumCalories += trip.originalTrip.calories;

@@ -46,7 +46,7 @@ class TripListPage extends StatelessWidget {
                   if (state is TripListLoaded) ...[
                     StatsDisplay(
                       sumCalories: state.sumCalories,
-                      sumDistance: state.sumDistance,
+                      sumDistance: state.sumDistance.toInt(),
                       sumPOIsVisited: state.sumPOIsVisited,
                       avgSustainability: state.avgSustainability,
                     ),

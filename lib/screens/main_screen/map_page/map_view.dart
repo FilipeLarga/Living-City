@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:living_city/data/models/point_of_interest_model.dart';
 import '../../../bloc/location/location_bloc.dart';
 import 'package:latlong/latlong.dart';
 import 'dart:math' as Math;
@@ -33,6 +34,10 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
   List<Marker> _pointsOfInterest = [];
   List<Marker> _locationMarkers = [];
   List<Marker> _pointMarkers = [];
+  List<LatLng> _userLine = [];
+  List<LatLng> _completedLine = [];
+  List<Marker> _completedMarkers = [];
+  List<LatLng> _routeLine = [];
   Marker _userLocation;
 
   TripModel _tripModel;
@@ -85,14 +90,70 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
         BlocListener<UserLocationBloc, UserLocationState>(
             listener: (context, state) {
           if (state is UserLocationLoaded) {
-            bool isNear;
-            if (_tripModel?.line != null) {
-              int result = locationIndexOnEdgeOrPath(
-                  state.location, _tripModel?.line, false, true, 30);
-              isNear = result != -1;
+            bool isNearRoute;
+            if (_routeLine != null) {
+              final int result = locationIndexOnEdgeOrPath(
+                  state.location, _routeLine, false, true, 30);
+              isNearRoute = result != -1;
+            }
+            if (_tripModel != null) {
+              final LatLng closestPoi = nearestPointIfClose(
+                  state.location,
+                  _tripModel.pois
+                      .map((e) => e.poi.coordinates)
+                      .where((element) => _pointMarkers
+                          .any((marker) => marker.point == element))
+                      .toList()
+                        ..add(_tripModel.destination.coordinates),
+                  30);
+              if (closestPoi != null) {
+                final _linesToRemove = [];
+                final LatLng coordinate =
+                    nearestCoordinateToPoint(_routeLine, closestPoi);
+                for (LatLng line in _routeLine) {
+                  if (line == coordinate) {
+                    _linesToRemove.add(line);
+                    _completedLine.add(line);
+                    break;
+                  }
+                  _linesToRemove.add(line);
+                  _completedLine.add(line);
+                }
+                for (LatLng point in _linesToRemove)
+                  _routeLine.removeAt(_routeLine.indexOf(point));
+                /*_routeLine
+                    .removeWhere((element) => _linesToRemove.contains(element));*/
+                final int order = _tripModel.pois.indexWhere(
+                        (element) => element.poi.coordinates == closestPoi) +
+                    1;
+                if (order != 0) {
+                  _pointMarkers
+                      .removeWhere((element) => element.point == closestPoi);
+                  _completedMarkers.add(Marker(
+                    point: closestPoi,
+                    height: 20,
+                    width: 20,
+                    builder: (context) => markers.TripPOIMarker(
+                      color: const Color(0xFF666666),
+                      order: order,
+                    ),
+                  ));
+                } else {
+                  //Trip Finished
+                  print(
+                      'trip line length: ' + _tripModel.line.length.toString());
+                  print('completed line length: ' +
+                      _completedLine.length.toString());
+                  print('route line length: ' + _routeLine.length.toString());
+
+                  print('user line length: ' + _userLine.length.toString());
+                  print('Distance: ${distanceTo(_userLine, _tripModel.line)}');
+                }
+              }
             }
             setState(() {
-              _showRecenter = isNear != null ? !isNear : false;
+              _showRecenter = isNearRoute != null ? !isNearRoute : false;
+              if (_tripModel != null) _userLine.add(state.location);
               _userLocation = Marker(
                 height: 28,
                 width: 28,
@@ -112,16 +173,27 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 _locationMarkers.clear();
                 _pointMarkers.clear();
                 _tripModel = state.tripModel;
+                _routeLine = List.from(state.tripModel.line);
+                _userLine.add(state.tripModel.origin.coordinates);
+                _pointMarkers.add(Marker(
+                    point: state.tripModel.origin.coordinates,
+                    height: 20,
+                    width: 20,
+                    builder: (context) => markers.TripOriginMarker()));
+                _pointMarkers.add(Marker(
+                    point: state.tripModel.destination.coordinates,
+                    height: 32,
+                    width: 32,
+                    builder: (context) => markers.TripDestinationMarker()));
                 for (int i = 0; i < state.tripModel.pois.length; i++) {
                   _pointMarkers.add(Marker(
                     point: state.tripModel.pois.elementAt(i).poi.coordinates,
-                    height: i == 0 ? 32 : 16,
-                    width: i == 0 ? 32 : 16,
-                    builder: (context) => i == 0
-                        ? markers.TripDestinationMarker()
-                        : markers.PointOfInterestMarker(
-                            onTapCallback: null,
-                          ),
+                    height: 20,
+                    width: 20,
+                    builder: (context) => markers.TripPOIMarker(
+                      color: const Color(0xFF2486D5),
+                      order: i + 1,
+                    ),
                   ));
                 }
               });
@@ -183,6 +255,9 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                 if (_wasTrip) _tripModel = null;
                 _locationMarkers.clear();
                 _pointMarkers.clear();
+                _userLine.clear();
+                _completedLine.clear();
+                _completedMarkers.clear();
                 _wasTrip = false;
               });
             if (state is BSNavigationExplore) {
@@ -273,9 +348,33 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                     ? []
                     : [
                         Polyline(
-                            points: _tripModel.line,
-                            color: Colors.blue[400],
-                            strokeWidth: 3)
+                          points: _userLine,
+                          color: const Color(0xFF929aab).withOpacity(0.7),
+                          strokeWidth: 3.2,
+                          isDotted: true,
+                        ),
+                        Polyline(
+                            points: _completedLine,
+                            color: const Color(0xFF929aab).withOpacity(0.85),
+                            strokeWidth: 2.8),
+                        Polyline(
+                            points: _routeLine,
+                            color: const Color(0xFF75B1F9),
+                            strokeWidth: 3.2)
+                        /*Polyline(
+                            points: _routeLine,
+                            color: const Color(0xFF75B1F9),
+                            strokeWidth: 3.2),
+                        Polyline(
+                            points: _completedLine,
+                            color: const Color(0xFF75B1F9),
+                            strokeWidth: 3.2),
+                        Polyline(
+                          points: _userLine,
+                          color: const Color(0xFFC44536),
+                          strokeWidth: 4.5,
+                          isDotted: true,
+                        ),*/
                       ],
               ),
               if ((_locationMarkers +
@@ -287,7 +386,8 @@ class _MapViewState extends State<MapView> with TickerProviderStateMixin {
                   markers: _pointMarkers +
                       (_isShowingPOIs ? _pointsOfInterest : []) +
                       _locationMarkers +
-                      (_userLocation != null ? [_userLocation] : []),
+                      (_userLocation != null ? [_userLocation] : []) +
+                      _completedMarkers,
                 )
             ],
           ),

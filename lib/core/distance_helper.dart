@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:latlong/latlong.dart';
+import 'package:living_city/data/models/point_of_interest_model.dart';
 
 double clamp(double x, double low, double high) {
   return x < low ? low : (x > high ? high : x);
@@ -164,4 +165,67 @@ int locationIndexOnEdgeOrPath(LatLng point, List<LatLng> poly, bool closed,
     }
   }
   return -1;
+}
+
+LatLng nearestPointIfClose(
+    LatLng location, List<LatLng> pois, double distanceTreshold) {
+  double nearestDistance;
+  LatLng nearestPoi;
+  for (LatLng poi in pois) {
+    final distance =
+        Distance(roundResult: true).as(LengthUnit.Meter, location, poi);
+    if (distance <= distanceTreshold) {
+      if (nearestDistance == null || distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestPoi = poi;
+      }
+    }
+  }
+  return nearestPoi;
+}
+
+LatLng nearestCoordinateToPoint(List<LatLng> line, LatLng poi) {
+  double nearestDistance;
+  LatLng nearestCoordinates;
+  for (LatLng coordinate in line) {
+    final distance =
+        Distance(roundResult: true).as(LengthUnit.Meter, coordinate, poi);
+    if (nearestDistance == null || distance < nearestDistance) {
+      nearestDistance = distance;
+      nearestCoordinates = coordinate;
+    }
+  }
+  return nearestCoordinates;
+}
+
+double distanceTo(List<LatLng> line1, List<LatLng> line2) {
+  int n = line1.length;
+  int m = line2.length;
+
+  var dtw = List.generate(n + 1, (i) => List(m + 1), growable: false);
+
+  for (int i = 1; i <= n; i++) dtw[i][0] = double.maxFinite;
+
+  for (int j = 1; j <= m; j++) dtw[0][j] = double.maxFinite;
+
+  dtw[0][0] = 0;
+
+  for (int i = 1; i <= n; i++)
+    for (int j = 1; j <= m; j++) {
+      double cost =
+          distanceToPoint(line1.elementAt(i - 1), line2.elementAt(j - 1));
+      dtw[i][j] = cost +
+          min(
+              min(
+                  dtw[i - 1][j], // insertion
+                  dtw[i][j - 1]), // deletion
+              dtw[i - 1][j - 1]); // match
+    }
+  return dtw[n][m];
+}
+
+double distanceToPoint(LatLng point1, LatLng point2) {
+  double deltaX = point1.latitude - point2.latitude;
+  double deltaY = point1.longitude - point2.longitude;
+  return sqrt(deltaX * deltaX + deltaY * deltaY);
 }

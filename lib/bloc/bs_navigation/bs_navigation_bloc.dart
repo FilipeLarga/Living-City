@@ -57,7 +57,7 @@ class BSNavigationBloc extends Bloc<BSNavigationEvent, BSNavigationState> {
       yield* _handleCanceled();
     else if (event is BSNavigationDepartureTimeAdded)
       yield* _handleDepartureTime(event);
-    else if (event is BSNavigationTripCancelled) yield* _handleTripCancelled();
+    else if (event is BSNavigationTripCancelled) yield* _handleCanceled();
   }
 
   Stream<BSNavigationState> _handleTripCancelled() async* {
